@@ -2,7 +2,12 @@ stages:
   - setup
   - test
   - build
+  - review
   - deploy
+
+
+variables:
+  REPO_NAME: fancyhotell
 
 cache:
   paths:
@@ -52,28 +57,49 @@ build-frontend:
   script: yarn build
 
 deploy-frontend_review:
-  stage: deploy
-  environment:
-    name: review/$CI_COMMIT_REF_NAME
+  stage: review
   script:
-    - ./node_modules/.bin/now -s fancyhotell -t $ZEIT_NOW_TOKEN
+    - URL=$(./node_modules/.bin/now -s fancyhotell -t $ZEIT_NOW_TOKEN -n ${REPO_NAME}-${CI_BUILD_REF_SLUG})
+    - NOW_URL=$(echo ${URL} | sed s/'http:\/\/'/''/g | sed s/'https:\/\/'//g)
+    - now -t $ZEIT_NOW_TOKEN alias set $NOW_URL $REPO_NAME-$CI_BUILD_REF_SLUG.now.sh
+  environment:
+    name: review/$CI_BUILD_REF_NAME
+    url: https://$REPO_NAME-$CI_BUILD_REF_SLUG.now.sh
+    on_stop: stop_now
   only:
     refs:
        - merge_requests
-  when: manual
-  # This can be removed if we wish to deploy review versions automatically
+  when: manual # This can be removed if we wish to deploy review versions automatically
   except:
     - master
     - prod
 
 deploy-frontend_staging:
   stage: deploy
-  environment:
-    name: staging
   script:
-    - ./node_modules/.bin/now -s fancyhotell -t $ZEIT_NOW_TOKEN
+    - URL=$(./node_modules/.bin/now -s fancyhotell -t $ZEIT_NOW_TOKEN -n ${REPO_NAME}-${CI_BUILD_REF_SLUG})
+    - NOW_URL=$(echo ${URL} | sed s/'http:\/\/'/''/g | sed s/'https:\/\/'//g)
+    - now -t $ZEIT_NOW_TOKEN alias set $NOW_URL fancyhotell-staging.now.sh
+  environment:
+    name: staging/frontend
+    url: https://$REPO_NAME-$CI_BUILD_REF_SLUG.now.sh
   only:
     - master
+
+stop_now:
+  stage: review
+  script:
+    - ./node_modules/.bin/now rm -t $ZEIT_NOW_TOKEN -y $CI_BUILD_REF_SLUG
+  when: manual
+  environment:
+    name: review/$CI_BUILD_REF_NAME
+    action: stop
+  only:
+    refs:
+      - merge_requests
+  except:
+    - master
+    - prod
 
 deploy-frontend:
   stage: deploy
@@ -82,8 +108,11 @@ deploy-frontend:
   only:
     - prod
   environment:
-    name: frontend
+    name: production/frontend
     url: https://fancyhotell.now.sh
+
+
+
 
 
 # Backend jobs
@@ -101,7 +130,7 @@ lint_backend:
   extends: .backend
   stage: test
   script:
-    - black
+    - black --check fancyhotell # Change this if the project name is different
     - flake8
 
 test_backend:
@@ -118,7 +147,7 @@ deploy-backend_staging:
     - gem install dpl
     - dpl --provider=heroku --app=fancyhotell-staging --api-key=$HEROKU_API_KEY
   environment:
-    name: staging-backend
+    name: staging/backend
     url: https://fancyhotell-staging.herokuapp.com/
   only:
     - master
@@ -131,7 +160,7 @@ deploy-backend:
     - gem install dpl
     - dpl --provider=heroku --app=fancyhotell --api-key=$HEROKU_API_KEY
   environment:
-    name: backend
+    name: production/backend
     url: https://fancyhotell.herokuapp.com/
   only:
     - prod
