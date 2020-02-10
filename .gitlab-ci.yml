@@ -1,0 +1,137 @@
+stages:
+  - setup
+  - test
+  - build
+  - deploy
+
+cache:
+  paths:
+    - frontend/node_modules/
+    - backend/venv/
+
+.frontend:
+  image: node:13
+  only:
+    changes:
+      - frontend/**/*
+    refs:
+      - merge_requests
+
+.backend:
+  image: python:3.7
+  only:
+    changes:
+      - backend/**/*
+    refs:
+      - merge_requests
+
+
+# Frontend jobs
+setup-frontend:
+  extends: .frontend
+  stage: setup
+  script:
+    - apt-get update -qy
+    - apt-get install -y yarn
+    - cd frontend
+    - yarn
+
+lint-frontend:
+  extends: .frontend
+  stage: test
+  script: yarn lint
+
+test-frontend:
+  extends: .frontend
+  stage: test
+  script: yarn test
+
+build-frontend:
+  extends: .frontend
+  stage: build
+  script: yarn build
+
+deploy-frontend_review:
+  stage: deploy
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+  script:
+    - ./node_modules/.bin/now -s fancyhotell -t $ZEIT_NOW_TOKEN
+  only:
+    refs:
+       - merge_requests
+  when: manual
+  # This can be removed if we wish to deploy review versions automatically
+  except:
+    - master
+    - prod
+
+deploy-frontend_staging:
+  stage: deploy
+  environment:
+    name: staging
+  script:
+    - ./node_modules/.bin/now -s fancyhotell -t $ZEIT_NOW_TOKEN
+  only:
+    - master
+
+deploy-frontend:
+  stage: deploy
+  script:
+    - ./node_modules/.bin/now --prod -s fancyhotell -t $ZEIT_NOW_TOKEN
+  only:
+    - prod
+  environment:
+    name: frontend
+    url: https://fancyhotell.now.sh
+
+
+# Backend jobs
+setup_backend:
+  extends: .backend
+  stage: setup
+  script:
+    - apt-get update -qy
+    - apt-get install -y python-dev python-pip
+    - cd backend
+    - pip install -r requirements.txt
+
+
+lint_backend:
+  extends: .backend
+  stage: test
+  script:
+    - black
+    - flake8
+
+test_backend:
+  extends: .backend
+  stage: test
+  script:
+    - pytest
+
+deploy-backend_staging:
+  stage: deploy
+  script:
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=fancyhotell-staging --api-key=$HEROKU_API_KEY
+  environment:
+    name: staging-backend
+    url: https://fancyhotell-staging.herokuapp.com/
+  only:
+    - master
+
+deploy-backend:
+  stage: deploy
+  script:
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=fancyhotell --api-key=$HEROKU_API_KEY
+  environment:
+    name: backend
+    url: https://fancyhotell.herokuapp.com/
+  only:
+    - prod
