@@ -1,4 +1,5 @@
 # Skikkelig Fancy Hotell
+
 > Front-end in Next.js
 
 ## Setup
