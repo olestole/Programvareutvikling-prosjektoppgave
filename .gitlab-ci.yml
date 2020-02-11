@@ -53,9 +53,9 @@ deploy-frontend_review:
   extends: .frontend
   stage: review
   script:
-    - URL=$(./node_modules/.bin/now -s fancyhotell -t $ZEIT_NOW_TOKEN -n ${REPO_NAME}-${CI_BUILD_REF_SLUG})
+    - URL=$(./node_modules/.bin/now -S fancyhotell -t $ZEIT_NOW_TOKEN -n fancyhotell --confirm)
     - NOW_URL=$(echo ${URL} | sed s/'http:\/\/'/''/g | sed s/'https:\/\/'//g)
-    - now -t $ZEIT_NOW_TOKEN alias set $NOW_URL $REPO_NAME-$CI_BUILD_REF_SLUG.now.sh
+    - ./node_modules/.bin/now -t $ZEIT_NOW_TOKEN alias set $NOW_URL $REPO_NAME-$CI_BUILD_REF_SLUG.now.sh
   environment:
     name: review/$CI_BUILD_REF_NAME
     url: https://$REPO_NAME-$CI_BUILD_REF_SLUG.now.sh
@@ -72,12 +72,12 @@ deploy-frontend_staging:
   extends: .frontend
   stage: deploy
   script:
-    - URL=$(./node_modules/.bin/now -s fancyhotell -t $ZEIT_NOW_TOKEN -n ${REPO_NAME}-${CI_BUILD_REF_SLUG})
+    - URL=$(./node_modules/.bin/now -S fancyhotell -t $ZEIT_NOW_TOKEN -n fancyhotell --confirm)
     - NOW_URL=$(echo ${URL} | sed s/'http:\/\/'/''/g | sed s/'https:\/\/'//g)
-    - now -t $ZEIT_NOW_TOKEN alias set $NOW_URL fancyhotell-staging.now.sh
+    - ./node_modules/.bin/now -t $ZEIT_NOW_TOKEN alias set $NOW_URL fancyhotell-staging.now.sh
   environment:
     name: staging/frontend
-    url: https://$REPO_NAME-$CI_BUILD_REF_SLUG.now.sh
+    url: https://fancyhotell-staging.now.sh
   only:
     - master
 
@@ -101,7 +101,7 @@ deploy-frontend:
   extends: .frontend
   stage: deploy
   script:
-    - ./node_modules/.bin/now --prod -s fancyhotell -t $ZEIT_NOW_TOKEN
+    - ./node_modules/.bin/now --prod -S fancyhotell -t $ZEIT_NOW_TOKEN -n fancyhotell --confirm
   only:
     - prod
   environment:
@@ -114,8 +114,6 @@ deploy-frontend:
 .backend:
   image: python:3.7
   before_script:
-    - apt-get update -qy
-    - apt-get install -y python-dev python-pip
     - cd backend
     - pip install -r requirements.txt
   only:
@@ -127,14 +125,19 @@ deploy-frontend:
 
 # Backend jobs
 
-lint_backend:
+lint_black-backend:
   extends: .backend
   stage: test
   script:
     - black --check fancyhotell # Change this if the project name is different
+
+lint_flake8-backend:
+  extends: .backend
+  stage: test
+  script:
     - flake8
 
-test_backend:
+test-backend:
   extends: .backend
   stage: test
   script:
