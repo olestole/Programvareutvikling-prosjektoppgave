@@ -2,7 +2,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "test": "echo \"No tests setup\" && exit 1",
+    "test": "echo \"No tests setup\" && exit 0",
     "lint": "yarn run lint:js && yarn run lint:prettier",
     "lint:prettier": "prettier '**/*.{js,css,md}' --check",
     "prettier": "prettier '**/*.{js,css,md}' --write",

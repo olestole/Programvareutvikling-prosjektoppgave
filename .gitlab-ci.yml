@@ -16,17 +16,14 @@ cache:
 
 .frontend:
   image: node:13
+  before_script:
+    - apt-get update -qy
+    - apt-get install -y yarn
+    - cd frontend
+    - yarn
   only:
     changes:
       - frontend/**/*
-    refs:
-      - merge_requests
-
-.backend:
-  image: python:3.7
-  only:
-    changes:
-      - backend/**/*
     refs:
       - merge_requests
 
@@ -35,11 +32,7 @@ cache:
 setup-frontend:
   extends: .frontend
   stage: setup
-  script:
-    - apt-get update -qy
-    - apt-get install -y yarn
-    - cd frontend
-    - yarn
+  script: yarn
 
 lint-frontend:
   extends: .frontend
@@ -57,6 +50,7 @@ build-frontend:
   script: yarn build
 
 deploy-frontend_review:
+  extends: .frontend
   stage: review
   script:
     - URL=$(./node_modules/.bin/now -s fancyhotell -t $ZEIT_NOW_TOKEN -n ${REPO_NAME}-${CI_BUILD_REF_SLUG})
@@ -75,6 +69,7 @@ deploy-frontend_review:
     - prod
 
 deploy-frontend_staging:
+  extends: .frontend
   stage: deploy
   script:
     - URL=$(./node_modules/.bin/now -s fancyhotell -t $ZEIT_NOW_TOKEN -n ${REPO_NAME}-${CI_BUILD_REF_SLUG})
@@ -87,6 +82,7 @@ deploy-frontend_staging:
     - master
 
 stop_now:
+  extends: .frontend
   stage: review
   script:
     - ./node_modules/.bin/now rm -t $ZEIT_NOW_TOKEN -y $CI_BUILD_REF_SLUG
@@ -102,6 +98,7 @@ stop_now:
     - prod
 
 deploy-frontend:
+  extends: .frontend
   stage: deploy
   script:
     - ./node_modules/.bin/now --prod -s fancyhotell -t $ZEIT_NOW_TOKEN
@@ -114,17 +111,21 @@ deploy-frontend:
 
 
 
-
-# Backend jobs
-setup_backend:
-  extends: .backend
-  stage: setup
-  script:
+.backend:
+  image: python:3.7
+  before_script:
     - apt-get update -qy
     - apt-get install -y python-dev python-pip
     - cd backend
     - pip install -r requirements.txt
+  only:
+    changes:
+      - backend/**/*
+    refs:
+      - merge_requests
 
+
+# Backend jobs
 
 lint_backend:
   extends: .backend
