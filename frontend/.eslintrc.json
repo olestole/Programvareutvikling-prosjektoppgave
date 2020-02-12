@@ -1,0 +1,22 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "prettier",
+    "prettier/react"
+  ],
+  "plugins": ["react"],
+  "globals": {
+    "jest": true,
+    "page": true,
+    "browser": true
+  },
+  "rules": {
+    "react/prop-types": 0,
+    "react/display-name": 2
+  },
+  "env": {
+    "jest": true,
+    "browser": true
+  }
+}

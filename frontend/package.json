@@ -1,0 +1,29 @@
+{
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "test": "echo \"No tests setup\" && exit 1",
+    "lint": "yarn run lint:js && yarn run lint:prettier",
+    "lint:prettier": "prettier '**/*.{js,css,md}' --check",
+    "pretier": "prettier '**/*.{js,css,md} --write'",
+    "lint:js": "eslint . --ingore-path .prettierignore",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.9.2",
+    "next": "^9.2.1",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-react": "^7.18.3",
+    "now": "^17.0.3",
+    "prettier": "^1.19.1"
+  },
+  "prettier": {
+    "singleQuote": true
+  }
+}
