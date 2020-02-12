@@ -1,12 +1,10 @@
-import React from 'react';
+// Remember to add "id"-subpage
+import Roomlist from '../components/Roomlist';
 
-import Navbar from '../components/Navbar';
-
-export default function Index() {
+export default function Rooms() {
   return (
     <div>
-      <Navbar />
-      <h1>ROOMS</h1>
+      <Roomlist />
     </div>
   );
 }
