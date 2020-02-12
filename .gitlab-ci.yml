@@ -115,7 +115,7 @@ deploy-frontend:
   image: python:3.7
   before_script:
     - cd backend
-    - pip install -r requirements.txt
+    - pip install -r requirements/dev.txt
   only:
     changes:
       - backend/**/*
