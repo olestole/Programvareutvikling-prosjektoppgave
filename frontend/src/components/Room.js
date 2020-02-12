@@ -11,10 +11,18 @@ import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles({
   root: {
-    maxWidth: 345
+    display: 'flex',
+    maxWidth: '100%',
+    marginTop: '2em'
   },
   media: {
-    height: 140
+    height: 150
+  },
+  flexImageItem: {
+    flex: '1'
+  },
+  flexTextItem: {
+    flex: '3'
   }
 });
 
@@ -23,13 +31,14 @@ export default function MediaCard() {
 
   return (
     <Card className={classes.root}>
-      <CardActionArea>
+      <CardActionArea className={classes.flexImageItem}>
         <CardMedia
-          style={{ height: '140px' }}
           className={classes.media}
           image="/building.jpg"
           title="Contemplative Reptile"
         />
+      </CardActionArea>
+      <CardActionArea className={classes.flexTextItem}>
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
             Lizard
@@ -39,14 +48,12 @@ export default function MediaCard() {
             species, ranging across all continents except Antarctica
           </Typography>
         </CardContent>
-      </CardActionArea>
-      <CardActions>
         <Button size="small" color="primary">
           <Link href="booking">
             <a>Book rom</a>
           </Link>
         </Button>
-      </CardActions>
+      </CardActionArea>
     </Card>
   );
 }

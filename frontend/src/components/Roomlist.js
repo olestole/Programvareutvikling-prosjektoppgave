@@ -10,7 +10,8 @@ const useStyles = makeStyles({
     flexWrap: 'wrap',
     justifyContent: 'space-evenly',
     alignItems: 'flex-start',
-    maxWidth: 345
+    maxWidth: '60%',
+    marginLeft: '15%'
   }
 });
 
