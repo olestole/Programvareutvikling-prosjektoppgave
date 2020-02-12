@@ -2,11 +2,11 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "test": "echo \"No tests setup\" && exit 1",
+    "test": "echo \"No tests setup\" && exit 0",
     "lint": "yarn run lint:js && yarn run lint:prettier",
     "lint:prettier": "prettier '**/*.{js,css,md}' --check",
-    "pretier": "prettier '**/*.{js,css,md} --write'",
-    "lint:js": "eslint . --ingore-path .prettierignore",
+    "prettier": "prettier '**/*.{js,css,md}' --write",
+    "lint:js": "eslint . --ignore-path .prettierignore",
     "start": "next start"
   },
   "dependencies": {
@@ -17,9 +17,12 @@
   },
   "devDependencies": {
     "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.18.3",
+    "eslint-config-react-app": "^5.2.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
     "now": "^17.0.3",
     "prettier": "^1.19.1"
   },

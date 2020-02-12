@@ -5,6 +5,10 @@
     "prettier",
     "prettier/react"
   ],
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2018
+  },
   "plugins": ["react"],
   "globals": {
     "jest": true,
@@ -17,6 +21,7 @@
   },
   "env": {
     "jest": true,
-    "browser": true
+    "browser": true,
+    "es6": true
   }
 }

@@ -1,0 +1,170 @@
+stages:
+  - setup
+  - test
+  - build
+  - review
+  - deploy
+
+
+variables:
+  REPO_NAME: fancyhotell
+
+cache:
+  paths:
+    - frontend/node_modules/
+    - backend/venv/
+
+.frontend:
+  image: node:13
+  before_script:
+    - apt-get update -qy
+    - apt-get install -y yarn
+    - cd frontend
+    - yarn
+  only:
+    changes:
+      - frontend/**/*
+    refs:
+      - merge_requests
+
+
+# Frontend jobs
+setup-frontend:
+  extends: .frontend
+  stage: setup
+  script: yarn
+
+lint-frontend:
+  extends: .frontend
+  stage: test
+  script: yarn lint
+
+test-frontend:
+  extends: .frontend
+  stage: test
+  script: yarn test
+
+build-frontend:
+  extends: .frontend
+  stage: build
+  script: yarn build
+
+deploy-frontend_review:
+  extends: .frontend
+  stage: review
+  script:
+    - URL=$(./node_modules/.bin/now -S fancyhotell -t $ZEIT_NOW_TOKEN -n fancyhotell --confirm)
+    - NOW_URL=$(echo ${URL} | sed s/'http:\/\/'/''/g | sed s/'https:\/\/'//g)
+    - ./node_modules/.bin/now -t $ZEIT_NOW_TOKEN alias set $NOW_URL $REPO_NAME-$CI_BUILD_REF_SLUG.now.sh
+  environment:
+    name: review/$CI_BUILD_REF_NAME
+    url: https://$REPO_NAME-$CI_BUILD_REF_SLUG.now.sh
+    on_stop: stop_now
+  only:
+    refs:
+       - merge_requests
+  when: manual # This can be removed if we wish to deploy review versions automatically
+  except:
+    - master
+    - prod
+
+deploy-frontend_staging:
+  extends: .frontend
+  stage: deploy
+  script:
+    - URL=$(./node_modules/.bin/now -S fancyhotell -t $ZEIT_NOW_TOKEN -n fancyhotell --confirm)
+    - NOW_URL=$(echo ${URL} | sed s/'http:\/\/'/''/g | sed s/'https:\/\/'//g)
+    - ./node_modules/.bin/now -t $ZEIT_NOW_TOKEN alias set $NOW_URL fancyhotell-staging.now.sh
+  environment:
+    name: staging/frontend
+    url: https://fancyhotell-staging.now.sh
+  only:
+    - master
+
+stop_now:
+  extends: .frontend
+  stage: review
+  script:
+    - ./node_modules/.bin/now rm -t $ZEIT_NOW_TOKEN -y $CI_BUILD_REF_SLUG
+  when: manual
+  environment:
+    name: review/$CI_BUILD_REF_NAME
+    action: stop
+  only:
+    refs:
+      - merge_requests
+  except:
+    - master
+    - prod
+
+deploy-frontend:
+  extends: .frontend
+  stage: deploy
+  script:
+    - ./node_modules/.bin/now --prod -S fancyhotell -t $ZEIT_NOW_TOKEN -n fancyhotell --confirm
+  only:
+    - prod
+  environment:
+    name: production/frontend
+    url: https://fancyhotell.now.sh
+
+
+
+
+.backend:
+  image: python:3.7
+  before_script:
+    - cd backend
+    - pip install -r requirements.txt
+  only:
+    changes:
+      - backend/**/*
+    refs:
+      - merge_requests
+
+
+# Backend jobs
+
+lint_black-backend:
+  extends: .backend
+  stage: test
+  script:
+    - black --check fancyhotell # Change this if the project name is different
+
+lint_flake8-backend:
+  extends: .backend
+  stage: test
+  script:
+    - flake8
+
+test-backend:
+  extends: .backend
+  stage: test
+  script:
+    - pytest
+
+deploy-backend_staging:
+  stage: deploy
+  script:
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=fancyhotell-staging --api-key=$HEROKU_API_KEY
+  environment:
+    name: staging/backend
+    url: https://fancyhotell-staging.herokuapp.com/
+  only:
+    - master
+
+deploy-backend:
+  stage: deploy
+  script:
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=fancyhotell --api-key=$HEROKU_API_KEY
+  environment:
+    name: production/backend
+    url: https://fancyhotell.herokuapp.com/
+  only:
+    - prod
