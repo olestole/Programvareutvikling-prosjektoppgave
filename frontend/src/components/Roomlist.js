@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Room from '../components/Room';
 import { makeStyles } from '@material-ui/core/styles';
 
