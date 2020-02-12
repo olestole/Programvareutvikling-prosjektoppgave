@@ -3,7 +3,7 @@ import Room from '../components/Room';
 import { makeStyles } from '@material-ui/core/styles';
 
 // import Layout from "./Layout";
-
+// Styles for the Roomlist container
 const useStyles = makeStyles({
   root: {
     display: 'flex',

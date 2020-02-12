@@ -9,6 +9,8 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
+// Styles for Room. This should be placed in media query
+// Not optimal for phone view at all
 const useStyles = makeStyles({
   root: {
     display: 'flex',
@@ -16,7 +18,7 @@ const useStyles = makeStyles({
     marginTop: '2em'
   },
   media: {
-    height: 150
+    height: 150 /* Imageheight has to specified for image to show */
   },
   flexImageItem: {
     flex: '1'
