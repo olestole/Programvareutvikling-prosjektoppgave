@@ -129,7 +129,7 @@ lint_black-backend:
   extends: .backend
   stage: test
   script:
-    - black --check fancyhotell # Change this if the project name is different
+    - black --check fancyhotell
 
 lint_flake8-backend:
   extends: .backend
@@ -147,9 +147,9 @@ deploy-backend_staging:
   stage: deploy
   script:
     - apt-get update -qy
-    - apt-get install -y ruby-dev
-    - gem install dpl
-    - dpl --provider=heroku --app=fancyhotell-staging --api-key=$HEROKU_API_KEY
+    - apt-get install -y git
+    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/fancyhotell-staging.git
+    - git push heroku `git subtree split --prefix backend`:master --force
   environment:
     name: staging/backend
     url: https://fancyhotell-staging.herokuapp.com/
@@ -160,9 +160,9 @@ deploy-backend:
   stage: deploy
   script:
     - apt-get update -qy
-    - apt-get install -y ruby-dev
-    - gem install dpl
-    - dpl --provider=heroku --app=fancyhotell --api-key=$HEROKU_API_KEY
+    - apt-get install -y git
+    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/fancyhotell.git
+    - git push heroku `git subtree split --prefix backend`:master --force
   environment:
     name: production/backend
     url: https://fancyhotell.herokuapp.com/

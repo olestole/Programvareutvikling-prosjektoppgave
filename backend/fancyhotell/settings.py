@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -26,6 +27,8 @@ SECRET_KEY = "e=!2e5d3ii&r-6-9=z-hdi^t((d1_#q3q1dnd9)v7%at$iz466"
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
     "fancyhotell.herokuapp.com",
     "fancyhotell-staging.herokuapp.com",
     "secret-harbor-95265.herokuapp.com",  # TODO remove
@@ -79,12 +82,11 @@ WSGI_APPLICATION = "fancyhotell.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    }
-}
+DATABASE_URL = os.environ.get(
+    "DATABASE_URL", f"sqlite:///{os.path.join(BASE_DIR, 'db.sqlite3')}"
+)
+
+DATABASES = {"default": dj_database_url.parse(DATABASE_URL, conn_max_age=600)}
 
 
 # Password validation
