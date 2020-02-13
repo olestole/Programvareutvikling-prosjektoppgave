@@ -25,7 +25,11 @@ SECRET_KEY = "e=!2e5d3ii&r-6-9=z-hdi^t((d1_#q3q1dnd9)v7%at$iz466"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "fancyhotell.herokuapp.com",
+    "fancyhotell-staging.herokuapp.com",
+    "secret-harbor-95265.herokuapp.com",  # TODO remove
+]
 
 
 # Application definition
