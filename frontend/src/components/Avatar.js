@@ -25,9 +25,7 @@ export default function LetterAvatars(props) {
 
   return (
     <div className={classes.root}>
-      <Avatar>
-        <img src={props.img} />
-      </Avatar>
+      <Avatar src={props.img} />
     </div>
   );
 }

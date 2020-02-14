@@ -40,9 +40,7 @@ export default function Navbar() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            News
-          </Typography>
+          <Typography variant="h6" className={classes.title}></Typography>
           <Link href="/login">
             <Button color="inherit">Login</Button>
           </Link>

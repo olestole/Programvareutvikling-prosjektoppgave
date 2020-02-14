@@ -1,16 +1,26 @@
 import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 
-import Homepage from '../components/Homepage';
 import Navbar from '../components/Navbar';
-// import Datepicker from '../components/Datepicker';
-// import Numberselect from '../components/Numberselect';
 import FindRoom from '../components/FindRoom';
+import NewYork from '../../static/NewYork.jpg';
+
+const useStyles = makeStyles({
+  container: {
+    width: 'auto',
+    height: '46em',
+    backgroundImage: `url(${NewYork})`,
+    backgroundRepeat: 'no-repeat',
+    backgroundAttachment: 'fixed',
+    backgroundSize: 'cover'
+  }
+});
 
 export default function Index() {
+  const classes = useStyles();
   return (
-    <div>
+    <div className={classes.container}>
       <Navbar />
-      <Homepage />
       <FindRoom />
     </div>
   );
