@@ -1,17 +1,16 @@
-import React, { Component } from 'react';
-import Link from 'next/link';
+import React from 'react';
 
-// import Layout from "./Layout";
+import { makeStyles } from '@material-ui/core/styles';
+// import Image from '../../static/NewYork.jpg';
 
-export default class Homepage extends Component {
-  render() {
-    return (
-      <div>
-        <h1>Skikkelig Fancy Hotell</h1>
-        <Link href="rooms">
-          <a>Book Hotel</a>
-        </Link>
-      </div>
-    );
-  }
+export default function Homepage() {
+  return (
+    <div>
+      <section
+        styles={{
+          backgroundImage: `url(${'https://www.elsetge.cat/imagepost/b/107/1075736_new-york-city-4k-wallpaper.jpg'})`
+        }}
+      ></section>
+    </div>
+  );
 }

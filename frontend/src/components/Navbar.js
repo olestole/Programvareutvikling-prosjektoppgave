@@ -7,6 +7,11 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
+
+import Avatar from './Avatar';
+
+import Link from 'next/link';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -38,7 +43,10 @@ export default function Navbar() {
           <Typography variant="h6" className={classes.title}>
             News
           </Typography>
-          <Button color="inherit">Login</Button>
+          <Link href="/login">
+            <Button color="inherit">Login</Button>
+          </Link>
+          <Avatar img={PersonOutlineIcon} />
         </Toolbar>
       </AppBar>
     </div>
