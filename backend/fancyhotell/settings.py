@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     # Apps above this line are preinstalled
     "rest_framework",
     "drf_yasg",
+    "fancyhotell.users",
+    "fancyhotell.rooms",
 ]
 
 MIDDLEWARE = [
