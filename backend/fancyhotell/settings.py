@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Apps above this line are preinstalled
     "rest_framework",
+    "drf_yasg",
 ]
 
 MIDDLEWARE = [
@@ -63,7 +64,7 @@ ROOT_URLCONF = "fancyhotell.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, "fancyhotell/templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
