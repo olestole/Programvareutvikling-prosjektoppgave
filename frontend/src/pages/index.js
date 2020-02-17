@@ -8,7 +8,7 @@ import FindRoom from '../components/FindRoom';
 const useStyles = makeStyles({
   container: {
     width: 'auto',
-    height: '98vh',
+    height: '100vh',
     backgroundImage: `url(${'/NewYork.jpg'})`,
     backgroundRepeat: 'no-repeat',
     backgroundAttachment: 'fixed',

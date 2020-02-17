@@ -32,18 +32,21 @@ export default function Navbar() {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-          >
-            <MenuIcon />
-          </IconButton>
+          <Link href="/">
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="menu"
+            >
+              <MenuIcon />
+            </IconButton>
+          </Link>
           <Typography variant="h6" className={classes.title}></Typography>
           <Link href="/login">
             <Button color="inherit">Login</Button>
           </Link>
+
           <Avatar img={PersonOutlineIcon} />
         </Toolbar>
       </AppBar>

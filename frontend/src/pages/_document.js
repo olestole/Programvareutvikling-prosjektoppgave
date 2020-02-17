@@ -19,6 +19,7 @@ class MyDocument extends Document {
             {`
             body {
               font-family: Roboto;
+              margin: 0;
             }
             `}
           </style>
