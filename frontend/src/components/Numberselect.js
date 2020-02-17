@@ -2,14 +2,11 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   root: {
-    '& .MuiTextField-root': {
-      margin: theme.spacing(1),
-      width: 200
-    }
+    margin: '0 0 0 0px'
   }
-}));
+});
 
 export default function FormPropsTextFields() {
   const classes = useStyles();

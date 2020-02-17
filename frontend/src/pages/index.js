@@ -3,13 +3,13 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import Navbar from '../components/Navbar';
 import FindRoom from '../components/FindRoom';
-import NewYork from '../../static/NewYork.jpg';
+// import NewYork from '../../public/NewYork.jpg';
 
 const useStyles = makeStyles({
   container: {
     width: 'auto',
-    height: '46em',
-    backgroundImage: `url(${NewYork})`,
+    height: '98vh',
+    backgroundImage: `url(${'/NewYork.jpg'})`,
     backgroundRepeat: 'no-repeat',
     backgroundAttachment: 'fixed',
     backgroundSize: 'cover'

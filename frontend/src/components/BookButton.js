@@ -6,14 +6,16 @@ import Link from 'next/link';
 
 // Check out https://gist.github.com/herr-vogel/0b5d4f3c28f08dc6cc4a2fd4f7b4a4df for Linking Buttons
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   root: {
     '& > *': {
       // margin: theme.spacing(1),
-      width: '98%'
+      width: '100%',
+      padding: '20px',
+      marginTop: '10px'
     }
   }
-}));
+});
 
 export default function OutlinedButtons() {
   const classes = useStyles();

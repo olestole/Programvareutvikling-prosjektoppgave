@@ -5,6 +5,11 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
 } from '@material-ui/pickers';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles({
+  root: {}
+});
 
 export default function MaterialUIPickers() {
   // The first commit of Material-UI
@@ -16,14 +21,16 @@ export default function MaterialUIPickers() {
     setSelectedDate(date);
   };
 
+  const classes = useStyles();
+
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <Grid container justify="space-around">
+      <Grid container justify="space-around" className={classes.root}>
         <KeyboardDatePicker
           disableToolbar
-          variant="inline"
-          format="MM/dd/yyyy"
-          margin="normal"
+          // variant="inline"
+          format="dd/MM/yyyy"
+          // margin="normal"
           id="date-picker-inline"
           label="Ønsket dato"
           value={selectedDate}
