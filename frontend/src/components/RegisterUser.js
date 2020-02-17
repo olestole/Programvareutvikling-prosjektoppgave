@@ -15,7 +15,7 @@ const useStyles = makeStyles({
   }
 });
 
-const LoginForm = props => {
+const RegisterUser = props => {
   const classes = useStyles();
 
   const handleChange = e => {
@@ -88,4 +88,4 @@ const LoginForm = props => {
   );
 };
 
-export default LoginForm;
+export default RegisterUser;
