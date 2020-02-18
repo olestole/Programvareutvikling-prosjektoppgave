@@ -61,6 +61,31 @@ const LoginForm = () => {
     console.log(regState);
   };
 
+  const renderRegister = () => {
+    return alreadyUser ? (
+      <div>
+        <RegisterUser registerForm={handleRegisterChange} />
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.regBtn}
+          onClick={addUser}
+        >
+          Lag ny bruker
+        </Button>
+      </div>
+    ) : (
+      <Button
+        className={classes.regBtn}
+        variant="outlined"
+        color="primary"
+        onClick={handleNewUser}
+      >
+        Do not have a user yet
+      </Button>
+    );
+  };
+
   return (
     <div>
       <form>
@@ -87,30 +112,7 @@ const LoginForm = () => {
             Logg inn
           </Button>
           <Divider variant="middle" className={classes.divider} />
-          {/* <hr className={classes.divider} /> */}
-
-          {alreadyUser ? (
-            <div>
-              <RegisterUser registerForm={handleRegisterChange} />
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.regBtn}
-                onClick={addUser}
-              >
-                Lag ny bruker
-              </Button>
-            </div>
-          ) : (
-            <Button
-              className={classes.regBtn}
-              variant="outlined"
-              color="primary"
-              onClick={handleNewUser}
-            >
-              Do not have a user yet
-            </Button>
-          )}
+          {renderRegister()}
         </Paper>
       </form>
     </div>
