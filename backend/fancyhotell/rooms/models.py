@@ -12,11 +12,26 @@ class Room(models.Model):
     title = models.CharField(max_length=100, blank=False)
     description = models.TextField(blank=True)
     price = models.DecimalField(default=0.00, decimal_places=2, max_digits=20)
-    images = models.ManyToManyField(ImageModel, related_name="room")
+    images = models.ManyToManyField(
+        ImageModel, related_name="room", null=True, blank=True
+    )
     capacity = models.IntegerField()
 
-    # def get_available(from_date=timezone.now(), to_date=timezone.timedelta(days=360)):
-    # return Rooms
+    def get_available(
+        self,
+        from_date=timezone.now(),
+        to_date=timezone.now() + timezone.timedelta(days=30),
+    ):
+        booked_rooms = (
+            Booking.objects.exclude(from_date__lte=to_date).exclude(
+                to_date__gte=from_date
+            )
+        ).values("room")
+        return Room.objects.exclude(id__in=booked_rooms)
+
+    def book(self, booking, user):
+        # TODO
+        pass
 
 
 class Booking(models.Model):

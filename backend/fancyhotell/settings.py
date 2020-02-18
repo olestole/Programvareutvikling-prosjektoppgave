@@ -31,7 +31,6 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "fancyhotell.herokuapp.com",
     "fancyhotell-staging.herokuapp.com",
-    "secret-harbor-95265.herokuapp.com",  # TODO remove
 ]
 
 
@@ -47,6 +46,7 @@ INSTALLED_APPS = [
     # Apps above this line are preinstalled
     "rest_framework",
     "drf_yasg",
+    "django_extensions",
     "fancyhotell.users",
     "fancyhotell.rooms",
 ]
