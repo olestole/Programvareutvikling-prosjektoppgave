@@ -17,10 +17,11 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 from django.urls import path, include, re_path
 from rest_framework import routers, permissions
-from fancyhotell.users.views import UserViewSet
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from fancyhotell.users.views import UserViewSet
+from fancyhotell.rooms.views import RoomViewset
 
 
 schema_view = get_schema_view(
@@ -38,6 +39,7 @@ schema_view = get_schema_view(
 # Example: router.register(r"myapp", MyappViewSet)
 router = routers.DefaultRouter()
 router.register(r"users", UserViewSet)
+router.register(r"rooms", RoomViewset, basename="room")
 
 
 urlpatterns = [
