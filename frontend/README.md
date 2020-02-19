@@ -16,3 +16,21 @@ $ yarn
 $ yarn dev
 # Open http://localhost:3000
 ```
+
+## Linting and checking formatting
+
+```
+$ yarn lint
+```
+
+## Apply formatting
+
+```
+$ yarn prettier
+```
+
+## Run tests
+
+```
+$ yarn test
+```

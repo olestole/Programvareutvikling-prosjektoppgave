@@ -13,7 +13,8 @@
   "globals": {
     "jest": true,
     "page": true,
-    "browser": true
+    "browser": true,
+    "process": true
   },
   "rules": {
     "react/prop-types": 0,
