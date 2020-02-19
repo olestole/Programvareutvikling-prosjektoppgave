@@ -73,7 +73,7 @@ deploy-frontend_staging:
   extends: .frontend
   stage: deploy
   script:
-    - URL=$(./node_modules/.bin/now -S fancyhotell -t $ZEIT_NOW_TOKEN -n fancyhotell -e [API_URL=$STAGING_API_URL] --confirm)
+    - URL=$(./node_modules/.bin/now -S fancyhotell -t $ZEIT_NOW_TOKEN -n fancyhotell - [API_URL="$STAGING_API_URL"] --confirm)
     - NOW_URL=$(echo ${URL} | sed s/'http:\/\/'/''/g | sed s/'https:\/\/'//g)
     - ./node_modules/.bin/now -t $ZEIT_NOW_TOKEN alias set $NOW_URL fancyhotell-staging.now.sh
   environment:
@@ -102,7 +102,7 @@ deploy-frontend:
   extends: .frontend
   stage: deploy
   script:
-    - ./node_modules/.bin/now --prod -S fancyhotell -t $ZEIT_NOW_TOKEN -n fancyhotell -e [API_URL=$API_URL] --confirm
+    - ./node_modules/.bin/now --prod -S fancyhotell -t $ZEIT_NOW_TOKEN -n fancyhotell -b [API_URL="$API_URL"] --confirm
   only:
     - prod
   environment:
@@ -157,7 +157,7 @@ deploy-backend_staging:
   extends: .deploy_backend
   stage: deploy
   script:
-    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/fancyhotell-staging.git
+    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/fancyhotell-staging.git && true
     - git push heroku `git subtree split --prefix backend`:master --force
   environment:
     name: staging/backend
@@ -169,7 +169,7 @@ deploy-backend:
   extends: .deploy_backend
   stage: deploy
   script:
-    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/fancyhotell.git
+    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/fancyhotell.git && true
     - git push heroku `git subtree split --prefix backend`:master --force
   environment:
     name: production/backend
