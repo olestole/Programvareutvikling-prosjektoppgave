@@ -54,7 +54,7 @@ deploy-frontend_review:
   extends: .frontend
   stage: review
   script:
-    - URL=$(./node_modules/.bin/now -S fancyhotell -t $ZEIT_NOW_TOKEN -n fancyhotell --confirm)
+    - URL=$(./node_modules/.bin/now -S fancyhotell -t $ZEIT_NOW_TOKEN -n fancyhotell -e [API_URL=$STAGING_API_URL] --confirm)
     - NOW_URL=$(echo ${URL} | sed s/'http:\/\/'/''/g | sed s/'https:\/\/'//g)
     - ./node_modules/.bin/now -t $ZEIT_NOW_TOKEN alias set $NOW_URL $REPO_NAME-$CI_BUILD_REF_SLUG.now.sh
   environment:
@@ -73,7 +73,7 @@ deploy-frontend_staging:
   extends: .frontend
   stage: deploy
   script:
-    - URL=$(./node_modules/.bin/now -S fancyhotell -t $ZEIT_NOW_TOKEN -n fancyhotell --confirm)
+    - URL=$(./node_modules/.bin/now -S fancyhotell -t $ZEIT_NOW_TOKEN -n fancyhotell -e [API_URL=$STAGING_API_URL] --confirm)
     - NOW_URL=$(echo ${URL} | sed s/'http:\/\/'/''/g | sed s/'https:\/\/'//g)
     - ./node_modules/.bin/now -t $ZEIT_NOW_TOKEN alias set $NOW_URL fancyhotell-staging.now.sh
   environment:
@@ -102,7 +102,7 @@ deploy-frontend:
   extends: .frontend
   stage: deploy
   script:
-    - ./node_modules/.bin/now --prod -S fancyhotell -t $ZEIT_NOW_TOKEN -n fancyhotell --confirm
+    - ./node_modules/.bin/now --prod -S fancyhotell -t $ZEIT_NOW_TOKEN -n fancyhotell -e [API_URL=$API_URL] --confirm
   only:
     - prod
   environment:
@@ -151,7 +151,7 @@ test-backend:
   before_script:
     - apk update
     - apk add git
-    - apk add git-subree
+    - apk add git-subtree
 
 deploy-backend_staging:
   extends: .deploy_backend
