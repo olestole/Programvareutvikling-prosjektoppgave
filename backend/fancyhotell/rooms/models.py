@@ -1,6 +1,7 @@
 from django.db import models
 from fancyhotell.users.models import Customer
 from django.utils import timezone
+import uuid
 
 
 class ImageModel(models.Model):
@@ -17,6 +18,7 @@ class Room(models.Model):
     )
     capacity = models.IntegerField()
 
+    @classmethod
     def get_available(
         self,
         from_date=timezone.now(),
@@ -30,7 +32,8 @@ class Room(models.Model):
         return Room.objects.exclude(id__in=booked_rooms)
 
     def book(self, booking, user):
-        # TODO
+        if not user:
+            pass
         pass
 
 
@@ -40,7 +43,7 @@ class Booking(models.Model):
     room = models.ForeignKey(
         Room, related_name="booking", null=False, on_delete=models.PROTECT
     )
-    booking_reference = models.UUIDField()
+    booking_reference = models.UUIDField(default=uuid.uuid4)
     comment = models.TextField(blank=True)
     customer = models.ForeignKey(
         Customer, related_name="booking", null=False, on_delete=models.PROTECT
