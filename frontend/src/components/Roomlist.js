@@ -15,7 +15,7 @@ const useStyles = makeStyles({
   }
 });
 
-Roomlist = () => {
+const Roomlist = () => {
   const classes = useStyles();
 
   return (
