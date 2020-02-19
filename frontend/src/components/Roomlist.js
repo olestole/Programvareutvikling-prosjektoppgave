@@ -15,7 +15,7 @@ const useStyles = makeStyles({
   }
 });
 
-export default function Roomlist() {
+Roomlist = () => {
   const classes = useStyles();
 
   return (
@@ -28,4 +28,6 @@ export default function Roomlist() {
       <Room />
     </div>
   );
-}
+};
+
+export default Roomlist;
