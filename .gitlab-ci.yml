@@ -151,6 +151,7 @@ test-backend:
   before_script:
     - apk update
     - apk add git
+    - apk add git-subree
 
 deploy-backend_staging:
   extends: .deploy_backend
