@@ -7,18 +7,20 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('rooms', '0002_auto_20200217_2057'),
+        ("rooms", "0002_auto_20200217_2057"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='booking',
-            name='booking_reference',
+            model_name="booking",
+            name="booking_reference",
             field=models.UUIDField(default=uuid.uuid4),
         ),
         migrations.AlterField(
-            model_name='room',
-            name='images',
-            field=models.ManyToManyField(blank=True, null=True, related_name='room', to='rooms.ImageModel'),
+            model_name="room",
+            name="images",
+            field=models.ManyToManyField(
+                blank=True, null=True, related_name="room", to="rooms.ImageModel"
+            ),
         ),
     ]
