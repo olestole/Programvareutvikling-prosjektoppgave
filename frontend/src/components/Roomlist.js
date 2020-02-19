@@ -15,17 +15,14 @@ const useStyles = makeStyles({
   }
 });
 
-const Roomlist = () => {
+const Roomlist = props => {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <Room />
-      <Room />
-      <Room />
-      <Room />
-      <Room />
-      <Room />
+      {props.rooms.map(room => (
+        <Room key={room.id} room={room} />
+      ))}
     </div>
   );
 };

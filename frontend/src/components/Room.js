@@ -28,9 +28,10 @@ const useStyles = makeStyles({
   }
 });
 
-const MediaCard = () => {
+const MediaCard = props => {
   const classes = useStyles();
 
+  const { title, room_number, price, capacity } = props.room;
   return (
     <Card className={classes.root}>
       <CardMedia
@@ -40,19 +41,19 @@ const MediaCard = () => {
       />
       <List className={classes.flexList} aria-label="Room attributes">
         <ListItem>
-          <ListItemText variant="h5" primary="Familierom" />
+          <ListItemText variant="h5" primary={title} />
         </ListItem>
         <Divider />
         <ListItem>
-          <ListItemText primary="5 soveplasser" />
+          <ListItemText primary={`${capacity} sengeplasser`} />
         </ListItem>
         <Divider />
         <ListItem>
-          <ListItemText primary="Attributt 1" />
+          <ListItemText primary={price} />
         </ListItem>
         <Divider />
         <ListItem>
-          <ListItemText primary="Attributt 2" />
+          <ListItemText primary={room_number} />
         </ListItem>
         <Divider />
         <ListItem>
