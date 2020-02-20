@@ -15,6 +15,5 @@ export default function Rooms(props) {
 Rooms.getInitialProps = async () => {
   const res = await fetch(`${config.serverUrl}/rooms/`);
   const json = await res.json();
-  console.log(json);
   return { rooms: json };
 };

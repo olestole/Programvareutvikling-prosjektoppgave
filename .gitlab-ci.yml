@@ -146,12 +146,15 @@ test-backend:
     - pytest
 
 
+.backend-deploy:
+  image: ruby
+  before_script:
+    - gem install dpl
+
 deploy-backend_staging:
+  extends: .backend-deploy
   stage: deploy
   script:
-    - apt-get update -qy
-    - apt-get install -y ruby-dev
-    - gem install dpl
     - dpl --provider=heroku --app=fancyhotell-staging --api-key=$HEROKU_API_KEY
   environment:
     name: staging/backend
@@ -160,11 +163,9 @@ deploy-backend_staging:
     - master
 
 deploy-backend:
+  extends: .backend-deploy
   stage: deploy
   script:
-    - apt-get update -qy
-    - apt-get install -y ruby-dev
-    - gem install dpl
     - dpl --provider=heroku --app=fancyhotell --api-key=$HEROKU_API_KEY
   environment:
     name: production/backend
