@@ -21,7 +21,8 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from fancyhotell.users.views import UserViewSet
-from fancyhotell.rooms.views import RoomViewset
+from fancyhotell.rooms.views import RoomViewset, BookingViewset
+from rest_framework_simplejwt import views as jwt_views
 
 
 schema_view = get_schema_view(
@@ -40,12 +41,19 @@ schema_view = get_schema_view(
 router = routers.DefaultRouter()
 router.register(r"users", UserViewSet)
 router.register(r"rooms", RoomViewset, basename="room")
+router.register(r"bookings", BookingViewset, basename="booking")
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     re_path(r"^api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     path("api/", include(router.urls)),
+    path(
+        "api/token/", jwt_views.TokenObtainPairView.as_view(), name="token_obtain_pair"
+    ),
+    path(
+        "api/token/refresh/", jwt_views.TokenRefreshView.as_view(), name="token_refresh"
+    ),
     path("", TemplateView.as_view(template_name="index.html"), name="index"),
     re_path(
         r"^swagger(?P<format>\.json|\.yaml)$",

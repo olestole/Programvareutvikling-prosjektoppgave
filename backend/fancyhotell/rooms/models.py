@@ -5,7 +5,7 @@ import uuid
 
 
 class ImageModel(models.Model):
-    image = models.ImageField()
+    image = models.ImageField(upload_to="images/")
 
 
 class Room(models.Model):
@@ -31,10 +31,15 @@ class Room(models.Model):
         ).values("room")
         return Room.objects.exclude(id__in=booked_rooms)
 
-    def book(self, booking, user):
-        if not user:
-            pass
-        pass
+    def is_available(self, from_date, to_date):
+        """
+        Check whether the room is available in a specified time period.
+        """
+        return (
+            Booking.objects.filter(room=self.pk)
+            .exclude(from_date__lte=to_date)
+            .exclude(to_date__gte=from_date)
+        )
 
 
 class Booking(models.Model):
@@ -48,3 +53,4 @@ class Booking(models.Model):
     customer = models.ForeignKey(
         Customer, related_name="booking", null=False, on_delete=models.PROTECT
     )
+    people = models.IntegerField(null=False, blank=True)

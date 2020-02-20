@@ -27,20 +27,47 @@ class RoomDetailSerializer(RoomSerializer):
             "description",
             "price",
             "capacity",
-            "images",
         ]
 
 
-class BookingSerializer(serializers.Serializer):
+class BookingCreateSerializerWithCustomerData(serializers.ModelSerializer):
     customer = CustomerDataSerializer()
-    people = serializers.IntegerField()
-    from_date = serializers.DateField()
-    to_date = serializers.DateField()
-    comment = serializers.CharField()
+
+    class Meta:
+        model = Booking
+        fields = ["id", "from_date", "to_date", "comment", "customer"]
 
 
-class UserBookingSerializer(serializers.Serializer):
-    people = serializers.IntegerField()
-    from_date = serializers.DateField()
-    to_date = serializers.DateField()
-    comment = serializers.CharField()
+class BookingCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Booking
+        fields = [
+            "id",
+            "from_date",
+            "to_date",
+            "comment",
+        ]
+
+
+class BookingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Booking
+        fields = ["id", "from_date", "to_date", "room", "customer"]
+
+
+class BookingDetailSerializer(serializers.ModelSerializer):
+    room = RoomDetailSerializer()
+    customer = CustomerDataSerializer()
+
+    class Meta:
+        model = Booking
+        fields = [
+            "id",
+            "from_date",
+            "to_date",
+            "booking_reference",
+            "comment",
+            "people",
+            "room",
+            "customer",
+        ]
