@@ -54,7 +54,7 @@ deploy-frontend_review:
   extends: .frontend
   stage: review
   script:
-    - URL=$(./node_modules/.bin/now -S fancyhotell -t $ZEIT_NOW_TOKEN -n fancyhotell -e [API_URL=$STAGING_API_URL] --confirm)
+    - URL=$(./node_modules/.bin/now -S fancyhotell -t $ZEIT_NOW_TOKEN -n fancyhotell -b [API_URL="$STAGING_API_URL"] --confirm)
     - NOW_URL=$(echo ${URL} | sed s/'http:\/\/'/''/g | sed s/'https:\/\/'//g)
     - ./node_modules/.bin/now -t $ZEIT_NOW_TOKEN alias set $NOW_URL $REPO_NAME-$CI_BUILD_REF_SLUG.now.sh
   environment:
@@ -73,7 +73,7 @@ deploy-frontend_staging:
   extends: .frontend
   stage: deploy
   script:
-    - URL=$(./node_modules/.bin/now -S fancyhotell -t $ZEIT_NOW_TOKEN -n fancyhotell - [API_URL="$STAGING_API_URL"] --confirm)
+    - URL=$(./node_modules/.bin/now -S fancyhotell -t $ZEIT_NOW_TOKEN -n fancyhotell -b [API_URL="$STAGING_API_URL"] --confirm)
     - NOW_URL=$(echo ${URL} | sed s/'http:\/\/'/''/g | sed s/'https:\/\/'//g)
     - ./node_modules/.bin/now -t $ZEIT_NOW_TOKEN alias set $NOW_URL fancyhotell-staging.now.sh
   environment:
@@ -146,19 +146,13 @@ test-backend:
     - pytest
 
 
-.deploy_backend:
-  image: alpine
-  before_script:
-    - apk update
-    - apk add git
-    - apk add git-subtree
-
 deploy-backend_staging:
-  extends: .deploy_backend
   stage: deploy
   script:
-    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/fancyhotell-staging.git && true
-    - git push heroku `git subtree split --prefix backend`:master --force
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=fancyhotell-staging --api-key=$HEROKU_API_KEY
   environment:
     name: staging/backend
     url: https://fancyhotell-staging.herokuapp.com/
@@ -166,11 +160,12 @@ deploy-backend_staging:
     - master
 
 deploy-backend:
-  extends: .deploy_backend
   stage: deploy
   script:
-    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/fancyhotell.git && true
-    - git push heroku `git subtree split --prefix backend`:master --force
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=fancyhotell --api-key=$HEROKU_API_KEY
   environment:
     name: production/backend
     url: https://fancyhotell.herokuapp.com/
