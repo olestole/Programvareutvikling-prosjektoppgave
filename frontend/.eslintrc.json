@@ -14,7 +14,8 @@
     "jest": true,
     "page": true,
     "browser": true,
-    "process": true
+    "process": true,
+    "exports": true
   },
   "rules": {
     "react/prop-types": 0,
