@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { UserContext } from './UserProvider';
 
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import RegisterUser from './RegisterUser';
+
+// import login from '../../utils/fetcher';
 
 const useStyles = makeStyles({
   root: {
@@ -25,12 +28,14 @@ const useStyles = makeStyles({
 });
 
 const LoginForm = () => {
+  const context = useContext(UserContext);
+
   const classes = useStyles();
   const [state, setState] = useState({
     email: '',
     password: ''
   });
-  const [alreadyUser, setUser] = useState(false);
+  const [alreadyUser, setUserLogin] = useState(false);
 
   const [regState, setRegState] = useState({
     newEmail: '',
@@ -47,7 +52,7 @@ const LoginForm = () => {
   };
 
   const handleNewUser = () => {
-    setUser(true);
+    setUserLogin(true);
   };
 
   const handleRegisterChange = (name, value) => {
@@ -59,6 +64,14 @@ const LoginForm = () => {
 
   const addUser = () => {
     console.log(regState);
+  };
+
+  const handleLogin = () => {
+    context.setUser({
+      username: state.email,
+      password: state.password,
+      token: ''
+    });
   };
 
   const renderRegister = () => {
@@ -108,7 +121,12 @@ const LoginForm = () => {
             variant="outlined"
             className={classes.div}
           />
-          <Button variant="outlined" color="secondary" className={classes.div}>
+          <Button
+            variant="outlined"
+            color="secondary"
+            className={classes.div}
+            onClick={handleLogin}
+          >
             Logg inn
           </Button>
           <Divider variant="middle" className={classes.divider} />

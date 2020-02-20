@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { UserContext } from './UserProvider'; // Import this wherever you'd want to use the global state
 
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -7,7 +8,6 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 
 import Avatar from './Avatar';
 
@@ -26,7 +26,16 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Navbar() {
+  const context = useContext(UserContext);
   const classes = useStyles();
+
+  const getAvatarImage = () => {
+    const username = context.user.username;
+    if (username !== '') {
+      return <Avatar letter={username[0].toUpperCase()} color="purple" />;
+    }
+    return <Avatar />;
+  };
 
   return (
     <div className={classes.root}>
@@ -46,8 +55,7 @@ export default function Navbar() {
           <Link href="/login">
             <Button color="inherit">Login</Button>
           </Link>
-
-          <Avatar img={PersonOutlineIcon} />
+          {getAvatarImage()}
         </Toolbar>
       </AppBar>
     </div>
