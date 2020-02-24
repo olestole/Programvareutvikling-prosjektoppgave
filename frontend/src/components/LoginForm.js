@@ -1,6 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from './UserProvider';
+import fetcher from '../../utils/fetcher';
+import config from '../../config/env';
 
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
@@ -67,11 +69,38 @@ const LoginForm = () => {
   };
 
   const handleLogin = () => {
-    context.setUser({
+    const body = {
       username: state.email,
-      password: state.password,
-      token: ''
-    });
+      password: state.password
+    };
+
+    (async () => {
+      const rawResponse = await fetch(
+        'https://secret-harbor-95265.herokuapp.com/api/token/',
+        {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body)
+        }
+      );
+      const status = rawResponse.status;
+      const content = await rawResponse.json();
+
+      console.log(status);
+      console.log(content.access, content.refresh);
+
+      status === 401
+        ? console.log("Couldn't find user")
+        : context.setUser({
+            username: state.email,
+            accessToken: content.access,
+            refreshToken: content.refresh,
+            loggedIn: true
+          });
+    })();
   };
 
   const renderRegister = () => {

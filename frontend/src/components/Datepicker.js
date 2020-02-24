@@ -8,7 +8,10 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
-  root: {}
+  root: {
+    width: '10em',
+    margin: '3px'
+  }
 });
 
 export default function MaterialUIPickers() {

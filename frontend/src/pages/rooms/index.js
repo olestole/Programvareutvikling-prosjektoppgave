@@ -1,8 +1,8 @@
 // Remember to add "id"-subpage
 import React from 'react';
-import Roomlist from '../components/Roomlist';
+import Roomlist from '../../components/Roomlist';
 import fetch from 'isomorphic-unfetch';
-import config from '../../config/env';
+import config from '../../../config/env';
 
 export default function Rooms(props) {
   return (

@@ -5,23 +5,52 @@ import Navbar from '../components/Navbar';
 import FindRoom from '../components/FindRoom';
 // import NewYork from '../../public/NewYork.jpg';
 
+// const useStyles = makeStyles({
+//   container: {
+//     display: 'flex',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     width: 'auto',
+//     height: '100vh',
+//     backgroundImage: `url(${'/NewYork.jpg'})`,
+//     backgroundRepeat: 'no-repeat',
+//     backgroundAttachment: 'fixed',
+//     backgroundSize: 'cover'
+//   }
+// });
+
 const useStyles = makeStyles({
-  container: {
+  root: {
     width: 'auto',
     height: '100vh',
     backgroundImage: `url(${'/NewYork.jpg'})`,
     backgroundRepeat: 'no-repeat',
     backgroundAttachment: 'fixed',
     backgroundSize: 'cover'
+  },
+  rootContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '90vh'
+  },
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 });
 
 export default function Index() {
   const classes = useStyles();
   return (
-    <div className={classes.container}>
+    <div className={classes.root}>
       <Navbar />
-      <FindRoom />
+      <div className={classes.rootContainer}>
+        <div className={classes.container}>
+          <FindRoom />
+        </div>
+      </div>
     </div>
   );
 }

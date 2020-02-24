@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { UserContext } from './UserProvider'; // Import this wherever you'd want to use the global state
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -15,7 +15,8 @@ import Link from 'next/link';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
+    height: '9vh'
   },
   menuButton: {
     marginRight: theme.spacing(2)
@@ -30,8 +31,8 @@ export default function Navbar() {
   const classes = useStyles();
 
   const getAvatarImage = () => {
-    const username = context.user.username;
-    if (username !== '') {
+    if (context.loggedIn) {
+      const username = context.user.username;
       return <Avatar letter={username[0].toUpperCase()} color="purple" />;
     }
     return <Avatar />;
