@@ -1,8 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from './UserProvider';
-import fetcher from '../../utils/fetcher';
-import config from '../../config/env';
 
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
@@ -77,6 +75,7 @@ const LoginForm = () => {
     (async () => {
       const rawResponse = await fetch(
         'https://secret-harbor-95265.herokuapp.com/api/token/',
+        // `${config.serverUrl}/token/`,
         {
           method: 'POST',
           headers: {

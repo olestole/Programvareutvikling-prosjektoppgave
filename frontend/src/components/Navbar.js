@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { UserContext } from './UserProvider'; // Import this wherever you'd want to use the global state
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -30,14 +30,6 @@ export default function Navbar() {
   const context = useContext(UserContext);
   const classes = useStyles();
 
-  const getAvatarImage = () => {
-    if (context.loggedIn) {
-      const username = context.user.username;
-      return <Avatar letter={username[0].toUpperCase()} color="purple" />;
-    }
-    return <Avatar />;
-  };
-
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -56,7 +48,14 @@ export default function Navbar() {
           <Link href="/login">
             <Button color="inherit">Login</Button>
           </Link>
-          {getAvatarImage()}
+          <Avatar
+            letter={
+              context.user.loggedIn
+                ? context.user.username[0].toUpperCase()
+                : null
+            }
+            color={context.user.loggedIn ? 'purple' : null}
+          ></Avatar>
         </Toolbar>
       </AppBar>
     </div>
