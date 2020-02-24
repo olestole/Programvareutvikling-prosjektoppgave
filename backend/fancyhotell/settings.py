@@ -31,6 +31,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "fancyhotell.herokuapp.com",
     "fancyhotell-staging.herokuapp.com",
+    "secret-harbor-95265.herokuapp.com",
 ]
 
 
