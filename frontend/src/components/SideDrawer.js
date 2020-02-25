@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
@@ -8,15 +9,15 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
-import PersonIcon from '@material-ui/icons/Person';
+// import PersonIcon from '@material-ui/icons/Person';
 import HotelIcon from '@material-ui/icons/Hotel';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 
 const links = [
-  { link: '/', icon: HomeIcon, text: 'Home' },
-  { link: '/login', icon: PersonIcon, text: 'Logg inn' }
+  { link: '/', icon: HomeIcon, text: 'Home' }
+  // { link: '/login', icon: PersonIcon, text: 'Logg inn' }
 ];
 
 const linksPriv = [
@@ -33,9 +34,9 @@ const useStyles = makeStyles({
   }
 });
 
-export default function TemporaryDrawer() {
+const TemporaryDrawer = () => {
   const classes = useStyles();
-  const [state, setState] = React.useState({
+  const [state, setState] = useState({
     top: false,
     left: false,
     bottom: false,
@@ -156,4 +157,6 @@ export default function TemporaryDrawer() {
       </Drawer>
     </div>
   );
-}
+};
+
+export default TemporaryDrawer;

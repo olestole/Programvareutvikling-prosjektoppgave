@@ -38,8 +38,6 @@ const LoginForm = () => {
     email: '',
     password: ''
   });
-  const [alreadyUser, setUserLogin] = useState(false);
-
   const [regState, setRegState] = useState({
     newEmail: '',
     newPassword: '',
@@ -48,6 +46,7 @@ const LoginForm = () => {
     newAdress: '',
     newName: ''
   });
+  const [alreadyUser, setUserLogin] = useState(false);
 
   const handleChange = e => {
     e.preventDefault();

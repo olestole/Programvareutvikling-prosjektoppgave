@@ -23,6 +23,7 @@
     "react/display-name": 2
   },
   "env": {
+    "node": true,
     "jest": true,
     "browser": true,
     "es6": true
