@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { UserContext } from './UserProvider'; // Import this wherever you'd want to use the global state
+import { useRouter } from 'next/router';
 
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';

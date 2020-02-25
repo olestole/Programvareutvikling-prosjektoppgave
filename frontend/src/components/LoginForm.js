@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from './UserProvider';
+import { useRouter } from 'next/router';
 
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
@@ -29,6 +30,7 @@ const useStyles = makeStyles({
 });
 
 const LoginForm = () => {
+  const router = useRouter();
   const context = useContext(UserContext);
 
   const classes = useStyles();
@@ -82,20 +84,24 @@ const LoginForm = () => {
         },
         body: JSON.stringify(body)
       });
+
       const status = rawResponse.status;
       const content = await rawResponse.json();
 
       console.log(status);
       console.log(content.access, content.refresh);
 
-      status === 401
-        ? console.log("Couldn't find user")
-        : context.setUser({
-            username: state.email,
-            accessToken: content.access,
-            refreshToken: content.refresh,
-            loggedIn: true
-          });
+      if (status === 401) {
+        console.log("Couldn't find user");
+      } else {
+        context.setUser({
+          username: state.email,
+          accessToken: content.access,
+          refreshToken: content.refresh,
+          loggedIn: true
+        });
+        router.push('/');
+      }
     })();
   };
 
