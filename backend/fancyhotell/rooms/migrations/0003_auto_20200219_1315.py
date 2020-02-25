@@ -6,9 +6,7 @@ import uuid
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ("rooms", "0002_auto_20200217_2057"),
-    ]
+    dependencies = [("rooms", "0002_auto_20200217_2057")]
 
     operations = [
         migrations.AlterField(

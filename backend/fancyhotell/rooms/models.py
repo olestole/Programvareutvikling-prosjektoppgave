@@ -36,9 +36,13 @@ class Room(models.Model):
         Check whether the room is available in a specified time period.
         """
         return (
-            Booking.objects.filter(room=self.pk)
-            .exclude(from_date__lte=to_date)
-            .exclude(to_date__gte=from_date)
+            # If there exists a booking on the room that either starts on a day
+            # less than the selected from date, or ends on a day grater than the
+            # selected start date, the room is not available
+            not Booking.objects.filter(room=self.pk)
+            .exclude(from_date__gte=to_date)
+            .exclude(to_date__lte=from_date)
+            .exists()
         )
 
 

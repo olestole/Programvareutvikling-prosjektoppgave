@@ -12,6 +12,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
+        fields = ["street_name", "street_number", "city", "postal_code", "country"]
 
 
 class CustomerDataSerializer(serializers.ModelSerializer):

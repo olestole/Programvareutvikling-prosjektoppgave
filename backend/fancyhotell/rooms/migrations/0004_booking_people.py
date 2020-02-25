@@ -5,15 +5,13 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('rooms', '0003_auto_20200219_1315'),
-    ]
+    dependencies = [("rooms", "0003_auto_20200219_1315")]
 
     operations = [
         migrations.AddField(
-            model_name='booking',
-            name='people',
+            model_name="booking",
+            name="people",
             field=models.IntegerField(blank=True, default=1),
             preserve_default=False,
-        ),
+        )
     ]

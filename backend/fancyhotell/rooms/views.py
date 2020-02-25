@@ -1,7 +1,9 @@
-from rest_framework import viewsets, views, status
+from rest_framework import viewsets, views, status, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from django.utils.dateparse import parse_date
+from django.contrib.auth.models import User
 from rest_framework import generics
 from fancyhotell.rooms.models import Room, Booking
 from fancyhotell.rooms.serializers import (
@@ -12,13 +14,15 @@ from fancyhotell.rooms.serializers import (
     BookingSerializer,
     BookingCreateSerializerWithCustomerData,
 )
-from fancyhotell.users.models import UserCustomer, Customer
-from fancyhotell.rooms.errors import RoomNotAvailable
+from fancyhotell.rooms.permissions import RoomPermissions, BookingPermissions
+from fancyhotell.users.models import UserCustomer, Customer, Address
+from fancyhotell.rooms.errors import RoomNotAvailable, RoomDoesNotExist
 
 
 class RoomViewset(viewsets.ModelViewSet):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
+    permission_classes = [RoomPermissions]
 
     def list(self, request):
         queryset = Room.get_available()
@@ -31,42 +35,17 @@ class RoomViewset(viewsets.ModelViewSet):
         serializer = RoomDetailSerializer(room)
         return Response(serializer.data)
 
-    @action(detail=True, methods=["POST"])
-    def book(self, request, *args, **kwargs):
-        room = self.get_object()
-        if request.user.isAuthenticated():
-            serializer = BookingCreateSerializer(data=request.data)
-        else:
-            serializer = BookingCreateSerializerWithCustomerData(data=request.data)
-
-        if serializer.is_valid():
-            print(request)
-            # Id the user is logged in, use the existing data
-            if request.user.isAuthenticated():
-                customer = UserCustomer.objects.get(request.user.id)
-            # If not, use the customer data to create a new customer object
-            else:
-                customer = Customer.objects.get_or_create(
-                    **serializer.data["customer_data"]
-                )
-
-            from_date = serializer.data["from_date"]
-            to_date = serializer.data["to_date"]
-            if not room.is_available(from_date, to_date):
-                raise RoomNotAvailable()
-
-            booking = Booking.get_or_create(customer=customer, **serializer.data)
-
-            serializer = BookingDetailSerializer(booking)
-
-            return Response(serializer.data)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 class BookingViewset(viewsets.ModelViewSet):
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
+    permission_classes = [BookingPermissions]
+
+    def get_queryset(self):
+        if self.request.user.is_anonymous:
+            return None
+
+        return Booking.objects.all()
 
     def list(self, request):
         serializer = BookingSerializer(self.queryset, many=True)
@@ -77,3 +56,43 @@ class BookingViewset(viewsets.ModelViewSet):
         booking = get_object_or_404(queryset, booking_reference=reference)
         serializer = BookingDetailSerializer(booking)
         return Response(serializer.data)
+
+    def create(self, request):
+        if request.user.is_anonymous:
+            serializer = BookingCreateSerializerWithCustomerData(data=request.data)
+        elif request.user.is_authenticated:
+            serializer = BookingCreateSerializer(data=request.data)
+
+        if serializer.is_valid():
+            if not Room.objects.filter(pk=serializer.data["room_id"]):
+                raise RoomDoesNotExist()
+
+            room = Room.objects.get(pk=serializer.data["room_id"])
+
+            # If the user is logged in, use the existing data
+            if not request.user.is_anonymous and request.user.is_authenticated:
+                customer = UserCustomer.objects.get(pk=request.user.id).customer
+
+            # If not, use the customer data to create a new customer object
+            else:
+                address = Address(**serializer.data["customer"]["address"])
+                address.save()
+                del serializer.data["customer"]["address"]
+                customer = Customer(address=address, **serializer.data["customer"])
+                customer.save()
+
+            from_date = parse_date(serializer.data["from_date"])
+            to_date = parse_date(serializer.data["to_date"])
+            if not room.is_available(from_date, to_date):
+                raise RoomNotAvailable()
+
+            booking_data = serializer.data
+            booking_data.pop("customer")
+            booking = Booking(customer=customer, **booking_data)
+            booking.save()
+
+            serializer = BookingDetailSerializer(booking)
+
+            return Response(serializer.data)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

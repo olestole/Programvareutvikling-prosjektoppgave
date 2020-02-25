@@ -20,33 +20,23 @@ class RoomSerializer(serializers.ModelSerializer):
 class RoomDetailSerializer(RoomSerializer):
     class Meta:
         model = Room
-        fields = [
-            "id",
-            "room_number",
-            "title",
-            "description",
-            "price",
-            "capacity",
-        ]
+        fields = ["id", "room_number", "title", "description", "price", "capacity"]
 
 
-class BookingCreateSerializerWithCustomerData(serializers.ModelSerializer):
+class BookingCreateSerializer(serializers.ModelSerializer):
+    room_id = serializers.IntegerField()
+
+    class Meta:
+        model = Booking
+        fields = ["room_id", "from_date", "to_date", "comment", "people"]
+
+
+class BookingCreateSerializerWithCustomerData(BookingCreateSerializer):
     customer = CustomerDataSerializer()
 
     class Meta:
         model = Booking
-        fields = ["id", "from_date", "to_date", "comment", "customer"]
-
-
-class BookingCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Booking
-        fields = [
-            "id",
-            "from_date",
-            "to_date",
-            "comment",
-        ]
+        fields = BookingCreateSerializer.Meta.fields + ["customer"]
 
 
 class BookingSerializer(serializers.ModelSerializer):
