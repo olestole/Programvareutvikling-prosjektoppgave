@@ -7,6 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import RegisterUser from './RegisterUser';
+import config from '../../config/env';
 
 // import login from '../../utils/fetcher';
 
@@ -73,18 +74,14 @@ const LoginForm = () => {
     };
 
     (async () => {
-      const rawResponse = await fetch(
-        'https://secret-harbor-95265.herokuapp.com/api/token/',
-        // `${config.serverUrl}/token/`,
-        {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(body)
-        }
-      );
+      const rawResponse = await fetch(`${config.serverUrl}/token/`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      });
       const status = rawResponse.status;
       const content = await rawResponse.json();
 
