@@ -2,7 +2,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "test": "jest",
+    "test": "jest --ci --update-snapshot",
     "lint": "yarn run lint:js && yarn run lint:prettier",
     "lint:prettier": "prettier '**/*.{js,css,md}' --check",
     "prettier": "prettier '**/*.{js,css,md}' --write",
