@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -39,40 +38,50 @@ const useStyles = makeStyles({
 export default function FindRoom() {
   const router = useRouter();
   const classes = useStyles();
-  const [selectedDates, setDates] = useState({
-    from: null,
-    to: null
+  const [state, setState] = useState({
+    from: Date.now(),
+    to: Date.now(),
+    quantity: 0
   });
 
-  const handleFromDate = date => {
-    console.log('FROM:');
-    console.log('Day: ' + date.getDate());
-    console.log('Month: ' + date.getMonth());
-    console.log('Year: ' + date.getYear());
+  // Can probably join these two functions into one
 
-    setDates({
-      ...selectedDates,
-      from: date
+  const handleFromDate = date => {
+    setState({
+      ...state,
+      from: date.getTime()
     });
   };
 
   const handleToDate = date => {
-    console.log('TO:');
-    console.log('Day: ' + date.getDate());
-    console.log('Month: ' + date.getMonth());
-    console.log('Year: ' + date.getYear());
+    setState({
+      ...state,
+      to: date.getTime()
+    });
+  };
 
-    setDates({
-      ...selectedDates,
-      to: date
+  const handleQuantity = number => {
+    console.log(number);
+    setState({
+      ...state,
+      quantity: number
     });
   };
 
   const handleSubmit = () => {
-    if (selectedDates.to < selectedDates.from) {
-      console.log("Can't go back in time ☹");
+    console.log(state);
+    if (state.to <= state.from) {
+      alert("Can't book back in time 🤢");
     } else {
-      router.push('/rooms');
+      router.push({
+        pathname: '/rooms',
+        query: {
+          //Have to split this into day, month, year if wanting to use query params
+          from_date: state.from,
+          to_date: state.to,
+          people: state.quantity
+        }
+      });
     }
   };
 
@@ -89,7 +98,11 @@ export default function FindRoom() {
           id="to"
           className={classes.dateLine}
         />
-        <Numberselect className={classes.dateLine} />
+        <Numberselect
+          className={classes.dateLine}
+          setNumber={handleQuantity}
+          value={state.quantity}
+        />
       </div>
       <div className={classes.btnContainer}>
         <Button

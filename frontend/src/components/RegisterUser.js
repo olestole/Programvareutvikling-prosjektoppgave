@@ -4,19 +4,29 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 
 const useStyles = makeStyles({
-  div: {
+  container: {
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  half: {
     height: '4em',
     margin: '5px',
+    flexGrow: '1 1 0',
     width: `calc(50% - 10px)`
   },
-  ownLine: {
+  full: {
     width: `calc(100% - 10px)`,
     margin: '5px'
   },
   third: {
     height: '4em',
     margin: '5px',
-    widht: 'calc(32% - 10px)'
+    width: 'calc(33.3% - 10px)'
+  },
+  twoThird: {
+    height: '4em',
+    margin: '5px',
+    width: 'calc(66.6% - 10px)'
   }
 });
 
@@ -28,18 +38,19 @@ const RegisterUser = props => {
   };
 
   return (
-    <form>
-      <div>
+    <form className={classes.container}>
+      <div className={classes.section}>
         <TextField
+          fullWidth
           onChange={handleChange}
           name="newEmail"
           id="outlined-basic"
           label="New Email"
           variant="outlined"
-          className={classes.ownLine}
+          className={classes.full}
         />
       </div>
-      <div>
+      <div className={classes.section}>
         <TextField
           name="newPassword"
           type="password"
@@ -47,7 +58,7 @@ const RegisterUser = props => {
           id="outlined-basic"
           label="New Password"
           variant="outlined"
-          className={classes.div}
+          className={classes.half}
         />
         <TextField
           name="reenterPassword"
@@ -56,10 +67,10 @@ const RegisterUser = props => {
           id="outlined-basic"
           label="Re-enter Password"
           variant="outlined"
-          className={classes.div}
+          className={classes.half}
         />
       </div>
-      <div>
+      <div className={classes.div1}>
         <TextField
           onChange={handleChange}
           name="newName"
@@ -67,7 +78,7 @@ const RegisterUser = props => {
           id="outlined-basic"
           label="Name"
           variant="outlined"
-          className={classes.div}
+          className={classes.half}
         />
         <TextField
           onChange={handleChange}
@@ -76,7 +87,7 @@ const RegisterUser = props => {
           id="outlined-basic"
           label="Phone number"
           variant="outlined"
-          className={classes.div}
+          className={classes.half}
         />
       </div>
       <div>
@@ -116,7 +127,15 @@ const RegisterUser = props => {
           id="outlined-basic"
           label="Adress"
           variant="outlined"
-          className={classes.ownLine}
+          className={classes.twoThird}
+        />
+        <TextField
+          onChange={handleChange}
+          name="newAdressNumber"
+          id="outlined-basic"
+          label="House number"
+          variant="outlined"
+          className={classes.third}
         />
       </div>
     </form>

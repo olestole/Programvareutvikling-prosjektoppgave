@@ -47,7 +47,8 @@ const LoginForm = () => {
     newName: '',
     newCountry: '',
     newZip: '',
-    newCity: ''
+    newCity: '',
+    newAdressNumber: ''
   });
   const [alreadyUser, setUserLogin] = useState(false);
 
@@ -107,7 +108,7 @@ const LoginForm = () => {
     })();
   };
 
-  const renderRegister = () => {
+  const RenderRegister = () => {
     return alreadyUser ? (
       <div>
         <RegisterUser registerForm={handleRegisterChange} />
@@ -163,7 +164,7 @@ const LoginForm = () => {
             Logg inn
           </Button>
           <Divider variant="middle" className={classes.divider} />
-          {renderRegister()}
+          <RenderRegister />
         </Paper>
       </form>
     </div>

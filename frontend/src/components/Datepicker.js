@@ -15,7 +15,6 @@ const useStyles = makeStyles({
 });
 
 const DatePicker = props => {
-  // The first commit of Material-UI
   // Day: Sunday-indexed -->
   // Months: 0-indexed --> January.getMonth() == 0.
   // Year: 1900-indexed --> 2020.getYear() == 120
