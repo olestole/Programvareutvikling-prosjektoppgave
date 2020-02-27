@@ -31,7 +31,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "fancyhotell.herokuapp.com",
     "fancyhotell-staging.herokuapp.com",
-    "secret-harbor-95265.herokuapp.com",  # TODO remove
+    "secret-harbor-95265.herokuapp.com",
 ]
 
 
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     # Apps above this line are preinstalled
     "rest_framework",
     "drf_yasg",
+    "django_extensions",
     "fancyhotell.users",
     "fancyhotell.rooms",
 ]
@@ -124,9 +125,16 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
+MEDIA_url = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
-    ]
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ],
 }

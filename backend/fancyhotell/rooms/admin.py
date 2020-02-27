@@ -1,3 +1,6 @@
 from django.contrib import admin
+from fancyhotell.rooms.models import Room, Booking, ImageModel
 
-# Register your models here.
+admin.site.register(Room)
+admin.site.register(Booking)
+admin.site.register(ImageModel)
