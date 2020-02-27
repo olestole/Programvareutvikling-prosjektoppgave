@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
@@ -36,21 +37,69 @@ const useStyles = makeStyles({
 });
 
 export default function FindRoom() {
+  const router = useRouter();
   const classes = useStyles();
+  const [selectedDates, setDates] = useState({
+    from: null,
+    to: null
+  });
+
+  const handleFromDate = date => {
+    console.log('FROM:');
+    console.log('Day: ' + date.getDate());
+    console.log('Month: ' + date.getMonth());
+    console.log('Year: ' + date.getYear());
+
+    setDates({
+      ...selectedDates,
+      from: date
+    });
+  };
+
+  const handleToDate = date => {
+    console.log('TO:');
+    console.log('Day: ' + date.getDate());
+    console.log('Month: ' + date.getMonth());
+    console.log('Year: ' + date.getYear());
+
+    setDates({
+      ...selectedDates,
+      to: date
+    });
+  };
+
+  const handleSubmit = () => {
+    if (selectedDates.to < selectedDates.from) {
+      console.log("Can't go back in time ☹");
+    } else {
+      router.push('/rooms');
+    }
+  };
 
   return (
     <Paper elevation={2} className={classes.container}>
       <div className={classes.dateContainer}>
-        <Datepicker className={classes.dateLine} />
-        <Datepicker className={classes.dateLine} />
+        <Datepicker
+          dateChange={handleFromDate}
+          id="from"
+          className={classes.dateLine}
+        />
+        <Datepicker
+          dateChange={handleToDate}
+          id="to"
+          className={classes.dateLine}
+        />
         <Numberselect className={classes.dateLine} />
       </div>
       <div className={classes.btnContainer}>
-        <Link href="/rooms">
-          <Button variant="outlined" color="secondary" className={classes.btn}>
-            Finn ditt rom!
-          </Button>
-        </Link>
+        <Button
+          variant="outlined"
+          color="secondary"
+          className={classes.btn}
+          onClick={handleSubmit}
+        >
+          Finn ditt rom!
+        </Button>
       </div>
     </Paper>
   );

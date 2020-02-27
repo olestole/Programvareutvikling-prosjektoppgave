@@ -44,7 +44,10 @@ const LoginForm = () => {
     reenterPassword: '',
     newPhone: '',
     newAdress: '',
-    newName: ''
+    newName: '',
+    newCountry: '',
+    newZip: '',
+    newCity: ''
   });
   const [alreadyUser, setUserLogin] = useState(false);
 

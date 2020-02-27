@@ -129,7 +129,7 @@ const TemporaryDrawer = () => {
   return (
     <div>
       <Button onClick={toggleDrawer('left', true)} style={{ color: 'inherit' }}>
-        <MenuIcon /> Meny
+        <MenuIcon />
       </Button>
       <Drawer open={state.left} onClose={toggleDrawer('left', false)}>
         {sideList('left')}

@@ -12,6 +12,11 @@ const useStyles = makeStyles({
   ownLine: {
     width: `calc(100% - 10px)`,
     margin: '5px'
+  },
+  third: {
+    height: '4em',
+    margin: '5px',
+    widht: 'calc(32% - 10px)'
   }
 });
 
@@ -23,8 +28,8 @@ const RegisterUser = props => {
   };
 
   return (
-    <div>
-      <form>
+    <form>
+      <div>
         <TextField
           onChange={handleChange}
           name="newEmail"
@@ -33,8 +38,8 @@ const RegisterUser = props => {
           variant="outlined"
           className={classes.ownLine}
         />
-      </form>
-      <form>
+      </div>
+      <div>
         <TextField
           name="newPassword"
           type="password"
@@ -53,8 +58,8 @@ const RegisterUser = props => {
           variant="outlined"
           className={classes.div}
         />
-      </form>
-      <form>
+      </div>
+      <div>
         <TextField
           onChange={handleChange}
           name="newName"
@@ -73,8 +78,38 @@ const RegisterUser = props => {
           variant="outlined"
           className={classes.div}
         />
-      </form>
-      <form>
+      </div>
+      <div>
+        <TextField
+          onChange={handleChange}
+          name="newCountry"
+          type="country"
+          id="outlined-basic"
+          label="Country"
+          variant="outlined"
+          className={classes.third}
+        />
+        <TextField
+          onChange={handleChange}
+          name="newZip"
+          type="text"
+          id="outlined-basic"
+          label="Zip"
+          pattern="[0-9]*"
+          variant="outlined"
+          className={classes.third}
+        />
+        <TextField
+          onChange={handleChange}
+          name="newCity"
+          type="text"
+          id="outlined-basic"
+          label="City"
+          variant="outlined"
+          className={classes.third}
+        />
+      </div>
+      <div>
         <TextField
           onChange={handleChange}
           name="newAdress"
@@ -83,8 +118,8 @@ const RegisterUser = props => {
           variant="outlined"
           className={classes.ownLine}
         />
-      </form>
-    </div>
+      </div>
+    </form>
   );
 };
 

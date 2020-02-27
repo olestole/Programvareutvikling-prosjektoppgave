@@ -23,7 +23,12 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(2)
   },
   title: {
-    flexGrow: 1
+    flexGrow: 1,
+    fontSize: 30
+  },
+  center: {
+    display: 'flex',
+    justifyContent: 'center'
   }
 }));
 
@@ -45,7 +50,9 @@ export default function Navbar() {
       <AppBar position="static">
         <Toolbar>
           <SideDrawer />
-          <Typography variant="h6" className={classes.title}></Typography>
+          <Typography variant="alignCenter" className={classes.title}>
+            SKIKKELIG FANCY HOTELL
+          </Typography>
           <RenderLogin />
           <Avatar
             letter={
