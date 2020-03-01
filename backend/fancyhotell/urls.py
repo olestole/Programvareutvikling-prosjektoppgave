@@ -39,7 +39,7 @@ schema_view = get_schema_view(
 # Register all apps to be included in the API here
 # Example: router.register(r"myapp", MyappViewSet)
 router = routers.DefaultRouter()
-router.register(r"users", UserViewSet)
+router.register(r"users", UserViewSet, basename="user")
 router.register(r"rooms", RoomViewset, basename="room")
 router.register(r"bookings", BookingViewset, basename="booking")
 
