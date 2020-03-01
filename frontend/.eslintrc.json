@@ -15,7 +15,8 @@
     "page": true,
     "browser": true,
     "process": true,
-    "exports": true
+    "exports": true,
+    "module": true
   },
   "rules": {
     "react/prop-types": 0,
