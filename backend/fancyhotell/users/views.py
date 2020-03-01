@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from fancyhotell.users.serializers import UserCreateSerializer, UserReadSerializer
 from fancyhotell.users.models import User
 from fancyhotell.users.permissions import UserPermissions
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 
 
@@ -14,7 +14,7 @@ class UserViewSet(viewsets.ModelViewSet):
             return User.objects.all()
         else:
             return User.objects.filter(email=self.request.user.email)
-    
+
     def get_serializer_class(self):
         if self.action in ["list", "retrieve"]:
             return UserReadSerializer

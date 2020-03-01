@@ -19,8 +19,5 @@ class UserPermissions(permissions.BasePermission):
         if request.method in ["POST", "PUT", "UPDATE"]:
             return True
         if request.method == "GET":
-            return (
-                request.user.is_authenticated
-                and obj.email == request.user.email
-            )
+            return request.user.is_authenticated and obj.email == request.user.email
         return False

@@ -15,6 +15,7 @@ class CustomerDataSerializer(serializers.ModelSerializer):
         model = Customer
         fields = ["email", "first_name", "last_name", "phone", "address"]
 
+
 class UserReadSerializer(serializers.ModelSerializer):
     customer = CustomerDataSerializer()
 
@@ -29,16 +30,31 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["id", "email", "first_name", "last_name", "phone", "address", "password"]
-        extra_kwargs = {'password': {'write_only': True}, 'phone': {'write_only': True}}
+        fields = [
+            "id",
+            "email",
+            "first_name",
+            "last_name",
+            "phone",
+            "address",
+            "password",
+        ]
+        extra_kwargs = {"password": {"write_only": True}, "phone": {"write_only": True}}
 
     def create(self, validated_data):
-        password = validated_data.pop('password')
-        email = validated_data.pop('email')
+        password = validated_data.pop("password")
+        email = validated_data.pop("email")
         user = User.objects.create_user(email, password)
         address = Address(**validated_data["address"])
         address.save()
-        customer = Customer(address=address, first_name=validated_data["first_name"],
-            last_name=validated_data["last_name"], email=validated_data["email"],
-            phone=validated_data["phone"])
+        customer = Customer(
+            address=address,
+            first_name=validated_data["first_name"],
+            last_name=validated_data["last_name"],
+            email=validated_data["email"],
+            phone=validated_data["phone"],
+        )
         customer.save()
+        user.customer = customer
+        user.save()
+        return user

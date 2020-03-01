@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.utils.dateparse import parse_date
 from rest_framework import generics, permissions, status, views, viewsets
@@ -9,9 +8,13 @@ from fancyhotell.rooms.errors import RoomDoesNotExist, RoomNotAvailable
 from fancyhotell.rooms.models import Booking, Room
 from fancyhotell.rooms.permissions import BookingPermissions, RoomPermissions
 from fancyhotell.rooms.serializers import (
-    BookingCreateSerializer, BookingCreateSerializerWithCustomerData,
-    BookingDetailSerializer, BookingSerializer, RoomDetailSerializer,
-    RoomSerializer)
+    BookingCreateSerializer,
+    BookingCreateSerializerWithCustomerData,
+    BookingDetailSerializer,
+    BookingSerializer,
+    RoomDetailSerializer,
+    RoomSerializer,
+)
 from fancyhotell.users.models import Address, Customer, User
 
 
