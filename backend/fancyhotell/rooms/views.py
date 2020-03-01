@@ -50,9 +50,9 @@ class BookingViewset(viewsets.ModelViewSet):
         serializer = BookingSerializer(self.queryset, many=True)
         return Response(serializer.data)
 
-    def retrieve(self, request, reference=None):
+    def retrieve(self, request, pk=None):
         queryset = Booking.objects.all()
-        booking = get_object_or_404(queryset, booking_reference=reference)
+        booking = get_object_or_404(queryset, pk=pk)
         serializer = BookingDetailSerializer(booking)
         return Response(serializer.data)
 
@@ -68,6 +68,8 @@ class BookingViewset(viewsets.ModelViewSet):
 
             room = Room.objects.get(pk=serializer.data["room_id"])
 
+            booking_data = serializer.data
+
             # If the user is logged in, use the existing data
             if not request.user.is_anonymous and request.user.is_authenticated:
                 customer = User.objects.get(pk=request.user.id).customer
@@ -80,13 +82,13 @@ class BookingViewset(viewsets.ModelViewSet):
                 customer = Customer(address=address, **serializer.data["customer"])
                 customer.save()
 
+                booking_data.pop("customer")
+
             from_date = parse_date(serializer.data["from_date"])
             to_date = parse_date(serializer.data["to_date"])
             if not room.is_available(from_date, to_date):
                 raise RoomNotAvailable()
 
-            booking_data = serializer.data
-            booking_data.pop("customer")
             booking = Booking(customer=customer, **booking_data)
             booking.save()
 
