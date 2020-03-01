@@ -1,11 +1,14 @@
 import React from 'react';
-import Roomlist from '../../components/Roomlist';
 import fetch from 'isomorphic-unfetch';
 // import config from '../../../config/env';
+
+import Roomlist from '../../components/Roomlist';
+import Navbar from '../../components/Navbar';
 
 export default function Rooms(props) {
   return (
     <div>
+      <Navbar />
       <Roomlist rooms={props.rooms} />
     </div>
   );

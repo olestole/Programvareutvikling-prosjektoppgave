@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
+import { UserContext } from './UserProvider';
 
 import Numberselect from './Numberselect';
 import Datepicker from './Datepicker';
@@ -36,6 +37,7 @@ const useStyles = makeStyles({
 });
 
 export default function FindRoom() {
+  const context = useContext(UserContext);
   const router = useRouter();
   const classes = useStyles();
   const [state, setState] = useState({
@@ -73,6 +75,13 @@ export default function FindRoom() {
     if (state.to <= state.from) {
       alert("Can't book back in time 🤢");
     } else {
+      context.setUser({
+        ...context.user,
+        booking: {
+          ...state
+        }
+      });
+
       router.push({
         pathname: '/rooms',
         query: {

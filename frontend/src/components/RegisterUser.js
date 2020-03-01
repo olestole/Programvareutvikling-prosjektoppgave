@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
+import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
 const useStyles = makeStyles({
@@ -30,11 +31,32 @@ const useStyles = makeStyles({
   }
 });
 
-const RegisterUser = props => {
+const RegisterUser = () => {
   const classes = useStyles();
+  const [regState, setRegState] = useState({
+    newEmail: '',
+    newPassword: '',
+    reenterPassword: '',
+    newPhone: '',
+    newAdress: '',
+    newFirstName: '',
+    newLastName: '',
+    newCountry: '',
+    newZip: '',
+    newCity: '',
+    newAdressNumber: ''
+  });
 
   const handleChange = e => {
-    props.registerForm(e.target.name, e.target.value);
+    e.preventDefault();
+    setRegState({
+      ...regState,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const addUser = () => {
+    console.log(regState);
   };
 
   return (
@@ -44,7 +66,7 @@ const RegisterUser = props => {
           fullWidth
           onChange={handleChange}
           name="newEmail"
-          id="outlined-basic"
+          id="outlined-basic 1"
           label="New Email"
           variant="outlined"
           className={classes.full}
@@ -55,7 +77,7 @@ const RegisterUser = props => {
           name="newPassword"
           type="password"
           onChange={handleChange}
-          id="outlined-basic"
+          id="outlined-basic 2"
           label="New Password"
           variant="outlined"
           className={classes.half}
@@ -64,7 +86,7 @@ const RegisterUser = props => {
           name="reenterPassword"
           type="password"
           onChange={handleChange}
-          id="outlined-basic"
+          id="outlined-basic 3"
           label="Re-enter Password"
           variant="outlined"
           className={classes.half}
@@ -73,18 +95,29 @@ const RegisterUser = props => {
       <div className={classes.div1}>
         <TextField
           onChange={handleChange}
-          name="newName"
+          name="newFirstName"
           type="text"
-          id="outlined-basic"
+          id="outlined-basic 4"
           label="Name"
           variant="outlined"
           className={classes.half}
         />
         <TextField
           onChange={handleChange}
+          name="newLastName"
+          type="text"
+          id="outlined-basic 5"
+          label="Last Name"
+          variant="outlined"
+          className={classes.half}
+        />
+      </div>
+      <div>
+        <TextField
+          onChange={handleChange}
           name="newPhone"
           type="tel"
-          id="outlined-basic"
+          id="outlined-basic 6"
           label="Phone number"
           variant="outlined"
           className={classes.half}
@@ -95,7 +128,7 @@ const RegisterUser = props => {
           onChange={handleChange}
           name="newCountry"
           type="country"
-          id="outlined-basic"
+          id="outlined-basic 7"
           label="Country"
           variant="outlined"
           className={classes.third}
@@ -104,7 +137,7 @@ const RegisterUser = props => {
           onChange={handleChange}
           name="newZip"
           type="text"
-          id="outlined-basic"
+          id="outlined-basic 8"
           label="Zip"
           pattern="[0-9]*"
           variant="outlined"
@@ -114,7 +147,7 @@ const RegisterUser = props => {
           onChange={handleChange}
           name="newCity"
           type="text"
-          id="outlined-basic"
+          id="outlined-basic 9"
           label="City"
           variant="outlined"
           className={classes.third}
@@ -124,7 +157,7 @@ const RegisterUser = props => {
         <TextField
           onChange={handleChange}
           name="newAdress"
-          id="outlined-basic"
+          id="outlined-basic 10"
           label="Adress"
           variant="outlined"
           className={classes.twoThird}
@@ -132,12 +165,20 @@ const RegisterUser = props => {
         <TextField
           onChange={handleChange}
           name="newAdressNumber"
-          id="outlined-basic"
+          id="outlined-basic 11"
           label="House number"
           variant="outlined"
           className={classes.third}
         />
       </div>
+      <Button
+        variant="contained"
+        color="primary"
+        className={classes.regBtn}
+        onClick={addUser}
+      >
+        Lag ny bruker
+      </Button>
     </form>
   );
 };

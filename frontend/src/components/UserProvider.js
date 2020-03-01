@@ -7,7 +7,24 @@ const UserProvider = props => {
     username: '',
     accessToken: '',
     refreshToken: '',
-    loggedIn: false
+    loggedIn: false,
+    booking: {
+      from_date: '',
+      to_date: '',
+      people: ''
+    },
+    customer: {
+      email: '',
+      first_name: '',
+      last_name: '',
+      address: {
+        street_name: '',
+        street_number: 0,
+        city: '',
+        postal_code: 0,
+        country: ''
+      }
+    }
   });
 
   return (

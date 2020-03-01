@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from './UserProvider';
 import { useRouter } from 'next/router';
 
-import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
@@ -31,6 +30,7 @@ const useStyles = makeStyles({
 
 const LoginForm = () => {
   const router = useRouter();
+
   const context = useContext(UserContext);
 
   const classes = useStyles();
@@ -44,12 +44,14 @@ const LoginForm = () => {
     reenterPassword: '',
     newPhone: '',
     newAdress: '',
-    newName: '',
+    newFirstName: '',
+    newLastName: '',
     newCountry: '',
     newZip: '',
     newCity: '',
     newAdressNumber: ''
   });
+
   const [alreadyUser, setUserLogin] = useState(false);
 
   const handleChange = e => {
@@ -62,6 +64,7 @@ const LoginForm = () => {
   };
 
   const handleRegisterChange = (name, value) => {
+    console.log(name, value);
     setRegState({
       ...regState,
       [name]: value
@@ -98,6 +101,7 @@ const LoginForm = () => {
         console.log("Couldn't find user");
       } else {
         context.setUser({
+          ...context.user,
           username: state.email,
           accessToken: content.access,
           refreshToken: content.refresh,
@@ -111,15 +115,19 @@ const LoginForm = () => {
   const RenderRegister = () => {
     return alreadyUser ? (
       <div>
-        <RegisterUser registerForm={handleRegisterChange} />
-        <Button
+        <RegisterUser
+          addUser={addUser}
+          regState={regState}
+          registerForm={handleRegisterChange}
+        />
+        {/* <Button
           variant="contained"
           color="primary"
           className={classes.regBtn}
           onClick={addUser}
         >
           Lag ny bruker
-        </Button>
+        </Button> */}
       </div>
     ) : (
       <Button
@@ -133,10 +141,12 @@ const LoginForm = () => {
     );
   };
 
+  // console.log(loggedIn);
+
   return (
     <div>
       <form>
-        <Paper elevation={5} className={classes.root}>
+        <div className={classes.root}>
           <TextField
             onChange={handleChange}
             name="email"
@@ -165,7 +175,7 @@ const LoginForm = () => {
           </Button>
           <Divider variant="middle" className={classes.divider} />
           <RenderRegister />
-        </Paper>
+        </div>
       </form>
     </div>
   );

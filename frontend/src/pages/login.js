@@ -1,5 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
 
 import Navbar from '../components/Navbar';
 import LoginForm from '../components/LoginForm';
@@ -22,21 +23,24 @@ const useStyles = makeStyles({
   container: {
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    flexDirection: 'column'
   }
 });
 
-export default function Index() {
+const Index = () => {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
       <Navbar />
       <div className={classes.rootContainer}>
-        <div className={classes.container}>
+        <Paper elevation={3} className={classes.container}>
           <LoginForm />
-        </div>
+        </Paper>
       </div>
     </div>
   );
-}
+};
+
+export default Index;
