@@ -81,7 +81,7 @@ const LoginForm = () => {
       password: state.password
     };
 
-    const rawResponse = await fetch(`${config.serverUrl}token/`, {
+    const rawResponse = await fetch(`${config.serverUrl}/token/`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -93,7 +93,7 @@ const LoginForm = () => {
     const status = rawResponse.status;
     const content = await rawResponse.json();
 
-    const userRes = await fetch(`${config.serverUrl}users/`, {
+    const userRes = await fetch(`${config.serverUrl}/users/`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',

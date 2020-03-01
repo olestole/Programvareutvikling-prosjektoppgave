@@ -46,9 +46,7 @@ const MediaCard = props => {
       customer: context.user.customer
     };
 
-    console.log(body);
-    console.log('HALLALLALALA');
-    const res = await fetch(`${config.serverUrl}bookings/`, {
+    const res = await fetch(`${config.serverUrl}/bookings/`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',

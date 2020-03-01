@@ -154,7 +154,7 @@ const RegisterUser = () => {
           id="outlined-basic 4"
           label="Name"
           variant="outlined"
-          className={classes.half}
+          className={classes.third}
         />
         <TextField
           onChange={handleChange}
@@ -163,10 +163,8 @@ const RegisterUser = () => {
           id="outlined-basic 5"
           label="Last Name"
           variant="outlined"
-          className={classes.half}
+          className={classes.third}
         />
-      </div>
-      <div>
         <TextField
           onChange={handleChange}
           name="newPhone"
@@ -174,7 +172,7 @@ const RegisterUser = () => {
           id="outlined-basic 6"
           label="Phone number"
           variant="outlined"
-          className={classes.half}
+          className={classes.third}
         />
       </div>
       <div>
