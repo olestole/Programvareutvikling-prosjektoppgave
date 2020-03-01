@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import { deepOrange, deepPurple } from '@material-ui/core/colors';
@@ -25,7 +26,7 @@ export default function LetterAvatars(props) {
 
   return (
     <div className={classes.root}>
-      <Avatar src={props.img} />
+      <Avatar className={classes[props.color]}>{props.letter}</Avatar>
     </div>
   );
 }

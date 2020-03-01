@@ -4,12 +4,22 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
   root: {
-    margin: '0 0 0 0px'
+    height: '4em'
   }
 });
 
-export default function FormPropsTextFields() {
+const NumberSelect = props => {
   const classes = useStyles();
+
+  const handleInput = e => {
+    e.preventDefault();
+    const re = /^\d+$/;
+    if (re.test(e.target.value)) {
+      props.setNumber(e.target.value);
+    } else {
+      return;
+    }
+  };
 
   return (
     <form className={classes.root} noValidate autoComplete="off">
@@ -22,8 +32,11 @@ export default function FormPropsTextFields() {
             shrink: true
           }}
           variant="outlined"
+          onChange={handleInput}
         />
       </div>
     </form>
   );
-}
+};
+
+export default NumberSelect;

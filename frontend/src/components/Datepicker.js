@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -8,17 +8,21 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
-  root: {}
+  root: {
+    width: '10em',
+    margin: '3px'
+  }
 });
 
-export default function MaterialUIPickers() {
-  // The first commit of Material-UI
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date('2014-08-18T21:11:54')
-  );
+const DatePicker = props => {
+  // Day: Sunday-indexed -->
+  // Months: 0-indexed --> January.getMonth() == 0.
+  // Year: 1900-indexed --> 2020.getYear() == 120
+  const [selectedDate, setSelectedDate] = useState(Date.now());
 
   const handleDateChange = date => {
     setSelectedDate(date);
+    props.dateChange(date);
   };
 
   const classes = useStyles();
@@ -42,4 +46,6 @@ export default function MaterialUIPickers() {
       </Grid>
     </MuiPickersUtilsProvider>
   );
-}
+};
+
+export default DatePicker;

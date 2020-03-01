@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { UserContext } from './UserProvider';
+import { useRouter } from 'next/router';
 
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import RegisterUser from './RegisterUser';
+import config from '../../config/env';
+
+// import login from '../../utils/fetcher';
 
 const useStyles = makeStyles({
   root: {
@@ -25,21 +30,27 @@ const useStyles = makeStyles({
 });
 
 const LoginForm = () => {
+  const router = useRouter();
+  const context = useContext(UserContext);
+
   const classes = useStyles();
   const [state, setState] = useState({
     email: '',
     password: ''
   });
-  const [alreadyUser, setUser] = useState(false);
-
   const [regState, setRegState] = useState({
     newEmail: '',
     newPassword: '',
     reenterPassword: '',
     newPhone: '',
     newAdress: '',
-    newName: ''
+    newName: '',
+    newCountry: '',
+    newZip: '',
+    newCity: '',
+    newAdressNumber: ''
   });
+  const [alreadyUser, setUserLogin] = useState(false);
 
   const handleChange = e => {
     e.preventDefault();
@@ -47,7 +58,7 @@ const LoginForm = () => {
   };
 
   const handleNewUser = () => {
-    setUser(true);
+    setUserLogin(true);
   };
 
   const handleRegisterChange = (name, value) => {
@@ -59,6 +70,67 @@ const LoginForm = () => {
 
   const addUser = () => {
     console.log(regState);
+  };
+
+  const handleLogin = () => {
+    const body = {
+      username: state.email,
+      password: state.password
+    };
+
+    (async () => {
+      const rawResponse = await fetch(`${config.serverUrl}/token/`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      });
+
+      const status = rawResponse.status;
+      const content = await rawResponse.json();
+
+      console.log(status);
+      console.log(content.access, content.refresh);
+
+      if (status === 401) {
+        console.log("Couldn't find user");
+      } else {
+        context.setUser({
+          username: state.email,
+          accessToken: content.access,
+          refreshToken: content.refresh,
+          loggedIn: true
+        });
+        router.push('/');
+      }
+    })();
+  };
+
+  const RenderRegister = () => {
+    return alreadyUser ? (
+      <div>
+        <RegisterUser registerForm={handleRegisterChange} />
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.regBtn}
+          onClick={addUser}
+        >
+          Lag ny bruker
+        </Button>
+      </div>
+    ) : (
+      <Button
+        className={classes.regBtn}
+        variant="outlined"
+        color="primary"
+        onClick={handleNewUser}
+      >
+        Do not have a user yet
+      </Button>
+    );
   };
 
   return (
@@ -83,34 +155,16 @@ const LoginForm = () => {
             variant="outlined"
             className={classes.div}
           />
-          <Button variant="outlined" color="secondary" className={classes.div}>
+          <Button
+            variant="outlined"
+            color="secondary"
+            className={classes.div}
+            onClick={handleLogin}
+          >
             Logg inn
           </Button>
           <Divider variant="middle" className={classes.divider} />
-          {/* <hr className={classes.divider} /> */}
-
-          {alreadyUser ? (
-            <div>
-              <RegisterUser registerForm={handleRegisterChange} />
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.regBtn}
-                onClick={addUser}
-              >
-                Lag ny bruker
-              </Button>
-            </div>
-          ) : (
-            <Button
-              className={classes.regBtn}
-              variant="outlined"
-              color="primary"
-              onClick={handleNewUser}
-            >
-              Do not have a user yet
-            </Button>
-          )}
+          <RenderRegister />
         </Paper>
       </form>
     </div>
