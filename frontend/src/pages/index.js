@@ -3,21 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import Navbar from '../components/Navbar';
 import FindRoom from '../components/FindRoom';
-// import NewYork from '../../public/NewYork.jpg';
-
-// const useStyles = makeStyles({
-//   container: {
-//     display: 'flex',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     width: 'auto',
-//     height: '100vh',
-//     backgroundImage: `url(${'/NewYork.jpg'})`,
-//     backgroundRepeat: 'no-repeat',
-//     backgroundAttachment: 'fixed',
-//     backgroundSize: 'cover'
-//   }
-// });
 
 const useStyles = makeStyles({
   root: {
