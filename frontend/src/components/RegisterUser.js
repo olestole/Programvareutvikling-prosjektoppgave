@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { UserContext } from './UserProvider';
+import config from '../../config/env';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -33,6 +35,8 @@ const useStyles = makeStyles({
 
 const RegisterUser = () => {
   const classes = useStyles();
+  // const router = useRouter();
+  const context = useContext(UserContext);
   const [regState, setRegState] = useState({
     newEmail: '',
     newPassword: '',
@@ -55,8 +59,58 @@ const RegisterUser = () => {
     });
   };
 
-  const addUser = () => {
+  const addUser = async () => {
     console.log(regState);
+
+    context.setUser({
+      ...context.user,
+      customer: {
+        email: regState.newEmail,
+        first_name: regState.newFirstName,
+        last_name: regState.newLastName,
+        password: regState.newPassword,
+        address: {
+          street_name: regState.newAdress,
+          street_number: regState.newAdressNumber,
+          city: regState.newCity,
+          postal_code: regState.newZip,
+          country: regState.newCountry
+        }
+      }
+    });
+
+    const body = {
+      email: regState.newEmail,
+      first_name: regState.newFirstName,
+      last_name: regState.newLastName,
+      phone: regState.newPhone,
+      password: regState.newPassword,
+      address: {
+        street_name: regState.newAdress,
+        street_number: regState.newAdressNumber,
+        city: regState.newCity,
+        postal_code: regState.newZip,
+        country: regState.newCountry
+      }
+    };
+
+    const rawResponse = await fetch(`${config.serverUrl}users/`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+
+    const status = rawResponse.status;
+    const content = await rawResponse.json();
+
+    if (status === 401) {
+      console.log("Couldn't find user");
+    } else {
+      console.log(content);
+    }
   };
 
   return (

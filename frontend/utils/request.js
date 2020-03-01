@@ -1,10 +1,7 @@
-import { useContext } from 'react';
-import { UserContext } from '../src/components/UserProvider';
+import config from '../config/env';
 
-const context = useContext(UserContext);
-
-const request = (url, data) => {
-  fetch(url, {
+const request = (url, data, context) => {
+  fetch(config.serverUrl + url, {
     method: 'POST',
     headers: {
       Accept: 'application/json',

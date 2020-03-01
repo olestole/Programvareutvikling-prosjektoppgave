@@ -56,9 +56,7 @@ export default function Navbar() {
           <RenderLogin />
           <Avatar
             letter={
-              context.user.loggedIn
-                ? context.user.username[0].toUpperCase()
-                : null
+              context.user.loggedIn ? context.user.email[0].toUpperCase() : null
             }
             color={context.user.loggedIn ? 'purple' : null}
           ></Avatar>

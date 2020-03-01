@@ -41,24 +41,31 @@ export default function FindRoom() {
   const router = useRouter();
   const classes = useStyles();
   const [state, setState] = useState({
-    from: Date.now(),
-    to: Date.now(),
-    quantity: 0
+    from_date: Date.now(),
+    to_date: Date.now(),
+    poeple: 0
   });
 
   // Can probably join these two functions into one
 
+  const formatDate = date => {
+    return (
+      date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+    );
+  };
+
   const handleFromDate = date => {
+    console.log(formatDate(date));
     setState({
       ...state,
-      from: date.getTime()
+      from_date: formatDate(date)
     });
   };
 
   const handleToDate = date => {
     setState({
       ...state,
-      to: date.getTime()
+      to_date: formatDate(date)
     });
   };
 
@@ -66,32 +73,31 @@ export default function FindRoom() {
     console.log(number);
     setState({
       ...state,
-      quantity: number
+      people: number
     });
   };
 
   const handleSubmit = () => {
-    console.log(state);
-    if (state.to <= state.from) {
-      alert("Can't book back in time 🤢");
-    } else {
-      context.setUser({
-        ...context.user,
-        booking: {
-          ...state
-        }
-      });
+    // console.log(state);
+    // if (state.to <= state.from_date) {
+    //   // alert("Can't book back in time 🤢");
+    // } else {
+    context.setUser({
+      ...context.user,
+      booking: {
+        ...state
+      }
+    });
 
-      router.push({
-        pathname: '/rooms',
-        query: {
-          //Have to split this into day, month, year if wanting to use query params
-          from_date: state.from,
-          to_date: state.to,
-          people: state.quantity
-        }
-      });
-    }
+    router.push({
+      pathname: '/rooms',
+      query: {
+        //Have to split this into day, month, year if wanting to use query params
+        from_date: state.from_date,
+        to_date: state.to_date,
+        people: state.people
+      }
+    });
   };
 
   return (
@@ -110,7 +116,7 @@ export default function FindRoom() {
         <Numberselect
           className={classes.dateLine}
           setNumber={handleQuantity}
-          value={state.quantity}
+          value={state.people}
         />
       </div>
       <div className={classes.btnContainer}>

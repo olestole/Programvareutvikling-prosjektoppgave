@@ -8,9 +8,9 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
+import config from '../../config/env';
 
 import { UserContext } from '../components/UserProvider';
-import request from '../../utils/request';
 
 // Styles for Room. This should be placed in media query
 // Not optimal for phone view at all
@@ -36,34 +36,41 @@ const MediaCard = props => {
   const context = useContext(UserContext);
   const router = useRouter();
 
-  const passInfo = () => {
+  const passInfo = async () => {
+    console.log(context.user);
     const body = {
       from_date: context.user.booking.from_date,
       to_date: context.user.booking.to_date,
       people: context.user.booking.people,
-      room_id: props.key,
-      customer: {
-        email: context.user.username,
-        first_name: context.user.customer.first_name,
-        last_name: context.user.customer.last_name,
-        address: {
-          street_name: context.user.customer.address.street_name,
-          street_number: context.user.customer.address.street_number,
-          city: context.user.customer.address.city,
-          postal_code: context.user.customer.address.postal_code,
-          country: context.user.customer.address.country
-        }
-      }
+      room_id: props.room.id,
+      customer: context.user.customer
     };
 
-    request('', body)
-    .then(router.push('/booking'))
+    console.log(body);
+    console.log('HALLALLALALA');
+    const res = await fetch(`${config.serverUrl}bookings/`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + context.user.accessToken
+      },
+      body: JSON.stringify(body)
+    });
 
+    const bookingInfo = res.json();
+
+    context.setUser({
+      ...context.user,
+      bookedRoom: bookingInfo
+    });
+
+    router.push('/booking');
   };
 
   const handleBooking = () => {
     context.user.loggedIn
-      ? 
+      ? passInfo()
       : router.push({
           pathname: '/login',
           query: {

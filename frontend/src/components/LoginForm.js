@@ -75,41 +75,48 @@ const LoginForm = () => {
     console.log(regState);
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     const body = {
-      username: state.email,
+      email: state.email,
       password: state.password
     };
 
-    (async () => {
-      const rawResponse = await fetch(`${config.serverUrl}/token/`, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
-      });
+    const rawResponse = await fetch(`${config.serverUrl}token/`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
 
-      const status = rawResponse.status;
-      const content = await rawResponse.json();
+    const status = rawResponse.status;
+    const content = await rawResponse.json();
 
-      console.log(status);
-      console.log(content.access, content.refresh);
-
-      if (status === 401) {
-        console.log("Couldn't find user");
-      } else {
-        context.setUser({
-          ...context.user,
-          username: state.email,
-          accessToken: content.access,
-          refreshToken: content.refresh,
-          loggedIn: true
-        });
-        router.push('/');
+    const userRes = await fetch(`${config.serverUrl}users/`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + content.access
       }
-    })();
+    });
+
+    const cont = await userRes.json();
+
+    if (status === 401) {
+      console.log("Couldn't find user");
+    } else {
+      context.setUser({
+        ...context.user,
+        email: state.email,
+        accessToken: content.access,
+        refreshToken: content.refresh,
+        loggedIn: true,
+        customer: cont[0].customer
+      });
+      router.push('/');
+    }
   };
 
   const RenderRegister = () => {
