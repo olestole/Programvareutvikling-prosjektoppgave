@@ -1,22 +1,18 @@
-from rest_framework import viewsets, views, status, permissions
-from rest_framework.decorators import action
-from rest_framework.response import Response
+from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.utils.dateparse import parse_date
-from django.contrib.auth.models import User
-from rest_framework import generics
-from fancyhotell.rooms.models import Room, Booking
+from rest_framework import generics, permissions, status, views, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
+from fancyhotell.rooms.errors import RoomDoesNotExist, RoomNotAvailable
+from fancyhotell.rooms.models import Booking, Room
+from fancyhotell.rooms.permissions import BookingPermissions, RoomPermissions
 from fancyhotell.rooms.serializers import (
-    RoomSerializer,
-    RoomDetailSerializer,
-    BookingCreateSerializer,
-    BookingDetailSerializer,
-    BookingSerializer,
-    BookingCreateSerializerWithCustomerData,
-)
-from fancyhotell.rooms.permissions import RoomPermissions, BookingPermissions
-from fancyhotell.users.models import UserCustomer, Customer, Address
-from fancyhotell.rooms.errors import RoomNotAvailable, RoomDoesNotExist
+    BookingCreateSerializer, BookingCreateSerializerWithCustomerData,
+    BookingDetailSerializer, BookingSerializer, RoomDetailSerializer,
+    RoomSerializer)
+from fancyhotell.users.models import Address, Customer, User
 
 
 class RoomViewset(viewsets.ModelViewSet):
@@ -71,7 +67,7 @@ class BookingViewset(viewsets.ModelViewSet):
 
             # If the user is logged in, use the existing data
             if not request.user.is_anonymous and request.user.is_authenticated:
-                customer = UserCustomer.objects.get(pk=request.user.id).customer
+                customer = User.objects.get(pk=request.user.id).customer
 
             # If not, use the customer data to create a new customer object
             else:
