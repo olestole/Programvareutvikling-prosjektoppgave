@@ -18,8 +18,9 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action in ["list", "retrieve"]:
             return UserReadSerializer
-        elif self.action == "create":
+        elif self.action == "create" or self.request.method == "POST":
             return UserCreateSerializer
+        return UserReadSerializer
 
     def list(self, request):
         serializer = UserReadSerializer(self.get_queryset(), many=True)
@@ -35,6 +36,7 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = UserCreateSerializer(data=request.data)
 
         if serializer.is_valid():
-            return Response(serializer.data)
+            self.perform_create(serializer)
+            return Response("OK")
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -39,11 +39,12 @@ class UserCreateSerializer(serializers.ModelSerializer):
             "address",
             "password",
         ]
-        extra_kwargs = {"password": {"write_only": True}, "phone": {"write_only": True}}
+        extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
         password = validated_data.pop("password")
         email = validated_data.pop("email")
+        phone = validated_data.pop("phone")
         user = User.objects.create_user(email, password)
         address = Address(**validated_data["address"])
         address.save()
@@ -51,8 +52,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
             address=address,
             first_name=validated_data["first_name"],
             last_name=validated_data["last_name"],
-            email=validated_data["email"],
-            phone=validated_data["phone"],
+            email=email,
+            phone=phone,
         )
         customer.save()
         user.customer = customer
