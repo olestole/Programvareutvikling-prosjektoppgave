@@ -4,15 +4,18 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import Roomlist from '../../components/Roomlist';
 import Navbar from '../../components/Navbar';
+import config from '../../../config/env';
 
 const useStyles = makeStyles({
   root: {
-    width: 'auto',
     height: '100vh',
     backgroundImage: `url(${'/NewYork.jpg'})`,
     backgroundRepeat: 'no-repeat',
     backgroundAttachment: 'fixed',
-    backgroundSize: 'cover'
+    backgroundSize: 'cover',
+    position: 'fixed',
+    overflowY: 'scroll',
+    width: '100%'
   },
   rootContainer: {
     display: 'flex',
@@ -24,6 +27,9 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  spacing: {
+    height: '40px'
   }
 });
 
@@ -32,16 +38,14 @@ export default function Rooms(props) {
   return (
     <div className={classes.root}>
       <Navbar />
+      <div className={classes.spacing} />
       <Roomlist rooms={props.rooms} />
     </div>
   );
 }
 
 Rooms.getInitialProps = async () => {
-  // const res = await fetch(`${config.serverUrl}/rooms/`);
-  const res = await fetch(
-    'https://secret-harbor-95265.herokuapp.com/api/rooms/'
-  );
+  const res = await fetch(`${config.serverUrl}/rooms/`);
   const json = await res.json();
   return { rooms: json };
 };

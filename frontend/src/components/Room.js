@@ -56,9 +56,9 @@ const MediaCard = props => {
       body: JSON.stringify(body)
     });
 
-    const bookingInfo = res.json();
+    const bookingInfo = await res.json();
 
-    context.setUser({
+    await context.setUser({
       ...context.user,
       bookedRoom: bookingInfo
     });

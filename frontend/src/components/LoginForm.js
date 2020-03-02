@@ -7,7 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import RegisterUser from './RegisterUser';
-import config from '../../config/env';
+import { logInWithData } from '../utils/api';
 
 // import login from '../../utils/fetcher';
 
@@ -81,39 +81,19 @@ const LoginForm = () => {
       password: state.password
     };
 
-    const rawResponse = await fetch(`${config.serverUrl}/token/`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    });
+    // Log in to the api
+    const { token, user } = await logInWithData(body);
 
-    const status = rawResponse.status;
-    const content = await rawResponse.json();
-
-    const userRes = await fetch(`${config.serverUrl}/users/`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + content.access
-      }
-    });
-
-    const cont = await userRes.json();
-
-    if (status === 401) {
+    if (!user) {
       console.log("Couldn't find user");
     } else {
-      context.setUser({
+      await context.setUser({
         ...context.user,
         email: state.email,
-        accessToken: content.access,
-        refreshToken: content.refresh,
+        accessToken: token.access,
+        refreshToken: token.refresh,
         loggedIn: true,
-        customer: cont[0].customer
+        customer: user.customer
       });
       router.push('/');
     }
@@ -143,7 +123,7 @@ const LoginForm = () => {
         color="primary"
         onClick={handleNewUser}
       >
-        Do not have a user yet
+        Jeg har ikke en bruker
       </Button>
     );
   };
@@ -159,7 +139,7 @@ const LoginForm = () => {
             name="email"
             type="email"
             id="outlined-basic"
-            label="Email"
+            label="E-post"
             variant="outlined"
             className={classes.div}
           />
@@ -168,7 +148,7 @@ const LoginForm = () => {
             type="password"
             onChange={handleChange}
             id="outlined-basic"
-            label="Password"
+            label="Passord"
             variant="outlined"
             className={classes.div}
           />

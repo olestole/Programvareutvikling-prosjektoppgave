@@ -23,7 +23,9 @@ const useStyles = makeStyles({
   container: {
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    width: '60%',
+    height: '400px'
   }
 });
 

@@ -3,13 +3,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from './UserProvider';
 
 const useStyles = makeStyles({
-  container: {
-    display: 'flex',
+  root: {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     padding: '40px',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
+    fontFamily: 'Roboto'
   },
   dateContainer: {
     display: 'flex',
@@ -20,26 +20,49 @@ const useStyles = makeStyles({
     width: '50%',
     height: '4em'
   },
-  btnContainer: {
-    display: 'flex',
-    width: '100%'
+  ref: {
+    fontWeight: 100
   },
-  btn: {
-    width: '100%',
-    height: '4em'
+  title: {
+    borderBottom: '1px solid black'
   }
 });
+
+//const Customer = ({ customer }) => {
+//return (
+//<div>
+//<h3>Bruker data:</h3>
+//<>
+//{Object.entries(customer).map(([key, val]) =>
+//typeof val == 'string' ? (
+//<div key={key}>
+//<h4>
+//{key}: {val}
+//</h4>
+//</div>
+//) : (
+//<div />
+//)
+//)}
+//</>
+//</div>
+//);
+//};
 
 export default function FindRoom() {
   const context = useContext(UserContext);
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <h1>Ditt rom er booket!</h1>
-      <h3>
-        {context.user.bookedRoom.from_date} to {context.user.bookedRoom.to_date}
+      <h1 className={classes.title}>Ditt rom er booket!</h1>
+      <h3>Innsjekk: {context.user.bookedRoom.from_date}</h3>
+      <h3>Utsjekk: {context.user.bookedRoom.to_date}</h3>
+      <br />
+      {/*<Customer customer={context.user.customer} />*/}
+      <br />
+      <h3 className={classes.ref}>
+        Booking referanse: {context.user.bookedRoom.booking_reference}
       </h3>
-      <h3>Booking referanse: {context.user.bookedRoom.booking_reference}</h3>
       {/* <h3>Pris: {context.user.bookedRoom.room.price}</h3> */}
     </div>
   );

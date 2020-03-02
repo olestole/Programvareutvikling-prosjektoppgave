@@ -1,10 +1,13 @@
 import React, { useState, useContext } from 'react';
+import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from './UserProvider';
 import config from '../../config/env';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+
+import { logInWithData } from '../utils/api';
 
 const useStyles = makeStyles({
   container: {
@@ -35,7 +38,7 @@ const useStyles = makeStyles({
 
 const RegisterUser = () => {
   const classes = useStyles();
-  // const router = useRouter();
+  const router = useRouter();
   const context = useContext(UserContext);
   const [regState, setRegState] = useState({
     newEmail: '',
@@ -60,8 +63,6 @@ const RegisterUser = () => {
   };
 
   const addUser = async () => {
-    console.log(regState);
-
     context.setUser({
       ...context.user,
       customer: {
@@ -94,7 +95,7 @@ const RegisterUser = () => {
       }
     };
 
-    const rawResponse = await fetch(`${config.serverUrl}users/`, {
+    const rawResponse = await fetch(`${config.serverUrl}/users/`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -104,10 +105,26 @@ const RegisterUser = () => {
     });
 
     const status = rawResponse.status;
+
     const content = await rawResponse.json();
 
+    const { user, token } = await logInWithData({
+      email: regState.newEmail,
+      password: regState.newPassword
+    });
+
+    await context.setUser({
+      ...context.user,
+      email: user.email,
+      accessToken: token.access,
+      refreshToken: token.refresh,
+      loggedIn: true,
+      customer: user.customer
+    });
+    router.push('/');
+
     if (status === 401) {
-      console.log("Couldn't find user");
+      console.log('Error');
     } else {
       console.log(content);
     }
@@ -121,7 +138,7 @@ const RegisterUser = () => {
           onChange={handleChange}
           name="newEmail"
           id="outlined-basic 1"
-          label="New Email"
+          label="E-post"
           variant="outlined"
           className={classes.full}
         />
@@ -132,7 +149,7 @@ const RegisterUser = () => {
           type="password"
           onChange={handleChange}
           id="outlined-basic 2"
-          label="New Password"
+          label="Passord"
           variant="outlined"
           className={classes.half}
         />
@@ -141,7 +158,7 @@ const RegisterUser = () => {
           type="password"
           onChange={handleChange}
           id="outlined-basic 3"
-          label="Re-enter Password"
+          label="Bekreft passord"
           variant="outlined"
           className={classes.half}
         />
@@ -152,7 +169,7 @@ const RegisterUser = () => {
           name="newFirstName"
           type="text"
           id="outlined-basic 4"
-          label="Name"
+          label="Fornavn"
           variant="outlined"
           className={classes.third}
         />
@@ -161,7 +178,7 @@ const RegisterUser = () => {
           name="newLastName"
           type="text"
           id="outlined-basic 5"
-          label="Last Name"
+          label="Etternavn"
           variant="outlined"
           className={classes.third}
         />
@@ -170,7 +187,7 @@ const RegisterUser = () => {
           name="newPhone"
           type="tel"
           id="outlined-basic 6"
-          label="Phone number"
+          label="Telefon nummer"
           variant="outlined"
           className={classes.third}
         />
@@ -181,7 +198,7 @@ const RegisterUser = () => {
           name="newCountry"
           type="country"
           id="outlined-basic 7"
-          label="Country"
+          label="Land"
           variant="outlined"
           className={classes.third}
         />
@@ -200,7 +217,7 @@ const RegisterUser = () => {
           name="newCity"
           type="text"
           id="outlined-basic 9"
-          label="City"
+          label="By"
           variant="outlined"
           className={classes.third}
         />
@@ -210,7 +227,7 @@ const RegisterUser = () => {
           onChange={handleChange}
           name="newAdress"
           id="outlined-basic 10"
-          label="Adress"
+          label="Gateaddresse"
           variant="outlined"
           className={classes.twoThird}
         />
@@ -218,7 +235,7 @@ const RegisterUser = () => {
           onChange={handleChange}
           name="newAdressNumber"
           id="outlined-basic 11"
-          label="House number"
+          label="Hus nummer"
           variant="outlined"
           className={classes.third}
         />
