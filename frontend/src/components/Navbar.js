@@ -17,7 +17,11 @@ import Link from 'next/link';
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
-    height: '9vh'
+    height: '9vh',
+    position: 'fixed',
+    width: '100%',
+    marginBottom: '30px',
+    zIndex: 1000
   },
   menuButton: {
     marginRight: theme.spacing(2)
@@ -56,9 +60,7 @@ export default function Navbar() {
           <RenderLogin />
           <Avatar
             letter={
-              context.user.loggedIn
-                ? context.user.username[0].toUpperCase()
-                : null
+              context.user.loggedIn ? context.user.email[0].toUpperCase() : null
             }
             color={context.user.loggedIn ? 'purple' : null}
           ></Avatar>

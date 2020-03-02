@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
+import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
+import { UserContext } from './UserProvider';
+import config from '../../config/env';
 
+import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+
+import { logInWithData } from '../utils/api';
 
 const useStyles = makeStyles({
   container: {
@@ -30,11 +36,98 @@ const useStyles = makeStyles({
   }
 });
 
-const RegisterUser = props => {
+const RegisterUser = () => {
   const classes = useStyles();
+  const router = useRouter();
+  const context = useContext(UserContext);
+  const [regState, setRegState] = useState({
+    newEmail: '',
+    newPassword: '',
+    reenterPassword: '',
+    newPhone: '',
+    newAdress: '',
+    newFirstName: '',
+    newLastName: '',
+    newCountry: '',
+    newZip: '',
+    newCity: '',
+    newAdressNumber: ''
+  });
 
   const handleChange = e => {
-    props.registerForm(e.target.name, e.target.value);
+    e.preventDefault();
+    setRegState({
+      ...regState,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const addUser = async () => {
+    context.setUser({
+      ...context.user,
+      customer: {
+        email: regState.newEmail,
+        first_name: regState.newFirstName,
+        last_name: regState.newLastName,
+        password: regState.newPassword,
+        address: {
+          street_name: regState.newAdress,
+          street_number: regState.newAdressNumber,
+          city: regState.newCity,
+          postal_code: regState.newZip,
+          country: regState.newCountry
+        }
+      }
+    });
+
+    const body = {
+      email: regState.newEmail,
+      first_name: regState.newFirstName,
+      last_name: regState.newLastName,
+      phone: regState.newPhone,
+      password: regState.newPassword,
+      address: {
+        street_name: regState.newAdress,
+        street_number: regState.newAdressNumber,
+        city: regState.newCity,
+        postal_code: regState.newZip,
+        country: regState.newCountry
+      }
+    };
+
+    const rawResponse = await fetch(`${config.serverUrl}/users/`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+
+    const status = rawResponse.status;
+
+    const content = await rawResponse.json();
+
+    const { user, token } = await logInWithData({
+      email: regState.newEmail,
+      password: regState.newPassword
+    });
+
+    await context.setUser({
+      ...context.user,
+      email: user.email,
+      accessToken: token.access,
+      refreshToken: token.refresh,
+      loggedIn: true,
+      customer: user.customer
+    });
+    router.push('/');
+
+    if (status === 401) {
+      console.log('Error');
+    } else {
+      console.log(content);
+    }
   };
 
   return (
@@ -44,8 +137,8 @@ const RegisterUser = props => {
           fullWidth
           onChange={handleChange}
           name="newEmail"
-          id="outlined-basic"
-          label="New Email"
+          id="outlined-basic 1"
+          label="E-post"
           variant="outlined"
           className={classes.full}
         />
@@ -55,8 +148,8 @@ const RegisterUser = props => {
           name="newPassword"
           type="password"
           onChange={handleChange}
-          id="outlined-basic"
-          label="New Password"
+          id="outlined-basic 2"
+          label="Passord"
           variant="outlined"
           className={classes.half}
         />
@@ -64,8 +157,8 @@ const RegisterUser = props => {
           name="reenterPassword"
           type="password"
           onChange={handleChange}
-          id="outlined-basic"
-          label="Re-enter Password"
+          id="outlined-basic 3"
+          label="Bekreft passord"
           variant="outlined"
           className={classes.half}
         />
@@ -73,21 +166,30 @@ const RegisterUser = props => {
       <div className={classes.div1}>
         <TextField
           onChange={handleChange}
-          name="newName"
+          name="newFirstName"
           type="text"
-          id="outlined-basic"
-          label="Name"
+          id="outlined-basic 4"
+          label="Fornavn"
           variant="outlined"
-          className={classes.half}
+          className={classes.third}
+        />
+        <TextField
+          onChange={handleChange}
+          name="newLastName"
+          type="text"
+          id="outlined-basic 5"
+          label="Etternavn"
+          variant="outlined"
+          className={classes.third}
         />
         <TextField
           onChange={handleChange}
           name="newPhone"
           type="tel"
-          id="outlined-basic"
-          label="Phone number"
+          id="outlined-basic 6"
+          label="Telefon nummer"
           variant="outlined"
-          className={classes.half}
+          className={classes.third}
         />
       </div>
       <div>
@@ -95,8 +197,8 @@ const RegisterUser = props => {
           onChange={handleChange}
           name="newCountry"
           type="country"
-          id="outlined-basic"
-          label="Country"
+          id="outlined-basic 7"
+          label="Land"
           variant="outlined"
           className={classes.third}
         />
@@ -104,7 +206,7 @@ const RegisterUser = props => {
           onChange={handleChange}
           name="newZip"
           type="text"
-          id="outlined-basic"
+          id="outlined-basic 8"
           label="Zip"
           pattern="[0-9]*"
           variant="outlined"
@@ -114,8 +216,8 @@ const RegisterUser = props => {
           onChange={handleChange}
           name="newCity"
           type="text"
-          id="outlined-basic"
-          label="City"
+          id="outlined-basic 9"
+          label="By"
           variant="outlined"
           className={classes.third}
         />
@@ -124,20 +226,28 @@ const RegisterUser = props => {
         <TextField
           onChange={handleChange}
           name="newAdress"
-          id="outlined-basic"
-          label="Adress"
+          id="outlined-basic 10"
+          label="Gateaddresse"
           variant="outlined"
           className={classes.twoThird}
         />
         <TextField
           onChange={handleChange}
           name="newAdressNumber"
-          id="outlined-basic"
-          label="House number"
+          id="outlined-basic 11"
+          label="Hus nummer"
           variant="outlined"
           className={classes.third}
         />
       </div>
+      <Button
+        variant="contained"
+        color="primary"
+        className={classes.regBtn}
+        onClick={addUser}
+      >
+        Lag ny bruker
+      </Button>
     </form>
   );
 };

@@ -3,12 +3,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from './UserProvider';
 import { useRouter } from 'next/router';
 
-import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import RegisterUser from './RegisterUser';
-import config from '../../config/env';
+import { logInWithData } from '../utils/api';
 
 // import login from '../../utils/fetcher';
 
@@ -31,6 +30,7 @@ const useStyles = makeStyles({
 
 const LoginForm = () => {
   const router = useRouter();
+
   const context = useContext(UserContext);
 
   const classes = useStyles();
@@ -44,12 +44,14 @@ const LoginForm = () => {
     reenterPassword: '',
     newPhone: '',
     newAdress: '',
-    newName: '',
+    newFirstName: '',
+    newLastName: '',
     newCountry: '',
     newZip: '',
     newCity: '',
     newAdressNumber: ''
   });
+
   const [alreadyUser, setUserLogin] = useState(false);
 
   const handleChange = e => {
@@ -62,6 +64,7 @@ const LoginForm = () => {
   };
 
   const handleRegisterChange = (name, value) => {
+    console.log(name, value);
     setRegState({
       ...regState,
       [name]: value
@@ -72,54 +75,46 @@ const LoginForm = () => {
     console.log(regState);
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     const body = {
-      username: state.email,
+      email: state.email,
       password: state.password
     };
 
-    (async () => {
-      const rawResponse = await fetch(`${config.serverUrl}/token/`, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
+    // Log in to the api
+    const { token, user } = await logInWithData(body);
+
+    if (!user) {
+      console.log("Couldn't find user");
+    } else {
+      await context.setUser({
+        ...context.user,
+        email: state.email,
+        accessToken: token.access,
+        refreshToken: token.refresh,
+        loggedIn: true,
+        customer: user.customer
       });
-
-      const status = rawResponse.status;
-      const content = await rawResponse.json();
-
-      console.log(status);
-      console.log(content.access, content.refresh);
-
-      if (status === 401) {
-        console.log("Couldn't find user");
-      } else {
-        context.setUser({
-          username: state.email,
-          accessToken: content.access,
-          refreshToken: content.refresh,
-          loggedIn: true
-        });
-        router.push('/');
-      }
-    })();
+      router.push('/');
+    }
   };
 
   const RenderRegister = () => {
     return alreadyUser ? (
       <div>
-        <RegisterUser registerForm={handleRegisterChange} />
-        <Button
+        <RegisterUser
+          addUser={addUser}
+          regState={regState}
+          registerForm={handleRegisterChange}
+        />
+        {/* <Button
           variant="contained"
           color="primary"
           className={classes.regBtn}
           onClick={addUser}
         >
           Lag ny bruker
-        </Button>
+        </Button> */}
       </div>
     ) : (
       <Button
@@ -128,21 +123,23 @@ const LoginForm = () => {
         color="primary"
         onClick={handleNewUser}
       >
-        Do not have a user yet
+        Jeg har ikke en bruker
       </Button>
     );
   };
 
+  // console.log(loggedIn);
+
   return (
     <div>
       <form>
-        <Paper elevation={5} className={classes.root}>
+        <div className={classes.root}>
           <TextField
             onChange={handleChange}
             name="email"
             type="email"
             id="outlined-basic"
-            label="Email"
+            label="E-post"
             variant="outlined"
             className={classes.div}
           />
@@ -151,7 +148,7 @@ const LoginForm = () => {
             type="password"
             onChange={handleChange}
             id="outlined-basic"
-            label="Password"
+            label="Passord"
             variant="outlined"
             className={classes.div}
           />
@@ -165,7 +162,7 @@ const LoginForm = () => {
           </Button>
           <Divider variant="middle" className={classes.divider} />
           <RenderRegister />
-        </Paper>
+        </div>
       </form>
     </div>
   );

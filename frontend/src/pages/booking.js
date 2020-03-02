@@ -3,13 +3,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 
 import Navbar from '../components/Navbar';
-import LoginForm from '../components/LoginForm';
+import BookingInfo from '../components/BookingInfo';
 
 const useStyles = makeStyles({
   root: {
     width: 'auto',
     height: '100vh',
-    backgroundImage: `url(${'/NewYork2.jpg'})`,
+    backgroundImage: `url(${'/NewYork.jpg'})`,
     backgroundRepeat: 'no-repeat',
     backgroundAttachment: 'fixed',
     backgroundSize: 'cover'
@@ -24,23 +24,22 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'column'
+    width: '60%',
+    height: '400px'
   }
 });
 
-const Index = () => {
+export default function Booking() {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
       <Navbar />
       <div className={classes.rootContainer}>
-        <Paper elevation={3} className={classes.container}>
-          <LoginForm />
+        <Paper className={classes.container}>
+          <BookingInfo />
         </Paper>
       </div>
     </div>
   );
-};
-
-export default Index;
+}

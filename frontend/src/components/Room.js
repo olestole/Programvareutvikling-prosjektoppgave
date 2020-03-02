@@ -1,5 +1,5 @@
-import React from 'react';
-import Link from 'next/link';
+import React, { useContext } from 'react';
+import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -8,6 +8,9 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
+import config from '../../config/env';
+
+import { UserContext } from '../components/UserProvider';
 
 // Styles for Room. This should be placed in media query
 // Not optimal for phone view at all
@@ -30,6 +33,49 @@ const useStyles = makeStyles({
 
 const MediaCard = props => {
   const classes = useStyles();
+  const context = useContext(UserContext);
+  const router = useRouter();
+
+  const passInfo = async () => {
+    console.log(context.user);
+    const body = {
+      from_date: context.user.booking.from_date,
+      to_date: context.user.booking.to_date,
+      people: context.user.booking.people,
+      room_id: props.room.id,
+      customer: context.user.customer
+    };
+
+    const res = await fetch(`${config.serverUrl}/bookings/`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + context.user.accessToken
+      },
+      body: JSON.stringify(body)
+    });
+
+    const bookingInfo = await res.json();
+
+    await context.setUser({
+      ...context.user,
+      bookedRoom: bookingInfo
+    });
+
+    router.push('/booking');
+  };
+
+  const handleBooking = () => {
+    context.user.loggedIn
+      ? passInfo()
+      : router.push({
+          pathname: '/login',
+          query: {
+            loggedIn: false
+          }
+        });
+  };
 
   const { title, room_number, price, capacity } = props.room;
   return (
@@ -57,10 +103,8 @@ const MediaCard = props => {
         </ListItem>
         <Divider />
         <ListItem>
-          <Button size="small" color="primary">
-            <Link href="booking">
-              <a>Book rom</a>
-            </Link>
+          <Button size="small" color="primary" onClick={handleBooking}>
+            Book nå
           </Button>
         </ListItem>
       </List>
