@@ -1,10 +1,13 @@
 import React from 'react';
 import UserProvider from '../components/UserProvider';
+import Layout from '../components/Layout';
 
 function MyApp({ Component, pageProps }) {
   return (
     <UserProvider>
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </UserProvider>
   );
 }
