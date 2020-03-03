@@ -5,28 +5,25 @@ import Navbar from '../components/Navbar';
 
 const useStyles = makeStyles({
   root: props => ({
-    width: 'auto',
     height: '100vh',
-    backgroundImage: `url(${props.backgroundImage})`,
     backgroundRepeat: 'no-repeat',
     backgroundAttachment: 'fixed',
-    backgroundSize: 'cover'
+    backgroundSize: 'cover',
+    width: `${props.width || '100%'}`,
+    backgroundImage: `url(${props.backgroundImage || '/NewYork.jpg'})`,
+    position: `${props.position || null}`,
+    overflowY: `${props.overflowY || null}`
   }),
   rootContainer: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     height: '90vh'
-  },
-  container: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
   }
 });
 
 const Layout = props => {
-  const classes = useStyles();
+  const classes = useStyles(props);
   return (
     <div className={classes.root}>
       <Navbar />
