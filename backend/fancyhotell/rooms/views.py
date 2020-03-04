@@ -23,9 +23,23 @@ class RoomViewset(viewsets.ModelViewSet):
     serializer_class = RoomSerializer
     permission_classes = [RoomPermissions]
 
-    def list(self, request):
+    def get_queryset(self):
         queryset = Room.get_available()
-        serializer = RoomSerializer(queryset, many=True)
+        from_date = self.request.query_params.get("from_date")
+        to_date = self.request.query_params.get("to_date")
+        people = self.request.query_params.get("people")
+
+        if from_date and to_date:
+            queryset = Room.get_available(
+                from_date=parse_date(from_date), to_date=parse_date(to_date)
+            )
+
+        if people:
+            queryset = queryset.filter(capacity__gte=people)
+        return queryset
+
+    def list(self, request):
+        serializer = RoomSerializer(self.get_queryset(), many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
