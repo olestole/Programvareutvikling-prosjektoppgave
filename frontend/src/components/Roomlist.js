@@ -11,7 +11,7 @@ const useStyles = makeStyles({
     justifyContent: 'space-evenly',
     alignItems: 'flex-start',
     width: '70%',
-    marginTop: '18em'
+    marginTop: '475px'
   }
 });
 
