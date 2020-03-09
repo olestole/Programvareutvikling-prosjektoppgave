@@ -41,12 +41,10 @@ export default function FindRoom() {
   const router = useRouter();
   const classes = useStyles();
   const [state, setState] = useState({
-    from_date: Date.now(),
-    to_date: Date.now(),
-    poeple: 0
+    from_date: null,
+    to_date: null,
+    people: null
   });
-
-  // Can probably join these two functions into one
 
   const formatDate = date => {
     return (
@@ -54,23 +52,23 @@ export default function FindRoom() {
     );
   };
 
+  // Can probably join these two functions into one
+
   const handleFromDate = date => {
-    console.log(formatDate(date));
     setState({
       ...state,
-      from_date: formatDate(date)
+      from_date: date
     });
   };
 
   const handleToDate = date => {
     setState({
       ...state,
-      to_date: formatDate(date)
+      to_date: date
     });
   };
 
   const handleQuantity = number => {
-    console.log(number);
     setState({
       ...state,
       people: number
@@ -78,26 +76,34 @@ export default function FindRoom() {
   };
 
   const handleSubmit = () => {
-    // console.log(state);
-    // if (state.to <= state.from_date) {
-    //   // alert("Can't book back in time 🤢");
-    // } else {
-    context.setUser({
-      ...context.user,
-      booking: {
-        ...state
-      }
-    });
+    if (state.to_date === null || state.from_date === null) {
+      alert('You have to choose a date');
+    } else if (state.to_date <= state.from_date) {
+      alert("Can't book back in time 🤢");
+    } else if (state.people == null) {
+      alert('You have to choose the number of people');
+    } else if (state.people <= 0) {
+      alert("Can't have a negative quantity of people");
+    } else {
+      context.setUser({
+        ...context.user,
+        booking: {
+          to_date: formatDate(state.to_date),
+          from_date: formatDate(state.from_date),
+          people: state.poeple
+        }
+      });
 
-    router.push({
-      pathname: '/rooms',
-      query: {
-        //Have to split this into day, month, year if wanting to use query params
-        from_date: state.from_date,
-        to_date: state.to_date,
-        people: state.people
-      }
-    });
+      router.push({
+        pathname: '/rooms',
+        query: {
+          //Have to split this into day, month, year if wanting to use query params
+          from_date: formatDate(state.from_date),
+          to_date: formatDate(state.to_date),
+          people: state.people
+        }
+      });
+    }
   };
 
   return (

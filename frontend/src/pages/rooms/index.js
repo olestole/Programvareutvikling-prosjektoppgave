@@ -1,51 +1,22 @@
 import React from 'react';
 import fetch from 'isomorphic-unfetch';
-import { makeStyles } from '@material-ui/core/styles';
 
+import Layout from '../../components/Layout';
 import Roomlist from '../../components/Roomlist';
-import Navbar from '../../components/Navbar';
 import config from '../../../config/env';
 
-const useStyles = makeStyles({
-  root: {
-    height: '100vh',
-    backgroundImage: `url(${'/NewYork.jpg'})`,
-    backgroundRepeat: 'no-repeat',
-    backgroundAttachment: 'fixed',
-    backgroundSize: 'cover',
-    position: 'fixed',
-    overflowY: 'scroll',
-    width: '100%'
-  },
-  rootContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '90vh'
-  },
-  container: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  spacing: {
-    height: '40px'
-  }
-});
-
-export default function Rooms(props) {
-  const classes = useStyles();
+const Rooms = props => {
   return (
-    <div className={classes.root}>
-      <Navbar />
-      <div className={classes.spacing} />
+    <Layout position={'fixed'} overflowY={'scroll'} width={'100%'}>
       <Roomlist rooms={props.rooms} />
-    </div>
+    </Layout>
   );
-}
+};
 
 Rooms.getInitialProps = async () => {
   const res = await fetch(`${config.serverUrl}/rooms/`);
   const json = await res.json();
   return { rooms: json };
 };
+
+export default Rooms;

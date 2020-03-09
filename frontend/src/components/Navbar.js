@@ -17,11 +17,12 @@ import Link from 'next/link';
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
-    height: '9vh',
-    position: 'fixed',
+    display: 'block',
+    height: 'auto',
+    position: 'sticky',
     width: '100%',
-    marginBottom: '30px',
-    zIndex: 1000
+    zIndex: 1000,
+    backgroundColor: '#3C3C3C'
   },
   menuButton: {
     marginRight: theme.spacing(2)

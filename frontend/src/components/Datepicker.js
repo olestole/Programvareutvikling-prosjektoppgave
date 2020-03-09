@@ -18,7 +18,7 @@ const DatePicker = props => {
   // Day: Sunday-indexed -->
   // Months: 0-indexed --> January.getMonth() == 0.
   // Year: 1900-indexed --> 2020.getYear() == 120
-  const [selectedDate, setSelectedDate] = useState(Date.now());
+  const [selectedDate, setSelectedDate] = useState(null);
 
   const handleDateChange = date => {
     setSelectedDate(date);

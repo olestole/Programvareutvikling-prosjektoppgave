@@ -82,7 +82,7 @@ const MediaCard = props => {
     <Card className={classes.root}>
       <CardMedia
         className={classes.media}
-        image="/building.jpg"
+        image="/Hotelroom.jpg"
         title="Contemplative Reptile"
       />
       <List className={classes.flexList} aria-label="Room attributes">
