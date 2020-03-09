@@ -43,7 +43,7 @@ export default function FindRoom() {
   const [state, setState] = useState({
     from_date: null,
     to_date: null,
-    people: 0
+    people: null
   });
 
   const formatDate = date => {
@@ -80,6 +80,10 @@ export default function FindRoom() {
       alert('You have to choose a date');
     } else if (state.to_date <= state.from_date) {
       alert("Can't book back in time 🤢");
+    } else if (state.people == null) {
+      alert('You have to choose the number of people');
+    } else if (state.people <= 0) {
+      alert("Can't have a negative quantity of people");
     } else {
       context.setUser({
         ...context.user,
