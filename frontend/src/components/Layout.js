@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { UserContext } from '../components/UserProvider';
 
 import Navbar from '../components/Navbar';
 
@@ -24,10 +25,16 @@ const useStyles = makeStyles({
 
 const Layout = props => {
   const classes = useStyles(props);
+
+  const context = useContext(UserContext);
   return (
     <div className={classes.root}>
       <Navbar />
-      <div className={classes.rootContainer}>{props.children}</div>
+      <div className={classes.rootContainer}>
+        {props.children.map(child =>
+          React.cloneElement(child, { context: context })
+        )}
+      </div>
     </div>
   );
 };
