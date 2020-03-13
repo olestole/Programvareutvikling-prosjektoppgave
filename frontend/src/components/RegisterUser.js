@@ -2,13 +2,11 @@ import React, { useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from './UserProvider';
-import config from '../../config/env';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import ErrorMsg from './ErrorMsg';
 
-import { login } from '../utils/api';
+import { login, postReq } from '../utils/api';
 
 const useStyles = makeStyles({
   container: {
@@ -99,22 +97,19 @@ const RegisterUser = props => {
     };
 
     // POST THE NEW USER TO BACKEND
-    const rawResponse = await fetch(`${config.serverUrl}/users/`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    });
-
+    const rawResponse = await postReq(body, 'users', null);
     const status = rawResponse.status;
     const content = await rawResponse.json();
 
     if (status == 200) {
       // LOGIN WITH THE NEW USER AND ROUTE TO EITHER '/' OR '/ROOMS'
       if (props.inBooking == 'true') {
-        login(body, context, router, '/rooms');
+        login(
+          body,
+          context,
+          router,
+          `/rooms?from_date=${context.user.booking.from_date}&${context.user.booking.to_date}&people=${context.user.booking.people}`
+        );
       } else {
         login(body, context, router, '/');
       }

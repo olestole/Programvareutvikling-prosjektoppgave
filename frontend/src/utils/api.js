@@ -2,32 +2,45 @@ import config from '../../config/env';
 import { trackPromise } from 'react-promise-tracker';
 
 // POST REQUEST
-export const postReq = (body, endpoint) =>
-  fetch(`${config.serverUrl}/${endpoint}/`, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(body)
-  });
+export const postReq = (body, endpoint, accessToken) => {
+  if (!accessToken) {
+    return fetch(`${config.serverUrl}/${endpoint}/`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+  } else {
+    return fetch(`${config.serverUrl}/${endpoint}/`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + accessToken
+      },
+      body: JSON.stringify(body)
+    });
+  }
+};
 
 //GET REQUEST
-export const getReq = (tokenData, endpoint) =>
+export const getReq = (accessToken, endpoint) =>
   fetch(`${config.serverUrl}/${endpoint}/`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + tokenData.access
+      Authorization: 'Bearer ' + accessToken
     }
   });
 
 // LOGIN WITH USERINFO
 export const logInWithData = async body => {
-  const tokenResponse = await postReq(body, 'token');
+  const tokenResponse = await postReq(body, 'token', null);
   const tokenData = await tokenResponse.json();
-  const userResponse = await getReq(tokenData, 'users');
+  const userResponse = await getReq(tokenData.access, 'users');
   const userData = await userResponse.json();
   return {
     token: tokenData,

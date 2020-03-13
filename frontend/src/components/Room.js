@@ -8,9 +8,9 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
-import config from '../../config/env';
 
 import { UserContext } from '../components/UserProvider';
+import { postReq } from '../utils/api';
 
 // Styles for Room. This should be placed in media query
 // Not optimal for phone view at all
@@ -37,7 +37,6 @@ const MediaCard = props => {
   const router = useRouter();
 
   const passInfo = async () => {
-    console.log(context.user);
     const body = {
       from_date: context.user.booking.from_date,
       to_date: context.user.booking.to_date,
@@ -46,16 +45,7 @@ const MediaCard = props => {
       customer: context.user.customer
     };
 
-    const res = await fetch(`${config.serverUrl}/bookings/`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + context.user.accessToken
-      },
-      body: JSON.stringify(body)
-    });
-
+    const res = await postReq(body, 'bookings', context.user.accessToken);
     const bookingInfo = await res.json();
 
     await context.setUser({
