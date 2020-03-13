@@ -97,7 +97,6 @@ export default function FindRoom() {
       router.push({
         pathname: '/rooms',
         query: {
-          //Have to split this into day, month, year if wanting to use query params
           from_date: formatDate(state.from_date),
           to_date: formatDate(state.to_date),
           people: state.people

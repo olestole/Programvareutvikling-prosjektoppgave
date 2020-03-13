@@ -7,9 +7,9 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import RegisterUser from './RegisterUser';
-import { logInWithData } from '../utils/api';
+import { login } from '../utils/api';
 
-// import login from '../../utils/fetcher';
+import LoadingSpinner from './LoadingSpinner';
 
 const useStyles = makeStyles({
   root: {
@@ -25,31 +25,22 @@ const useStyles = makeStyles({
   },
   divider: {
     margin: '1em 0 2em 0'
+  },
+  float: {
+    position: 'absolute',
+    left: '50%',
+    top: '50%'
   }
 });
 
 const LoginForm = () => {
   const router = useRouter();
-
   const context = useContext(UserContext);
-
   const classes = useStyles();
+
   const [state, setState] = useState({
     email: '',
     password: ''
-  });
-  const [regState, setRegState] = useState({
-    newEmail: '',
-    newPassword: '',
-    reenterPassword: '',
-    newPhone: '',
-    newAdress: '',
-    newFirstName: '',
-    newLastName: '',
-    newCountry: '',
-    newZip: '',
-    newCity: '',
-    newAdressNumber: ''
   });
 
   const [alreadyUser, setUserLogin] = useState(false);
@@ -63,59 +54,18 @@ const LoginForm = () => {
     setUserLogin(true);
   };
 
-  const handleRegisterChange = (name, value) => {
-    console.log(name, value);
-    setRegState({
-      ...regState,
-      [name]: value
-    });
-  };
-
-  const addUser = () => {
-    console.log(regState);
-  };
-
   const handleLogin = async () => {
     const body = {
       email: state.email,
       password: state.password
     };
 
-    // Log in to the api
-    const { token, user } = await logInWithData(body);
-
-    if (!user) {
-      console.log("Couldn't find user");
-    } else {
-      await context.setUser({
-        ...context.user,
-        email: state.email,
-        accessToken: token.access,
-        refreshToken: token.refresh,
-        loggedIn: true,
-        customer: user.customer
-      });
-      router.push('/');
-    }
+    login(body, context, router, '/');
   };
 
   const RenderRegister = () => {
     return alreadyUser ? (
-      <div>
-        <RegisterUser
-          addUser={addUser}
-          regState={regState}
-          registerForm={handleRegisterChange}
-        />
-        {/* <Button
-          variant="contained"
-          color="primary"
-          className={classes.regBtn}
-          onClick={addUser}
-        >
-          Lag ny bruker
-        </Button> */}
-      </div>
+      <RegisterUser />
     ) : (
       <Button
         className={classes.regBtn}
@@ -127,8 +77,6 @@ const LoginForm = () => {
       </Button>
     );
   };
-
-  // console.log(loggedIn);
 
   return (
     <div>
@@ -162,6 +110,9 @@ const LoginForm = () => {
           </Button>
           <Divider variant="middle" className={classes.divider} />
           <RenderRegister />
+          <div className={classes.float}>
+            <LoadingSpinner />
+          </div>
         </div>
       </form>
     </div>

@@ -31,7 +31,7 @@ const Layout = props => {
     <div className={classes.root}>
       <Navbar />
       <div className={classes.rootContainer}>
-        {props.children.map(child =>
+        {React.Children.map(props.children, child =>
           React.cloneElement(child, { context: context })
         )}
       </div>
