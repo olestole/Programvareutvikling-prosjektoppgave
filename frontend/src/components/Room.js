@@ -72,7 +72,7 @@ const MediaCard = props => {
       : router.push({
           pathname: '/login',
           query: {
-            loggedIn: false
+            inBooking: true
           }
         });
   };

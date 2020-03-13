@@ -37,7 +37,7 @@ const useStyles = makeStyles({
   }
 });
 
-const RegisterUser = () => {
+const RegisterUser = props => {
   const classes = useStyles();
   const router = useRouter();
   const context = useContext(UserContext);
@@ -112,10 +112,14 @@ const RegisterUser = () => {
     const content = await rawResponse.json();
 
     if (status == 200) {
-      // LOGIN WITH THE NEW USER AND ROUTE TO '/'
-      login(body, context, router, '/');
+      // LOGIN WITH THE NEW USER AND ROUTE TO EITHER '/' OR '/ROOMS'
+      if (props.inBooking == 'true') {
+        login(body, context, router, '/rooms');
+      } else {
+        login(body, context, router, '/');
+      }
     } else {
-      // Error when the user already exists
+      // Error when the user already exists, change this with custom error-message later
       console.log(content.email[0]);
       alert('Email already exists😟');
     }

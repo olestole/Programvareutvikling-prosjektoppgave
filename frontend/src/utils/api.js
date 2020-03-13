@@ -1,10 +1,9 @@
-import { useRouter } from 'react';
-
 import config from '../../config/env';
 import { trackPromise } from 'react-promise-tracker';
 
-export const logInWithData = async body => {
-  const rawResponse = await fetch(`${config.serverUrl}/token/`, {
+// POST REQUEST
+export const postReq = (body, endpoint) =>
+  fetch(`${config.serverUrl}/${endpoint}/`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -13,9 +12,9 @@ export const logInWithData = async body => {
     body: JSON.stringify(body)
   });
 
-  const tokenData = await rawResponse.json();
-
-  const userRes = await fetch(`${config.serverUrl}/users/`, {
+//GET REQUEST
+export const getReq = (tokenData, endpoint) =>
+  fetch(`${config.serverUrl}/${endpoint}/`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
@@ -24,22 +23,29 @@ export const logInWithData = async body => {
     }
   });
 
-  const userData = await userRes.json();
+// LOGIN WITH USERINFO
+export const logInWithData = async body => {
+  const tokenResponse = await postReq(body, 'token');
+  const tokenData = await tokenResponse.json();
+  const userResponse = await getReq(tokenData, 'users');
+  const userData = await userResponse.json();
   return {
     token: tokenData,
     user: userData[0]
   };
 };
 
+// LOGIN WITH INDICATOR
 export const loginWithIndicator = body => {
   return trackPromise(logInWithData(body));
 };
 
+// LOGIN AND VALIDATE IF IT'S A VALID USER-LOGIN
 export const login = async (body, context, router, routerURL) => {
-  // Log in to the api
   const { token, user } = await loginWithIndicator(body);
 
   if (!user) {
+    // Change this with custom error-message later
     alert("Couldn't find user😔");
   } else {
     await context.setUser({

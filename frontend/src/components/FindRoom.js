@@ -90,7 +90,7 @@ export default function FindRoom() {
         booking: {
           to_date: formatDate(state.to_date),
           from_date: formatDate(state.from_date),
-          people: state.poeple
+          people: state.people
         }
       });
 

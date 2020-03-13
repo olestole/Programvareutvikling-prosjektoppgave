@@ -33,7 +33,7 @@ const useStyles = makeStyles({
   }
 });
 
-const LoginForm = () => {
+const LoginForm = props => {
   const router = useRouter();
   const context = useContext(UserContext);
   const classes = useStyles();
@@ -60,12 +60,23 @@ const LoginForm = () => {
       password: state.password
     };
 
-    login(body, context, router, '/');
+    console.log(props.inBooking);
+
+    if (props.inBooking == 'true') {
+      login(
+        body,
+        context,
+        router,
+        `/rooms?from_date=${context.user.booking.from_date}&${context.user.booking.to_date}&people=${context.user.booking.people}`
+      );
+    } else {
+      login(body, context, router, '/');
+    }
   };
 
   const RenderRegister = () => {
     return alreadyUser ? (
-      <RegisterUser />
+      <RegisterUser inBooking={props.inBooking} />
     ) : (
       <Button
         className={classes.regBtn}
