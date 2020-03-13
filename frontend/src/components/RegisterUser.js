@@ -6,6 +6,7 @@ import config from '../../config/env';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import ErrorMsg from './ErrorMsg';
 
 import { login } from '../utils/api';
 
@@ -110,14 +111,14 @@ const RegisterUser = () => {
     const status = rawResponse.status;
     const content = await rawResponse.json();
 
-    if (status === 401) {
-      console.log('Error');
+    if (status == 200) {
+      // LOGIN WITH THE NEW USER AND ROUTE TO '/'
+      login(body, context, router, '/');
     } else {
-      console.log(content);
+      // Error when the user already exists
+      console.log(content.email[0]);
+      alert('Email already exists😟');
     }
-
-    // LOGIN WITH THE NEW USER AND ROUTE TO '/'
-    login(body, context, router, '/');
   };
 
   return (

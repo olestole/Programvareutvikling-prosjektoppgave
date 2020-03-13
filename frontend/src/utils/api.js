@@ -40,7 +40,7 @@ export const login = async (body, context, router, routerURL) => {
   const { token, user } = await loginWithIndicator(body);
 
   if (!user) {
-    console.log("Couldn't find user");
+    alert("Couldn't find user😔");
   } else {
     await context.setUser({
       ...context.user,
