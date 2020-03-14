@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
+import Paper from '@material-ui/core/Paper';
 import RegisterUser from './RegisterUser';
 import { login } from '../utils/api';
 
@@ -30,6 +31,12 @@ const useStyles = makeStyles({
     position: 'absolute',
     left: '50%',
     top: '50%'
+  },
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column'
   }
 });
 
@@ -90,43 +97,45 @@ const LoginForm = props => {
   };
 
   return (
-    <div>
-      <form>
-        <div className={classes.root}>
-          <TextField
-            onChange={handleChange}
-            name="email"
-            type="email"
-            id="outlined-basic"
-            label="E-post"
-            variant="outlined"
-            className={classes.div}
-          />
-          <TextField
-            name="password"
-            type="password"
-            onChange={handleChange}
-            id="outlined-basic"
-            label="Passord"
-            variant="outlined"
-            className={classes.div}
-          />
-          <Button
-            variant="outlined"
-            color="secondary"
-            className={classes.div}
-            onClick={handleLogin}
-          >
-            Logg inn
-          </Button>
-          <Divider variant="middle" className={classes.divider} />
-          <RenderRegister />
-          <div className={classes.float}>
-            <LoadingSpinner />
+    <Paper elevation={3} className={classes.container}>
+      <div>
+        <form>
+          <div className={classes.root}>
+            <TextField
+              onChange={handleChange}
+              name="email"
+              type="email"
+              id="outlined-basic"
+              label="E-post"
+              variant="outlined"
+              className={classes.div}
+            />
+            <TextField
+              name="password"
+              type="password"
+              onChange={handleChange}
+              id="outlined-basic"
+              label="Passord"
+              variant="outlined"
+              className={classes.div}
+            />
+            <Button
+              variant="outlined"
+              color="secondary"
+              className={classes.div}
+              onClick={handleLogin}
+            >
+              Logg inn
+            </Button>
+            <Divider variant="middle" className={classes.divider} />
+            <RenderRegister />
+            <div className={classes.float}>
+              <LoadingSpinner />
+            </div>
           </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    </Paper>
   );
 };
 

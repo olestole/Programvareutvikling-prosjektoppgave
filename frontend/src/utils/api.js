@@ -42,6 +42,9 @@ export const logInWithData = async body => {
   const tokenData = await tokenResponse.json();
   const userResponse = await getReq(tokenData.access, 'users');
   const userData = await userResponse.json();
+
+  sessionStorage.setItem('jwtToken', tokenData.access);
+
   return {
     token: tokenData,
     user: userData[0]
@@ -71,4 +74,17 @@ export const login = async (body, context, router, routerURL) => {
     });
     router.push(routerURL);
   }
+};
+
+export const getBookings = async ({ user }) => {
+  const rawResponse = await fetch(`${config.serverUrl}/bookings/`, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + user.tokenData.access
+    }
+  });
+  const data = await rawResponse.json();
+  return data;
 };

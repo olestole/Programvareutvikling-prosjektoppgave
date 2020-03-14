@@ -35,6 +35,22 @@ const Layout = props => {
           React.cloneElement(child, { context: context })
         )}
       </div>
+      <style jsx global>
+        {`
+          body {
+            margin: 0;
+            font-family: Roboto;
+          }
+          a {
+            color: red;
+            font-weight: 500;
+            text-decoration: none;
+          }
+          a:visited {
+            color: #b63030;
+          }
+        `}
+      </style>
     </div>
   );
 };

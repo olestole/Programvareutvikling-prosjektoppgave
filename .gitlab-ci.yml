@@ -86,7 +86,7 @@ stop_now:
   extends: .frontend
   stage: review
   script:
-    - ./node_modules/.bin/now rm -t $ZEIT_NOW_TOKEN -y $CI_BUILD_REF_SLUG
+    - ./node_modules/.bin/now rm -t $ZEIT_NOW_TOKEN -y "fancyhotell-${CI_BUILD_REF_SLUG}.now.sh"
   when: manual
   environment:
     name: review/$CI_BUILD_REF_NAME
