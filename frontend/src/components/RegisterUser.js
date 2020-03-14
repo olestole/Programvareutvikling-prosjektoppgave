@@ -2,12 +2,11 @@ import React, { useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from './UserProvider';
-import config from '../../config/env';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-import { logInWithData } from '../utils/api';
+import { login, postReq } from '../utils/api';
 
 const useStyles = makeStyles({
   container: {
@@ -36,10 +35,11 @@ const useStyles = makeStyles({
   }
 });
 
-const RegisterUser = () => {
+const RegisterUser = props => {
   const classes = useStyles();
   const router = useRouter();
   const context = useContext(UserContext);
+
   const [regState, setRegState] = useState({
     newEmail: '',
     newPassword: '',
@@ -63,7 +63,7 @@ const RegisterUser = () => {
   };
 
   const addUser = async () => {
-    context.setUser({
+    await context.setUser({
       ...context.user,
       customer: {
         email: regState.newEmail,
@@ -80,6 +80,7 @@ const RegisterUser = () => {
       }
     });
 
+    // CREATE BODY TO POST THE NEW USER TO BACKEND
     const body = {
       email: regState.newEmail,
       first_name: regState.newFirstName,
@@ -95,38 +96,27 @@ const RegisterUser = () => {
       }
     };
 
-    const rawResponse = await fetch(`${config.serverUrl}/users/`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    });
-
+    // POST THE NEW USER TO BACKEND
+    const rawResponse = await postReq(body, 'users', null);
     const status = rawResponse.status;
-
     const content = await rawResponse.json();
 
-    const { user, token } = await logInWithData({
-      email: regState.newEmail,
-      password: regState.newPassword
-    });
-
-    await context.setUser({
-      ...context.user,
-      email: user.email,
-      accessToken: token.access,
-      refreshToken: token.refresh,
-      loggedIn: true,
-      customer: user.customer
-    });
-    router.push('/');
-
-    if (status === 401) {
-      console.log('Error');
+    if (status == 200) {
+      // LOGIN WITH THE NEW USER AND ROUTE TO EITHER '/' OR '/ROOMS'
+      if (props.inBooking == 'true') {
+        login(
+          body,
+          context,
+          router,
+          `/rooms?from_date=${context.user.booking.from_date}&${context.user.booking.to_date}&people=${context.user.booking.people}`
+        );
+      } else {
+        login(body, context, router, '/');
+      }
     } else {
-      console.log(content);
+      // Error when the user already exists, change this with custom error-message later
+      console.log(content.email[0]);
+      alert('Email already exists😟');
     }
   };
 
