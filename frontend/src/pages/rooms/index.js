@@ -13,8 +13,13 @@ const Rooms = props => {
   );
 };
 
-Rooms.getInitialProps = async () => {
-  const res = await fetch(`${config.serverUrl}/rooms/`);
+Rooms.getInitialProps = async props => {
+  const { query } = props;
+  const res = await fetch(
+    `${config.serverUrl}/rooms/?${query.from_date &&
+      'from_date=' + query.from_date}${query.to_date &&
+      '&to_date=' + query.to_date}${query.people && '&people=' + query.people}`
+  );
   const json = await res.json();
   return { rooms: json };
 };

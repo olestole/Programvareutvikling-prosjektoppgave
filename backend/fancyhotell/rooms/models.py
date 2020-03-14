@@ -25,10 +25,10 @@ class Room(models.Model):
         to_date=timezone.now() + timezone.timedelta(days=30),
     ):
         booked_rooms = (
-            Booking.objects.exclude(from_date__lte=to_date).exclude(
-                to_date__gte=from_date
-            )
-        ).values("room")
+            Booking.objects.filter(from_date__lt=to_date)
+            .filter(to_date__gt=from_date)
+            .values("room")
+        )
         return Room.objects.exclude(id__in=booked_rooms)
 
     def is_available(self, from_date, to_date):
