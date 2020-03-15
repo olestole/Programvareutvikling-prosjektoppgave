@@ -24,7 +24,6 @@ const withAuthSync = WrappedComponent => {
     let userData;
     if (fancyhotellAuth) {
       userData = await loginWithToken(fancyhotellAuth);
-      console.log(userData);
     }
     return { ...componentProps, user: userData, token: fancyhotellAuth };
   };
