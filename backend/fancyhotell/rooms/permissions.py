@@ -12,6 +12,9 @@ class BookingPermissions(permissions.BasePermission):
             return request.user.is_authenticated
         if request.method == "POST":
             return True
+        if request.method == "DELETE":
+            print(request.user.is_authenticated)
+            return request.user.is_authenticated
         return request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
@@ -30,7 +33,7 @@ class BookingPermissions(permissions.BasePermission):
             return (
                 request.user.is_authenticated
                 and obj.customer.email == request.user.email
-                and obj.from_date - timedelta(days=24) < datetime.date(datetime.now())
+                and obj.from_date - timedelta(days=1) > datetime.date(datetime.now())
             )
         return False
 

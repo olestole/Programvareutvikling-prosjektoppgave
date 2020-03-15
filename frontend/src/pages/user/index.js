@@ -13,7 +13,7 @@ const useStyles = makeStyles({
   container: {
     justifyContent: 'center',
     width: '90%',
-    height: '90%'
+    paddingBottom: '30px'
   }
 });
 
@@ -21,7 +21,7 @@ const Index = props => {
   const classes = useStyles();
 
   return (
-    <Layout backgroundImage={'NewYork2.jpg'} {...props}>
+    <Layout backgroundImage={'NewYork2.jpg'} overflowY="scroll" {...props}>
       <RequireLogin>
         <Paper elevation={3} className={classes.container}>
           <Suspense fallback={<LoadingSpinner />}>

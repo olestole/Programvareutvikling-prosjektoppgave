@@ -129,7 +129,8 @@ const BookingDetail = () => {
 
   const { data, error } = useSWR(
     user.accessToken ? ['bookings/', user.accessToken] : null,
-    url => getReq(url, user.accessToken)
+    url => getReq(url, user.accessToken),
+    { suspense: true }
   );
   const bookings = data;
   return (
