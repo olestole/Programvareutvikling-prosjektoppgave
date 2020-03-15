@@ -42,7 +42,7 @@ class BookingCreateSerializerWithCustomerData(BookingCreateSerializer):
 class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
-        fields = ["id", "from_date", "to_date", "room", "customer"]
+        fields = ["id", "from_date", "to_date", "room", "customer", "people"]
 
 
 class BookingDetailSerializer(serializers.ModelSerializer):

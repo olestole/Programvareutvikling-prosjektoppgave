@@ -1,19 +1,21 @@
 import config from '../../config/env';
 import { trackPromise } from 'react-promise-tracker';
+import fetch from 'isomorphic-unfetch';
+import cookie from 'js-cookie';
 
 // POST REQUEST
 export const postReq = (body, endpoint, accessToken) => {
   if (!accessToken) {
-    return fetch(`${config.serverUrl}/${endpoint}/`, {
+    return fetch(`${config.serverUrl}/${endpoint}`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(body)
-    });
+    }).then(r => r.json());
   } else {
-    return fetch(`${config.serverUrl}/${endpoint}/`, {
+    return fetch(`${config.serverUrl}/${endpoint}`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -21,34 +23,69 @@ export const postReq = (body, endpoint, accessToken) => {
         Authorization: 'Bearer ' + accessToken
       },
       body: JSON.stringify(body)
-    });
+    }).then(r => r.json());
   }
 };
 
 //GET REQUEST
-export const getReq = (accessToken, endpoint) =>
-  fetch(`${config.serverUrl}/${endpoint}/`, {
-    method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + accessToken
-    }
-  });
+export const getReq = (endpoint, accessToken) =>
+  accessToken
+    ? fetch(`${config.serverUrl}/${endpoint}`, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + accessToken
+        }
+      }).then(r => r.json())
+    : fetch(`${config.serverUrl}/${endpoint}`, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      }).then(r => r.json());
+
+const storeToken = token => {
+  cookie.set('fancyhotellAuth', token, { expires: 1 });
+};
+
+// DELETE REQUEST
+export const deleteReq = (endpoint, accessToken) =>
+  accessToken
+    ? fetch(`${config.serverUrl}/${endpoint}`, {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + accessToken
+        }
+      }).then(r => r.json())
+    : fetch(`${config.serverUrl}/${endpoint}`, {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      }).then(r => r.json());
 
 // LOGIN WITH USERINFO
 export const logInWithData = async body => {
-  const tokenResponse = await postReq(body, 'token', null);
-  const tokenData = await tokenResponse.json();
-  const userResponse = await getReq(tokenData.access, 'users');
-  const userData = await userResponse.json();
+  const tokenData = await postReq(body, 'token/', null);
+  const userData = await getReq('users/', tokenData.access);
 
-  sessionStorage.setItem('jwtToken', tokenData.access);
+  storeToken(tokenData.access);
 
   return {
     token: tokenData,
     user: userData[0]
   };
+};
+
+// LOGIN WITH TOKEN
+export const loginWithToken = async token => {
+  const userData = await getReq('users/', token);
+  return userData;
 };
 
 // LOGIN WITH INDICATOR
@@ -57,7 +94,7 @@ export const loginWithIndicator = body => {
 };
 
 // LOGIN AND VALIDATE IF IT'S A VALID USER-LOGIN
-export const login = async (body, context, router, routerURL) => {
+export const login = async (body, context) => {
   const { token, user } = await loginWithIndicator(body);
 
   if (!user) {
@@ -72,19 +109,5 @@ export const login = async (body, context, router, routerURL) => {
       loggedIn: true,
       customer: user.customer
     });
-    router.push(routerURL);
   }
-};
-
-export const getBookings = async ({ user }) => {
-  const rawResponse = await fetch(`${config.serverUrl}/bookings/`, {
-    method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + user.tokenData.access
-    }
-  });
-  const data = await rawResponse.json();
-  return data;
 };

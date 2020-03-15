@@ -19,7 +19,6 @@ from fancyhotell.users.models import Address, Customer, User
 
 
 class RoomViewset(viewsets.ModelViewSet):
-    queryset = Room.objects.all()
     serializer_class = RoomSerializer
     permission_classes = [RoomPermissions]
 
@@ -50,7 +49,6 @@ class RoomViewset(viewsets.ModelViewSet):
 
 
 class BookingViewset(viewsets.ModelViewSet):
-    queryset = Booking.objects.all()
     serializer_class = BookingSerializer
     permission_classes = [BookingPermissions]
 
@@ -61,11 +59,11 @@ class BookingViewset(viewsets.ModelViewSet):
         return Booking.objects.all()
 
     def list(self, request):
-        serializer = BookingSerializer(self.queryset, many=True)
+        serializer = BookingSerializer(self.get_queryset(), many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
-        queryset = Booking.objects.all()
+        queryset = self.get_queryset()
         booking = get_object_or_404(queryset, pk=pk)
         serializer = BookingDetailSerializer(booking)
         return Response(serializer.data)

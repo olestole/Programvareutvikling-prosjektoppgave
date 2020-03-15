@@ -67,17 +67,9 @@ const LoginForm = props => {
       password: state.password
     };
 
-    console.log(props.inBooking);
-
-    if (props.inBooking == 'true') {
-      login(
-        body,
-        context,
-        router,
-        `/rooms?from_date=${context.user.booking.from_date}&${context.user.booking.to_date}&people=${context.user.booking.people}`
-      );
-    } else {
-      login(body, context, router, '/');
+    login(body, context);
+    if (props.redirect) {
+      router.push(props.redirect);
     }
   };
 

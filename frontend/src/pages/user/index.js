@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import BookingDetail from '../../components/BookingDetail';
 
 import Layout from '../../components/Layout';
 import RequireLogin from '../../utils/requireLogin';
+import LoadingSpinner from '../../components/LoadingSpinner';
+
+import withLogin from '../../utils/withLogin';
 
 const useStyles = makeStyles({
   container: {
@@ -14,18 +17,20 @@ const useStyles = makeStyles({
   }
 });
 
-const Index = () => {
+const Index = props => {
   const classes = useStyles();
 
   return (
-    <Layout backgroundImage={'NewYork2.jpg'}>
+    <Layout backgroundImage={'NewYork2.jpg'} {...props}>
       <RequireLogin>
         <Paper elevation={3} className={classes.container}>
-          <BookingDetail />
+          <Suspense fallback={<LoadingSpinner />}>
+            <BookingDetail />
+          </Suspense>
         </Paper>
       </RequireLogin>
     </Layout>
   );
 };
 
-export default Index;
+export default withLogin(Index);
