@@ -19,9 +19,31 @@ class RoomSerializer(serializers.ModelSerializer):
 
 
 class RoomDetailSerializer(RoomSerializer):
+    unavailable_dates = serializers.SerializerMethodField()
+
+    def get_unavailable_dates(self, obj):
+        bookings = (
+            Booking.objects.filter(from_date__gte=timezone.now())
+            .filter(room=obj.id)
+            .order_by("from_date")
+        )
+        dates = []
+        for booking in bookings:
+            dates.append({"from": booking.from_date, "to": booking.to_date})
+
+        return dates
+
     class Meta:
         model = Room
-        fields = ["id", "room_number", "title", "description", "price", "capacity"]
+        fields = [
+            "id",
+            "room_number",
+            "title",
+            "description",
+            "price",
+            "capacity",
+            "unavailable_dates",
+        ]
 
 
 class BookingCreateSerializer(serializers.ModelSerializer):

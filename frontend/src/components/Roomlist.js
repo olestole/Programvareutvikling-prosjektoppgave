@@ -36,7 +36,7 @@ const Room = props => {
   const classes = useStyles();
 
   const { title, room_number, price, capacity } = props.room;
-  const { handleBooking } = props;
+  const { handleClick } = props;
   return (
     <Card className={classes.root}>
       <CardMedia
@@ -62,8 +62,8 @@ const Room = props => {
         </ListItem>
         <Divider />
         <ListItem>
-          <Button size="small" color="primary" onClick={handleBooking}>
-            Book nå
+          <Button size="small" color="primary" onClick={handleClick}>
+            Se mer
           </Button>
         </ListItem>
       </List>
@@ -85,53 +85,23 @@ const listStyles = makeStyles({
 const Roomlist = props => {
   const classes = listStyles();
 
-  const context = useContext(UserContext);
   const router = useRouter();
 
-  const [isBooking, setIsBooking] = useState(false);
-
-  const passInfo = async roomId => {
-    const body = {
-      from_date: context.user.booking.from_date,
-      to_date: context.user.booking.to_date,
-      people: context.user.booking.people,
-      room_id: roomId,
-      customer: context.user.customer
-    };
-
-    const bookingInfo = await postReq(
-      body,
-      'bookings/',
-      context.user.accessToken
+  const handleClick = id => {
+    const { from_date, to_date } = router.query;
+    router.push(
+      `/rooms/[id]/?from_date=${from_date}&to_date=${to_date}`,
+      `/rooms/${id}/?from_date=${from_date}&to_date=${to_date}`
     );
-
-    await context.setUser({
-      ...context.user,
-      bookedRoom: bookingInfo
-    });
-
-    router.push('/booking');
   };
 
-  const handleBooking = id => {
-    setIsBooking(true);
-    context.user.loggedIn && passInfo(id);
-  };
-
-  if (isBooking && !context.user.loggedIn) {
-    return (
-      <RequireLogin>
-        <span>If you see this, something went wrong</span>
-      </RequireLogin>
-    );
-  }
   return (
     <div className={classes.root}>
       {props.rooms.map(room => (
         <Room
           key={room.id}
           room={room}
-          handleBooking={() => handleBooking(room.id)}
+          handleClick={() => handleClick(room.id)}
         />
       ))}
     </div>

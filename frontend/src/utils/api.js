@@ -124,3 +124,5 @@ export const logout = async context => {
     customer: {}
   });
 };
+
+export const getRoomById = async id => await getReq(`rooms/${id}/`);

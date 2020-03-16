@@ -58,6 +58,11 @@ const listStyles = makeStyles({
     display: 'flex',
     justifyContent: 'space-between'
   },
+  detailsLink: {
+    marginTop: '5px',
+    color: '#3f51b5',
+    cursor: 'pointer'
+  },
   details: {
     marginTop: '5px'
   }
@@ -87,9 +92,15 @@ const BookingList = ({ bookings, accessToken }) => {
                 </Typography>
               </div>
               <Divider />
-              <Typography variant="p" component="p" className={classes.details}>
-                Rom nummer: {booking.room}
-              </Typography>
+              <Link href="/rooms/[id]" as={`/rooms/${booking.room}`}>
+                <Typography
+                  variant="p"
+                  component="p"
+                  className={classes.detailsLink}
+                >
+                  Rom nummer: {booking.room}
+                </Typography>
+              </Link>
               <Typography variant="p" component="p" className={classes.details}>
                 Antall: {booking.people}
               </Typography>
