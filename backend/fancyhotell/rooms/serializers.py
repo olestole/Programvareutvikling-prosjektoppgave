@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from fancyhotell.rooms.models import Room, Booking, ImageModel
+from django.db import transaction
+from fancyhotell.rooms.models import Room, Booking, ImageModel, Amenity
 from fancyhotell.users.serializers import CustomerDataSerializer
 from django.utils import timezone
 
@@ -8,6 +9,18 @@ class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImageModel
         fields = ["image"]
+
+
+class AmenitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Amenity
+        fields = ["amenity"]
+
+    def to_representation(self, instance):
+        return instance.get_amenity_display()
+
+    def to_internal_value(self, data):
+        return {"amenity": data}
 
 
 class RoomSerializer(serializers.ModelSerializer):
@@ -20,6 +33,7 @@ class RoomSerializer(serializers.ModelSerializer):
 
 class RoomDetailSerializer(RoomSerializer):
     unavailable_dates = serializers.SerializerMethodField()
+    amenities = AmenitySerializer(many=True, required=False, default=[])
 
     def get_unavailable_dates(self, obj):
         bookings = (
@@ -33,6 +47,22 @@ class RoomDetailSerializer(RoomSerializer):
 
         return dates
 
+    # Override create for amenities
+    def create(self, validated_data):
+        amenities = [
+            amenity["amenity"] for amenity in validated_data.pop("amenities", [])
+        ]
+
+        with transaction.atomic():
+            instance = super().create(validated_data)
+            for amenity in amenities:
+                Amenity.objects.get_or_create(pk=amenity)
+            if amenities:
+                instance.amenities.set(amenities)
+                instance.save()
+
+        return instance
+
     class Meta:
         model = Room
         fields = [
@@ -42,6 +72,7 @@ class RoomDetailSerializer(RoomSerializer):
             "description",
             "price",
             "capacity",
+            "amenities",
             "unavailable_dates",
         ]
 

@@ -23,6 +23,12 @@ class RoomViewset(viewsets.ModelViewSet):
     serializer_class = RoomSerializer
     permission_classes = [RoomPermissions]
 
+    def get_serializer_class(self):
+        # This is mostly just for metadata
+        if self.request.method in ["POST"]:
+            return RoomDetailSerializer
+        return RoomSerializer
+
     def get_queryset(self):
         queryset = Room.get_available()
         from_date = self.request.query_params.get("from_date")
