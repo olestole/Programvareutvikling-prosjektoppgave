@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../components/UserProvider';
-
 import Navbar from '../components/Navbar';
 
 const useStyles = makeStyles({
@@ -27,6 +26,18 @@ const Layout = props => {
   const classes = useStyles(props);
 
   const context = useContext(UserContext);
+  console.log(props);
+  if (props.user && props.user[0] && !context.user.loggedIn) {
+    const user = props.user[0];
+    context.setUser({
+      ...context.user,
+      email: user.email,
+      accessToken: props.token,
+      loggedIn: true,
+      customer: user.customer
+    });
+  }
+  console.log('hello');
   return (
     <div className={classes.root}>
       <Navbar />
@@ -35,6 +46,22 @@ const Layout = props => {
           React.cloneElement(child, { context: context })
         )}
       </div>
+      <style jsx global>
+        {`
+          body {
+            margin: 0;
+            font-family: Roboto;
+          }
+          a {
+            color: red;
+            font-weight: 500;
+            text-decoration: none;
+          }
+          a:visited {
+            color: #b63030;
+          }
+        `}
+      </style>
     </div>
   );
 };

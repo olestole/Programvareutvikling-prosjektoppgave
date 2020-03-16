@@ -1,9 +1,7 @@
 import React from 'react';
-import fetch from 'isomorphic-unfetch';
-
 import Layout from '../../components/Layout';
 import Roomlist from '../../components/Roomlist';
-import config from '../../../config/env';
+import { getReq } from '../../utils/api';
 
 const Rooms = props => {
   return (
@@ -15,13 +13,13 @@ const Rooms = props => {
 
 Rooms.getInitialProps = async props => {
   const { query } = props;
-  const res = await fetch(
-    `${config.serverUrl}/rooms/?${query.from_date &&
+  const res = await getReq(
+    `rooms/?${query.from_date &&
       'from_date=' + query.from_date}${query.to_date &&
       '&to_date=' + query.to_date}${query.people && '&people=' + query.people}`
   );
-  const json = await res.json();
-  return { rooms: json };
+  console.log(res);
+  return { rooms: res };
 };
 
 export default Rooms;

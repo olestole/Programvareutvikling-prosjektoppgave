@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Drawer from '@material-ui/core/Drawer';
@@ -12,7 +13,6 @@ import HomeIcon from '@material-ui/icons/Home';
 // import PersonIcon from '@material-ui/icons/Person';
 import HotelIcon from '@material-ui/icons/Hotel';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 
 const links = [
@@ -21,8 +21,8 @@ const links = [
 ];
 
 const linksPriv = [
-  { link: '/myBookings', icon: HotelIcon, text: 'Mine bookinger' },
-  { link: '/myPage', icon: AccountCircleIcon, text: 'Min side' }
+  { link: '/user', icon: HotelIcon, text: 'Mine bookinger' },
+  { link: '/user', icon: AccountCircleIcon, text: 'Min side' }
 ];
 
 const useStyles = makeStyles({
