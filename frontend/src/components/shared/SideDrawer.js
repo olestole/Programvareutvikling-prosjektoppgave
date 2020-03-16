@@ -22,7 +22,7 @@ const links = [
 
 const linksPriv = [
   { link: '/user', icon: HotelIcon, text: 'Mine bookinger' },
-  { link: '/user', icon: AccountCircleIcon, text: 'Min side' }
+  { link: '/myPage', icon: AccountCircleIcon, text: 'Min side' }
 ];
 
 const useStyles = makeStyles({

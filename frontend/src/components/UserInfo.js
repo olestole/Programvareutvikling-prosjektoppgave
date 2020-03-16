@@ -1,29 +1,72 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
+import { UserContext } from './UserProvider';
 import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
 
 import Avatar from './Avatar';
 
 const useStyles = makeStyles({
   container: {
     display: 'flex',
-    padding: '40px'
+    padding: '40px',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly'
   },
   row: {
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    justifyContent: 'space-around'
+  },
+  column: {
+    display: 'flex',
+    flexDirection: 'column',
+    margin: '20px'
+  },
+  listItem: {
+    margin: '5px'
   }
 });
 
 const UserInfo = () => {
   const classes = useStyles();
+  const { user } = useContext(UserContext);
+  const address = user.customer.address;
+
+  const name = `${user.customer.first_name} ${user.customer.last_name}`;
+  console.log(user);
   return (
-    <Paper className={classes.container}>
-      <div className={classes.row}>
-        <h3>OLESTOLE@OUTLOOK.SE</h3>
-        <Avatar variant="square" />
+    <Paper elevation={3} className={classes.container}>
+      <div className={classes.column}>
+        <h1 className={classes.listItem}>{name.toUpperCase()}</h1>
+        <h4 className={classes.listItem}>{user.email.toUpperCase()}</h4>
+        <h4 className={classes.listItem}>{user.customer.phone}</h4>
+        <br />
+        <h4 className={classes.listItem}>
+          {address.street_name} {address.street_number}
+        </h4>
+        <h4 className={classes.listItem}>
+          {address.city}, {address.postal_code}
+        </h4>
+        <h4 className={classes.listItem}>{address.country}</h4>
+        <br />
+        <Button
+          className={classes.listItem}
+          variant="contained"
+          color="primary"
+        >
+          ENDRE BRUKERINFO
+        </Button>
       </div>
+      <div className={classes.column}>
+        <Avatar
+          size="12"
+          letter={user.loggedIn ? user.email[0].toUpperCase() : null}
+          color={user.loggedIn ? 'purple' : null}
+        />
+      </div>
+      <div></div>
     </Paper>
   );
 };

@@ -3,6 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import UserInfo from '../components/UserInfo';
 import Layout from '../components/Layout';
+import withLogin from '../utils/withLogin';
+import RequireLogin from '../utils/withLogin';
 
 const useStyles = makeStyles({
   container: {
@@ -12,13 +14,17 @@ const useStyles = makeStyles({
   }
 });
 
-export default function Index() {
+const MyPage = () => {
   const classes = useStyles();
   return (
     <Layout overflowY={'scroll'}>
-      <div className={classes.container}>
-        <UserInfo />
-      </div>
+      <RequireLogin>
+        <div className={classes.container} context={'HALLA'}>
+          <UserInfo />
+        </div>
+      </RequireLogin>
     </Layout>
   );
-}
+};
+
+export default withLogin(MyPage);

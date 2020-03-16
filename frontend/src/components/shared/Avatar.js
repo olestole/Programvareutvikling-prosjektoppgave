@@ -11,18 +11,22 @@ const useStyles = makeStyles(theme => ({
       margin: theme.spacing(1)
     }
   },
-  orange: {
+  orange: props => ({
     color: theme.palette.getContrastText(deepOrange[500]),
-    backgroundColor: deepOrange[500]
-  },
-  purple: {
+    backgroundColor: deepOrange[500],
+    width: theme.spacing(props.size),
+    height: theme.spacing(props.size)
+  }),
+  purple: props => ({
     color: theme.palette.getContrastText(deepPurple[500]),
-    backgroundColor: deepPurple[500]
-  }
+    backgroundColor: deepPurple[500],
+    width: theme.spacing(parseInt(props.size)),
+    height: theme.spacing(parseInt(props.size))
+  })
 }));
 
 export default function LetterAvatars(props) {
-  const classes = useStyles();
+  const classes = useStyles(props);
 
   return (
     <div className={classes.root}>
