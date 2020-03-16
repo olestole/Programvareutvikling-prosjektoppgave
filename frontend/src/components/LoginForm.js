@@ -61,14 +61,15 @@ const LoginForm = props => {
     setUserLogin(true);
   };
 
-  const handleLogin = async () => {
+  const handleLogin = async e => {
+    e.preventDefault();
     const body = {
       email: state.email,
       password: state.password
     };
 
-    login(body, context);
-    if (props.redirect) {
+    const res = await login(body, context);
+    if (props.redirect && res) {
       router.push(props.redirect);
     }
   };
@@ -90,42 +91,40 @@ const LoginForm = props => {
 
   return (
     <Paper elevation={3} className={classes.container}>
-      <div>
-        <form>
-          <div className={classes.root}>
-            <TextField
-              onChange={handleChange}
-              name="email"
-              type="email"
-              id="outlined-basic"
-              label="E-post"
-              variant="outlined"
-              className={classes.div}
-            />
-            <TextField
-              name="password"
-              type="password"
-              onChange={handleChange}
-              id="outlined-basic"
-              label="Passord"
-              variant="outlined"
-              className={classes.div}
-            />
-            <Button
-              variant="outlined"
-              color="secondary"
-              className={classes.div}
-              onClick={handleLogin}
-            >
-              Logg inn
-            </Button>
-            <Divider variant="middle" className={classes.divider} />
-            <RenderRegister />
-            <div className={classes.float}>
-              <LoadingSpinner />
-            </div>
+      <div className={classes.root}>
+        <form onSubmit={handleLogin}>
+          <TextField
+            onChange={handleChange}
+            name="email"
+            type="email"
+            id="outlined-basic"
+            label="E-post"
+            variant="outlined"
+            className={classes.div}
+          />
+          <TextField
+            name="password"
+            type="password"
+            onChange={handleChange}
+            id="outlined-basic"
+            label="Passord"
+            variant="outlined"
+            className={classes.div}
+          />
+          <Button
+            variant="outlined"
+            color="secondary"
+            type="submit"
+            className={classes.div}
+          >
+            Logg inn
+          </Button>
+          <Divider variant="middle" className={classes.divider} />
+          <div className={classes.float}>
+            <LoadingSpinner />
           </div>
         </form>
+        <RenderRegister />
       </div>
     </Paper>
   );

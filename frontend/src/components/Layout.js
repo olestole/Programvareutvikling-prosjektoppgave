@@ -26,7 +26,7 @@ const Layout = props => {
   const classes = useStyles(props);
 
   const context = useContext(UserContext);
-  console.log(props);
+
   if (props.user && props.user[0] && !context.user.loggedIn) {
     const user = props.user[0];
     context.setUser({
@@ -37,7 +37,6 @@ const Layout = props => {
       customer: user.customer
     });
   }
-  console.log('hello');
   return (
     <div className={classes.root}>
       <Navbar />

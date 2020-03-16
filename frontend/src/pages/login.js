@@ -11,9 +11,4 @@ const Index = () => {
   );
 };
 
-Index.getInitialProps = ({ query }) => {
-  console.log(query);
-  return { query };
-};
-
 export default Index;

@@ -109,5 +109,18 @@ export const login = async (body, context) => {
       loggedIn: true,
       customer: user.customer
     });
+    return true;
   }
+};
+
+export const logout = async context => {
+  cookie.remove('fancyhotellAuth');
+  context.setUser({
+    ...context.user,
+    email: '',
+    accessToken: '',
+    refreshToken: '',
+    loggedIn: false,
+    customer: {}
+  });
 };

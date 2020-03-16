@@ -1,18 +1,20 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { UserContext } from './UserProvider'; // Import this wherever you'd want to use the global state
+import Router from 'next/router';
+import Link from 'next/link';
 
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-// import IconButton from '@material-ui/core/IconButton';
-// import MenuIcon from '@material-ui/icons/Menu';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Menu,
+  MenuItem
+} from '@material-ui/core';
 import SideDrawer from './SideDrawer';
-
 import Avatar from './Avatar';
-
-import Link from 'next/link';
+import { logout } from '../utils/api';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -29,11 +31,15 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     flexGrow: 1,
-    fontSize: 30
+    fontSize: 30,
+    textAlign: 'center'
   },
   center: {
     display: 'flex',
     justifyContent: 'center'
+  },
+  button: {
+    padding: '0'
   }
 }));
 
@@ -41,30 +47,64 @@ export default function Navbar() {
   const context = useContext(UserContext);
   const classes = useStyles();
 
-  const RenderLogin = () =>
-    context.user.loggedIn ? (
-      <div></div>
-    ) : (
-      <Link href="/login">
-        <Button color="inherit">Login</Button>
-      </Link>
-    );
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const openMenu = event => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const closeMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = async () => {
+    await logout(context);
+    Router.push('/');
+  };
 
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
           <SideDrawer />
-          <Typography variant="alignCenter" className={classes.title}>
+          <Typography variant="h2" className={classes.title}>
             SKIKKELIG FANCY HOTELL
           </Typography>
-          <RenderLogin />
-          <Avatar
-            letter={
-              context.user.loggedIn ? context.user.email[0].toUpperCase() : null
-            }
-            color={context.user.loggedIn ? 'purple' : null}
-          ></Avatar>
+          <Button className={classes.button} onClick={openMenu}>
+            <Avatar
+              letter={
+                context.user.loggedIn
+                  ? context.user.email[0].toUpperCase()
+                  : null
+              }
+              color={context.user.loggedIn ? 'purple' : null}
+            ></Avatar>
+          </Button>
+          <Menu
+            anchorEl={anchorEl}
+            getContentAnchorEl={null}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center'
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'left'
+            }}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={closeMenu}
+          >
+            {context.user.loggedIn ? (
+              <MenuItem onClick={handleLogout}>Logg ut</MenuItem>
+            ) : (
+              <MenuItem>
+                <Link href="/login">
+                  <a style={{ color: 'inherit' }}>Logg inn</a>
+                </Link>
+              </MenuItem>
+            )}
+          </Menu>
         </Toolbar>
       </AppBar>
     </div>
