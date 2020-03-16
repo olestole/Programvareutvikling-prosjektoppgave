@@ -14,6 +14,8 @@ from fancyhotell.rooms.serializers import (
     BookingSerializer,
     RoomDetailSerializer,
     RoomSerializer,
+    BookingCreateSerializerWithCustomerData,
+    AdminRoomDetailSerializer,
 )
 from fancyhotell.users.models import Address, Customer, User
 
@@ -46,6 +48,18 @@ class RoomViewset(viewsets.ModelViewSet):
         room = get_object_or_404(queryset, pk=pk)
         serializer = RoomDetailSerializer(room)
         return Response(serializer.data)
+
+
+class AdminRoomViewset(viewsets.ModelViewSet):
+    queryset = Room.objects.all()
+    serializer_class = AdminRoomDetailSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+
+class AdminRoomViewset(viewsets.ModelViewSet):
+    queryset = Room.objects.all()
+    serializer_class = AdminRoomDetailSerializer
+    permission_classes = [permissions.IsAdminUser]
 
 
 class BookingViewset(viewsets.ModelViewSet):

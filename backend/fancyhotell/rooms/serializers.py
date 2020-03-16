@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from fancyhotell.rooms.models import Room, Booking, ImageModel
 from fancyhotell.users.serializers import CustomerDataSerializer
+from django.utils import timezone
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -61,3 +62,18 @@ class BookingDetailSerializer(serializers.ModelSerializer):
             "room",
             "customer",
         ]
+
+
+class AdminRoomDetailSerializer(serializers.ModelSerializer):
+    number_of_future_bookings = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Room
+        fields = ["id", "room_number", "title", "number_of_future_bookings"]
+
+    def get_number_of_future_bookings(self, obj):
+        return (
+            Booking.objects.filter(room=obj.id)
+            .filter(from_date__gt=timezone.now())
+            .count()
+        )

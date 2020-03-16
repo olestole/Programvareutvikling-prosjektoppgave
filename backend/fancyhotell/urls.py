@@ -21,7 +21,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from fancyhotell.users.views import UserViewSet
-from fancyhotell.rooms.views import RoomViewset, BookingViewset
+from fancyhotell.rooms.views import RoomViewset, BookingViewset, AdminRoomViewset
 from rest_framework_simplejwt import views as jwt_views
 
 
@@ -42,6 +42,7 @@ router = routers.DefaultRouter()
 router.register(r"users", UserViewSet, basename="user")
 router.register(r"rooms", RoomViewset, basename="room")
 router.register(r"bookings", BookingViewset, basename="booking")
+router.register(r"admin/rooms", AdminRoomViewset, basename="adminroom")
 
 
 urlpatterns = [
