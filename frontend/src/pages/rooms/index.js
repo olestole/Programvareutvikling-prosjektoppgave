@@ -18,7 +18,6 @@ Rooms.getInitialProps = async props => {
       'from_date=' + query.from_date}${query.to_date &&
       '&to_date=' + query.to_date}${query.people && '&people=' + query.people}`
   );
-  console.log(res);
   return { rooms: res };
 };
 

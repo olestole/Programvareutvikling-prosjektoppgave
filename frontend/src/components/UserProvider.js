@@ -3,7 +3,7 @@ import React, { createContext, useState } from 'react';
 const UserContext = createContext();
 
 const UserProvider = props => {
-  const [user, setUsert] = useState({
+  const [user, setUser] = useState({
     email: '',
     accessToken: '',
     refreshToken: '',
@@ -42,11 +42,6 @@ const UserProvider = props => {
       }
     }
   });
-
-  const setUser = (...args) => {
-    console.log(...args);
-    setUsert(...args);
-  };
 
   return (
     <UserContext.Provider value={{ user, setUser }}>

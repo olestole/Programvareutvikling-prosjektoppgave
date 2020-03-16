@@ -99,7 +99,7 @@ const RegisterUser = props => {
     // POST THE NEW USER TO BACKEND
     const rawResponse = await postReq(body, 'users', null);
     const status = rawResponse.status;
-    const content = await rawResponse.json();
+    await rawResponse.json();
 
     if (status == 200) {
       // LOGIN WITH THE NEW USER AND ROUTE TO EITHER '/' OR '/ROOMS'
@@ -115,7 +115,6 @@ const RegisterUser = props => {
       }
     } else {
       // Error when the user already exists, change this with custom error-message later
-      console.log(content.email[0]);
       alert('Email already exists😟');
     }
   };
