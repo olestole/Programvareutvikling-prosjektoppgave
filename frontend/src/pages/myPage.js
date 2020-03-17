@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import UserInfo from '../components/UserInfo';
 import Layout from '../components/Layout';
 import withLogin from '../utils/withLogin';
-import RequireLogin from '../utils/withLogin';
+import RequireLogin from '../utils/requireLogin';
 
 const useStyles = makeStyles({
   container: {
