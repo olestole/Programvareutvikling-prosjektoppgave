@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -8,10 +8,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
-
-import { UserContext } from '../components/UserProvider';
-import { postReq } from '../utils/api';
-import RequireLogin from '../utils/requireLogin';
 
 // Styles for Room. This should be placed in media query
 // Not optimal for phone view at all

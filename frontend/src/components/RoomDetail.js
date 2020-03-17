@@ -197,7 +197,7 @@ const facilityStyles = makeStyles({
   }
 });
 
-const RoomFacilities = ({ room }) => {
+const RoomFacilities = () => {
   const classes = facilityStyles();
   const tests = {
     bathroom: true,
