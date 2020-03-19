@@ -5,7 +5,7 @@ import { getReq } from '../../utils/api';
 
 const Rooms = props => {
   return (
-    <Layout position={'fixed'} overflowY={'scroll'} width={'100%'}>
+    <Layout position={'fixed'} noCenter overflowY={'scroll'} width={'100%'}>
       <Roomlist rooms={props.rooms} />
     </Layout>
   );
