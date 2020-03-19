@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -8,10 +8,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
-
-import { UserContext } from '../components/UserProvider';
-import { postReq } from '../utils/api';
-import RequireLogin from '../utils/requireLogin';
 
 // Styles for Room. This should be placed in media query
 // Not optimal for phone view at all
@@ -36,7 +32,7 @@ const Room = props => {
   const classes = useStyles();
 
   const { title, room_number, price, capacity } = props.room;
-  const { handleBooking } = props;
+  const { handleClick } = props;
   return (
     <Card className={classes.root}>
       <CardMedia
@@ -62,8 +58,8 @@ const Room = props => {
         </ListItem>
         <Divider />
         <ListItem>
-          <Button size="small" color="primary" onClick={handleBooking}>
-            Book nå
+          <Button size="small" color="primary" onClick={handleClick}>
+            Se mer
           </Button>
         </ListItem>
       </List>
@@ -85,53 +81,23 @@ const listStyles = makeStyles({
 const Roomlist = props => {
   const classes = listStyles();
 
-  const context = useContext(UserContext);
   const router = useRouter();
 
-  const [isBooking, setIsBooking] = useState(false);
-
-  const passInfo = async roomId => {
-    const body = {
-      from_date: context.user.booking.from_date,
-      to_date: context.user.booking.to_date,
-      people: context.user.booking.people,
-      room_id: roomId,
-      customer: context.user.customer
-    };
-
-    const bookingInfo = await postReq(
-      body,
-      'bookings/',
-      context.user.accessToken
+  const handleClick = id => {
+    const { from_date, to_date } = router.query;
+    router.push(
+      `/rooms/[id]/?from_date=${from_date}&to_date=${to_date}`,
+      `/rooms/${id}/?from_date=${from_date}&to_date=${to_date}`
     );
-
-    await context.setUser({
-      ...context.user,
-      bookedRoom: bookingInfo
-    });
-
-    router.push('/booking');
   };
 
-  const handleBooking = id => {
-    setIsBooking(true);
-    context.user.loggedIn && passInfo(id);
-  };
-
-  if (isBooking && !context.user.loggedIn) {
-    return (
-      <RequireLogin>
-        <span>If you see this, something went wrong</span>
-      </RequireLogin>
-    );
-  }
   return (
     <div className={classes.root}>
       {props.rooms.map(room => (
         <Room
           key={room.id}
           room={room}
-          handleBooking={() => handleBooking(room.id)}
+          handleClick={() => handleClick(room.id)}
         />
       ))}
     </div>

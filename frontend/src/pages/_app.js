@@ -2,6 +2,9 @@ import React from 'react';
 import UserProvider from '../components/UserProvider';
 import { SWRConfig } from 'swr';
 import fetch from 'isomorphic-unfetch';
+// For component in components/RoomDetail
+import 'react-date-range/dist/styles.css';
+import 'react-date-range/dist/theme/default.css';
 
 function MyApp({ Component, pageProps }) {
   return (

@@ -22,6 +22,7 @@ const useStyles = makeStyles(theme => ({
     display: 'block',
     height: 'auto',
     position: 'sticky',
+    top: '0',
     width: '100%',
     zIndex: 1000,
     backgroundColor: '#3C3C3C'
@@ -32,7 +33,8 @@ const useStyles = makeStyles(theme => ({
   title: {
     flexGrow: 1,
     fontSize: 30,
-    textAlign: 'center'
+    textAlign: 'center',
+    cursor: 'pointer'
   },
   center: {
     display: 'flex',
@@ -67,9 +69,11 @@ export default function Navbar() {
       <AppBar position="static">
         <Toolbar>
           <SideDrawer />
-          <Typography variant="h2" className={classes.title}>
-            SKIKKELIG FANCY HOTELL
-          </Typography>
+          <Link href="/">
+            <Typography variant="h2" className={classes.title}>
+              SKIKKELIG FANCY HOTELL
+            </Typography>
+          </Link>
           <Button className={classes.button} onClick={openMenu}>
             <Avatar
               letter={
