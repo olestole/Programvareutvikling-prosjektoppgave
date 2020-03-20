@@ -122,7 +122,7 @@ const Filters = ({ setFilters, filters }) => {
       <Typography variant="h4">Filtre</Typography>
       <Divider />
       <FormControl className={classes.amenityForm}>
-        <FormLabel component="ledgend">Fasiliteter</FormLabel>
+        <FormLabel component="legend">Fasiliteter</FormLabel>
         <FormGroup>
           <Card className={classes.amenities}>
             {amenities &&
