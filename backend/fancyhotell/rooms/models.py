@@ -8,15 +8,40 @@ class ImageModel(models.Model):
     image = models.ImageField(upload_to="images/")
 
 
+class Amenity(models.Model):
+    AMENITIES = (
+        ("TV", "TV"),
+        ("KITCHEN", "Kitchen"),
+        ("PETS", "Pets"),
+        ("BATH", "Bathroom"),
+        ("WIFI", "wifi"),
+        ("ELEVATOR", "elevator"),
+        ("KING_SIZE", "King size bed"),
+        ("QUEEN_SIZE", "Queen size bed"),
+        ("SINGLE_BED", "Singlse bed"),
+        ("GARAGE", "Parking garage"),
+        ("SOFA", "Sofa"),
+        ("INTERNET", "Internet"),
+        ("IRON", "Iron"),
+        ("MICROWAVE", "Microwave oven"),
+        ("SAFE", "Safe"),
+        ("AIRCON", "Aircondition"),
+        ("WASHING_MACHINE", "Washing machine"),
+        ("DRYER", "Dryer"),
+        ("HAIR_DRYER", "Hair dryer"),
+    )
+
+    amenity = models.CharField(primary_key=True, max_length=50, choices=AMENITIES)
+
+
 class Room(models.Model):
     room_number = models.IntegerField(default=0, unique=True, null=False)
     title = models.CharField(max_length=100, blank=False)
     description = models.TextField(blank=True)
     price = models.DecimalField(default=0.00, decimal_places=2, max_digits=20)
-    images = models.ManyToManyField(
-        ImageModel, related_name="room", null=True, blank=True
-    )
+    images = models.ManyToManyField(ImageModel, related_name="room", blank=True)
     capacity = models.IntegerField()
+    amenities = models.ManyToManyField(Amenity, blank=True)
 
     @classmethod
     def get_available(

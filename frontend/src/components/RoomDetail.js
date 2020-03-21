@@ -26,7 +26,14 @@ import {
   Tv,
   Wifi,
   Accessible,
-  Lock
+  Lock,
+  Language,
+  Weekend,
+  Eco,
+  SingleBed,
+  KingBed,
+  DirectionsCar,
+  LocalLaundryService
 } from '@material-ui/icons';
 import cx from 'classnames';
 import { DateRange } from 'react-date-range';
@@ -197,18 +204,11 @@ const facilityStyles = makeStyles({
   }
 });
 
-const RoomFacilities = () => {
+const RoomFacilities = ({ room }) => {
   const classes = facilityStyles();
-  const tests = {
-    bathroom: true,
-    wifi: true,
-    kitchen: true,
-    tv: true,
-    elevator: true
-  };
 
-  const getIcon = facility => {
-    switch (facility) {
+  const getIcon = amenity => {
+    switch (amenity.toLowerCase()) {
       case 'bathroom':
         return <Bathtub />;
       case 'wifi':
@@ -222,8 +222,24 @@ const RoomFacilities = () => {
         return <Accessible />;
       case 'safe':
         return <Lock />;
-      case 'animals':
+      case 'pets':
         return <Pets />;
+      case 'internet':
+        return <Language />;
+      case 'dryer':
+      case 'washing machine':
+        return <LocalLaundryService />;
+      case 'queen size bed':
+      case 'king size bed':
+        return <KingBed />;
+      case 'single bed':
+        return <SingleBed />;
+      case 'garage':
+        return <DirectionsCar />;
+      case 'aircondition':
+        return <Eco />;
+      case 'sofa':
+        return <Weekend />;
       default:
         return;
     }
@@ -235,16 +251,14 @@ const RoomFacilities = () => {
       </Typography>
       <Divider />
       <div className={classes.chips}>
-        {Object.keys(tests)
-          .filter(k => tests[k])
-          .map(k => (
-            <Chip
-              className={classes.chip}
-              key={k}
-              label={k}
-              icon={getIcon(k)}
-            />
-          ))}
+        {room.amenities.map(amenity => (
+          <Chip
+            className={classes.chip}
+            key={amenity}
+            label={amenity}
+            icon={getIcon(amenity)}
+          />
+        ))}
       </div>
     </Container>
   );
