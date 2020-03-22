@@ -19,7 +19,7 @@ const MyPage = () => {
   return (
     <Layout overflowY={'scroll'}>
       <RequireLogin>
-        <div className={classes.container} context={'HALLA'}>
+        <div className={classes.container}>
           <UserInfo />
         </div>
       </RequireLogin>

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { UserContext } from './UserProvider';
@@ -6,6 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 
 import Avatar from './Avatar';
+import UserEditForm from '../components/UserEditForm';
 
 const useStyles = makeStyles({
   container: {
@@ -29,13 +30,33 @@ const useStyles = makeStyles({
   }
 });
 
+const userForm = makeStyles({});
+
 const UserInfo = () => {
   const classes = useStyles();
+  const formStyles = userForm();
   const { user } = useContext(UserContext);
-  const address = user.customer.address;
+  const [showForm, setShowForm] = useState(false);
 
+  const address = user.customer.address;
   const name = `${user.customer.first_name} ${user.customer.last_name}`;
-  console.log(user);
+
+  const handleUserChange = () => setShowForm(true);
+
+  const RenderForm = () =>
+    showForm ? (
+      <UserEditForm />
+    ) : (
+      <Button
+        className={classes.listItem}
+        variant="contained"
+        color="primary"
+        onClick={handleUserChange}
+      >
+        ENDRE BRUKERINFO
+      </Button>
+    );
+
   return (
     <Paper elevation={3} className={classes.container}>
       <div className={classes.column}>
@@ -51,13 +72,7 @@ const UserInfo = () => {
         </h4>
         <h4 className={classes.listItem}>{address.country}</h4>
         <br />
-        <Button
-          className={classes.listItem}
-          variant="contained"
-          color="primary"
-        >
-          ENDRE BRUKERINFO
-        </Button>
+        <RenderForm />
       </div>
       <div className={classes.column}>
         <Avatar
