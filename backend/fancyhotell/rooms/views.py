@@ -3,9 +3,10 @@ from django.utils.dateparse import parse_date
 from rest_framework import generics, permissions, status, views, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 
 from fancyhotell.rooms.errors import RoomDoesNotExist, RoomNotAvailable
-from fancyhotell.rooms.models import Booking, Room
+from fancyhotell.rooms.models import Booking, Room, Amenity
 from fancyhotell.rooms.permissions import BookingPermissions, RoomPermissions
 from fancyhotell.rooms.serializers import (
     BookingCreateSerializer,
@@ -15,13 +16,16 @@ from fancyhotell.rooms.serializers import (
     RoomDetailSerializer,
     RoomSerializer,
     AdminRoomDetailSerializer,
+    AmenityListSerializer,
 )
+from fancyhotell.rooms.filters import AmenityFilter, RoomFilterSet
 from fancyhotell.users.models import Address, Customer, User
 
 
 class RoomViewset(viewsets.ModelViewSet):
     serializer_class = RoomSerializer
     permission_classes = [RoomPermissions]
+    filterset_class = RoomFilterSet
 
     def get_serializer_class(self):
         # This is mostly just for metadata
@@ -44,14 +48,17 @@ class RoomViewset(viewsets.ModelViewSet):
             queryset = queryset.filter(capacity__gte=people)
         return queryset
 
-    def list(self, request):
-        serializer = RoomSerializer(self.get_queryset(), many=True)
-        return Response(serializer.data)
-
     def retrieve(self, request, pk=None):
         queryset = Room.objects.all()
         room = get_object_or_404(queryset, pk=pk)
         serializer = RoomDetailSerializer(room)
+        return Response(serializer.data)
+
+    # This route lists all amenities
+    @action(detail=False)
+    def amenities(self, request):
+        queryset = Amenity.objects.all()
+        serializer = AmenityListSerializer(queryset, many=True)
         return Response(serializer.data)
 
 

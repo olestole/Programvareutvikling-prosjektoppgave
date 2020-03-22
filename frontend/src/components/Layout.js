@@ -14,13 +14,13 @@ const useStyles = makeStyles({
     position: `${props.position || null}`,
     overflowY: `${props.overflowY || null}`
   }),
-  rootContainer: {
+  rootContainer: ({ noCenter }) => ({
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: noCenter || 'center',
     height: 'auto',
     minHeight: '90vh'
-  }
+  })
 });
 
 const Layout = props => {

@@ -18,7 +18,7 @@ class Amenity(models.Model):
         ("ELEVATOR", "elevator"),
         ("KING_SIZE", "King size bed"),
         ("QUEEN_SIZE", "Queen size bed"),
-        ("SINGLE_BED", "Singlse bed"),
+        ("SINGLE_BED", "Single bed"),
         ("GARAGE", "Parking garage"),
         ("SOFA", "Sofa"),
         ("INTERNET", "Internet"),

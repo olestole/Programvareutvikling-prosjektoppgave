@@ -23,6 +23,18 @@ class AmenitySerializer(serializers.ModelSerializer):
         return {"amenity": data}
 
 
+# For listing all amenities. We change to_representation in
+# order to get the display value as well as the key for usage
+# in filters.
+class AmenityListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Amenity
+        fields = ["amenity"]
+
+    def to_representation(self, instance):
+        return {"key": instance.amenity, "value": instance.get_amenity_display()}
+
+
 class RoomSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True)
 
