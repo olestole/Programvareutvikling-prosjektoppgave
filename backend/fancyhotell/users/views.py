@@ -1,5 +1,9 @@
 from django.shortcuts import get_object_or_404
-from fancyhotell.users.serializers import UserCreateSerializer, UserReadSerializer
+from fancyhotell.users.serializers import (
+    UserCreateSerializer,
+    UserReadSerializer,
+    UserUpdateSerializer,
+)
 from fancyhotell.users.models import User
 from fancyhotell.users.permissions import UserPermissions
 from rest_framework import viewsets, status
@@ -18,6 +22,8 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action in ["list", "retrieve"]:
             return UserReadSerializer
+        elif self.action == "update":
+            return UserUpdateSerializer
         elif self.action == "create" or self.request.method == "POST":
             return UserCreateSerializer
         return UserReadSerializer
