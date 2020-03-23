@@ -30,22 +30,22 @@ const useStyles = makeStyles({
   }
 });
 
-const userForm = makeStyles({});
+// const userForm = makeStyles({});
 
 const UserInfo = () => {
   const classes = useStyles();
-  const formStyles = userForm();
+  // const formStyles = userForm();
   const { user } = useContext(UserContext);
   const [showForm, setShowForm] = useState(false);
 
   const address = user.customer.address;
   const name = `${user.customer.first_name} ${user.customer.last_name}`;
 
-  const handleUserChange = () => setShowForm(true);
+  const handleUserChange = () => setShowForm(!showForm);
 
   const RenderForm = () =>
     showForm ? (
-      <UserEditForm />
+      <UserEditForm handleUserChange={handleUserChange} />
     ) : (
       <Button
         className={classes.listItem}

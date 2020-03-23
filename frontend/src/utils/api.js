@@ -127,6 +127,7 @@ export const login = async (body, context) => {
   } else {
     await context.setUser({
       ...context.user,
+      id: user.id,
       email: user.email,
       accessToken: token.access,
       refreshToken: token.refresh,

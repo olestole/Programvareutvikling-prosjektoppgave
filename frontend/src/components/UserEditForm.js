@@ -35,9 +35,8 @@ const useStyles = makeStyles({
   }
 });
 
-const UserEditForm = () => {
+const UserEditForm = ({ handleUserChange }) => {
   const classes = useStyles();
-  const router = useRouter();
   const context = useContext(UserContext);
 
   const [regState, setRegState] = useState({
@@ -66,15 +65,18 @@ const UserEditForm = () => {
     // CREATE BODY TO POST THE NEW USER TO BACKEND
     const body = {
       email: context.user.customer.email,
-      first_name: context.user.customer.first_name,
-      last_name: context.user.customer.last_name,
-      phone: context.user.customer.phone,
-      address: {
-        street_name: context.user.customer.address.street_name,
-        street_number: context.user.customer.address.street_number,
-        city: context.user.customer.address.city,
-        postal_code: context.user.customer.address.postal_code,
-        country: context.user.customer.address.country
+      customer: {
+        email: context.user.customer.email,
+        first_name: context.user.customer.first_name,
+        last_name: context.user.customer.last_name,
+        phone: context.user.customer.phone,
+        address: {
+          street_name: context.user.customer.address.street_name,
+          street_number: context.user.customer.address.street_number,
+          city: context.user.customer.address.city,
+          postal_code: context.user.customer.address.postal_code,
+          country: context.user.customer.address.country
+        }
       }
     };
 
@@ -86,25 +88,36 @@ const UserEditForm = () => {
       'country'
     ];
 
+    // We have a pretty weird usermodel with duplicate fields and so on, so this makes sure everything is updated correctly
     for (var key in regState) {
       if (!regState[key] == '') {
-        console.log(typeof key);
-        console.log(addressList.includes(key));
-
-        addressList.includes(key)
-          ? (body.address[key] = regState[key])
-          : (body[key] = regState[key]);
-        console.log(key + ' -> ' + regState[key]);
+        if (addressList.includes(key)) {
+          body.customer.address[key] = regState[key];
+        } else if (key == 'email') {
+          body.customer[key] = regState[key];
+          body[key] = regState[key];
+        } else {
+          body.customer[key] = regState[key];
+        }
       }
     }
 
-    console.log(body);
-
     // POST THE NEW USER TO BACKEND
-    const res = await putReq(body, 'users/');
+    const res = await putReq(
+      body,
+      `users/${context.user.id}/`,
+      context.user.accessToken
+    );
+
+    // Set the edited user to context, so that it visually updates the page with new info
+    context.setUser({
+      ...context.user,
+      email: body.email,
+      customer: body.customer
+    });
 
     if (res) {
-      router.push('/myPage');
+      handleUserChange();
     } else {
       // Error when the user already exists, change this with custom error-message later
       alert('Something went wrong😶');
