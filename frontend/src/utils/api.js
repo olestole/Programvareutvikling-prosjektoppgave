@@ -69,6 +69,31 @@ export const deleteReq = (endpoint, accessToken) =>
         }
       }).then(r => r.json());
 
+//PUT REQUEST
+export const putReq = (endpoint, accessToken) =>
+  accessToken
+    ? fetch(`${config.serverUrl}/${endpoint}`, {
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + accessToken
+        }
+      }).then(r => r.json())
+    : // What should happen when the user does not have authorization to update?
+      // Do we need to handle this?
+      fetch(`${config.serverUrl}/${endpoint}`, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      }).then(r => r.json());
+
+const storeToken = token => {
+  cookie.set('fancyhotellAuth', token, { expires: 1 });
+};
+
 // LOGIN WITH USERINFO
 export const logInWithData = async body => {
   const tokenData = await postReq(body, 'token/', null);
