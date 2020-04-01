@@ -31,6 +31,10 @@ const useStyles = makeStyles({
     height: '4em',
     margin: '5px',
     width: 'calc(66.6% - 10px)'
+  },
+  regBtn: {
+    width: `calc(100% - 10px)`,
+    margin: '5px'
   }
 });
 
@@ -81,7 +85,7 @@ const RoomEditor = () => {
   //   if (res) {
   //     router.push('/');
   //   } else {
-  //     // Error when the room already exists, change this with custom error-message later
+  //     // Error when the room already exists
   //     alert('Room already exists😟');
   //   }
   // };
@@ -134,7 +138,7 @@ const RoomEditor = () => {
         <TextField
           onChange={handleChange}
           name="newImages"
-          type="text"
+          type="file"
           id="outlined-basic 7"
           label="Bilde"
           variant="outlined"
