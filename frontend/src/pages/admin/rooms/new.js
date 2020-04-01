@@ -4,6 +4,7 @@ import Paper from '@material-ui/core/Paper';
 
 import Layout from '../../../components/Layout';
 import RoomEditor from '../../../components/RoomEditor.js';
+import withLogin from '../../utils/withLogin';
 
 const useStyles = makeStyles({
   container: {
@@ -25,4 +26,4 @@ const Index = props => {
   );
 };
 
-export default Index;
+export default withLogin(Index);
