@@ -70,21 +70,17 @@ export const deleteReq = (endpoint, accessToken) =>
       }).then(r => r.json());
 
 //PUT REQUEST
-export const putReq = (endpoint, accessToken) => {
+export const putReq = (body, endpoint, accessToken) => {
   if (accessToken) {
     fetch(`${config.serverUrl}/${endpoint}`, {
       method: 'PUT',
+      body: JSON.stringify(body),
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + accessToken
       }
-    }).then(r => {
-      if (r.status >= 400) {
-        return r.statusText;
-      }
-      r.json();
-    });
+    }).then(r => r.json());
   }
 };
 

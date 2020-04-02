@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import { TextField, Chip } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
-import { postReq, getRoomById } from '../utils/api';
+import { UserContext } from './UserProvider';
+import { putReq, postReq } from '../utils/api';
 
 const useStyles = makeStyles({
   container: {
@@ -32,66 +34,84 @@ const useStyles = makeStyles({
     margin: '5px',
     width: 'calc(66.6% - 10px)'
   },
+  descriptionFieldDiv: {
+    height: '8em'
+  },
+  descrField: {
+    margin: '5px',
+    width: `calc(100% - 10px)`,
+    height: '40px'
+  },
   regBtn: {
     width: `calc(100% - 10px)`,
     margin: '5px'
   }
 });
 
-const RoomEditor = () => {
+const RoomEditor = props => {
   const classes = useStyles();
   const router = useRouter();
+  const context = useContext(UserContext);
 
   const [regState, setRegState] = useState({
     newRoomNumber: '',
     newTitle: '',
     newPrice: '',
     newCapacity: '',
-    newImages: []
+    newDescription: '',
+    newAmenities: []
   });
 
   const handleChange = e => {
     e.preventDefault();
+    console.log(e.target.value);
     setRegState({
       ...regState,
       [e.target.name]: e.target.value
     });
   };
 
-  // const addRoom = async () => {
-  //   await context.setRoom({
-  //     ...context.room,
-  //     room: {
-  //       room_number: regState.newRoomNumber,
-  //       title: regState.newTitle,
-  //       price: regState.newPrice,
-  //       capacity: regState.newCapacity,
-  //       images: regState.newImages
-  //     }
-  //   });
+  const handleAmenityChange = (e, value) => {
+    e.preventDefault();
+    setRegState({
+      ...regState,
+      newAmenities: value.map(val => val.key)
+    });
+  };
 
-  //   // CREATE BODY TO POST THE NEW ROOM TO BACKEND
-  //   const body = {
-  //     room_number: regState.newRoomNumber,
-  //     title: regState.newTitle,
-  //     price: regState.newPrice,
-  //     capacity: regState.newCapacity,
-  //     images: regState.newImages
-  //   };
+  const submitRoom = e => {
+    e.preventDefault();
+    addRoom();
+  };
 
-  //   // POST THE NEW ROOM TO BACKEND
-  //   const res = await putReq(body, 'rooms/');
+  const addRoom = async () => {
+    // CREATE BODY TO POST THE NEW ROOM TO BACKEND
+    const body = {
+      room_number: regState.newRoomNumber,
+      title: regState.newTitle,
+      price: regState.newPrice,
+      capacity: regState.newCapacity,
+      description: regState.newDescription,
+      amenities: regState.newAmenities
+    };
 
-  //   if (res) {
-  //     router.push('/');
-  //   } else {
-  //     // Error when the room already exists
-  //     alert('Room already exists😟');
-  //   }
-  // };
+    // POST THE NEW ROOM TO BACKEND
+    const res = await postReq(body, 'rooms/', context.user.accessToken);
+
+    console.log(res);
+
+    if (res) {
+      router.push('/');
+    } else {
+      // Error when the room already exists
+      alert('Room already exists😟');
+    }
+  };
+
+  const { amenities } = props;
 
   return (
-    <form className={classes.container}>
+    <form className={classes.container} onSubmit={submitRoom}>
       <div className={classes.section}>
         <TextField
           fullWidth
@@ -134,33 +154,36 @@ const RoomEditor = () => {
           className={classes.third}
         />
       </div>
-      <div>
+      <div className={classes.descriptionFieldDiv}>
         <TextField
           onChange={handleChange}
-          name="newImages"
-          type="file"
-          id="outlined-basic 7"
-          label="Bilde"
+          name="newDescription"
+          type="text"
+          id="outlined-basic 4"
+          label="Beskrivelse"
           variant="outlined"
-          className={classes.third}
+          className={classes.descrField}
         />
       </div>
+      <Autocomplete
+        multiple
+        id="amenities"
+        options={amenities}
+        getOptionLabel={option => option.value}
+        getOptionValue={option => option.key}
+        onChange={handleAmenityChange}
+        renderInput={params => (
+          <TextField {...params} label="fasiliteter" variant="standard" />
+        )}
+      />
       <Button
         variant="contained"
         color="primary"
         className={classes.regBtn}
+        type="submit"
         // onClick={addRoom}
       >
         Lag nytt rom
-      </Button>
-
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.regBtn}
-        // onClick={addRoom}
-      >
-        Oppdater rom
       </Button>
     </form>
   );

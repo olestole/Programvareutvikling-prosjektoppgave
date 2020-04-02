@@ -4,7 +4,9 @@ import Paper from '@material-ui/core/Paper';
 
 import Layout from '../../../components/Layout';
 import RoomEditor from '../../../components/RoomEditor.js';
-import withLogin from '../../utils/withLogin';
+import withLogin from '../../../utils/withLogin';
+import RequireLogin from '../../../utils/requireLogin';
+import { getReq } from '../../../utils/api';
 
 const useStyles = makeStyles({
   container: {
@@ -19,11 +21,18 @@ const Index = props => {
 
   return (
     <Layout backgroundImage={'NewYork2.jpg'} overflowY="scroll" {...props}>
-      <Paper elevation={3} className={classes.container}>
-        <RoomEditor />
-      </Paper>
+      <RequireLogin>
+        <Paper elevation={3} className={classes.container}>
+          <RoomEditor amenities={props.amenities} />
+        </Paper>
+      </RequireLogin>
     </Layout>
   );
+};
+
+Index.getInitialProps = async ctx => {
+  const amenities = await getReq('rooms/amenities/');
+  return { amenities };
 };
 
 export default withLogin(Index);
