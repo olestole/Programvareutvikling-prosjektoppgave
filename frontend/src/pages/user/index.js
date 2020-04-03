@@ -1,11 +1,11 @@
 import React, { Suspense } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import BookingDetail from '../../components/BookingDetail';
+import BookingDetail from '../../components/user/BookingDetail';
 
-import Layout from '../../components/Layout';
+import Layout from '../../components/shared/Layout';
 import RequireLogin from '../../utils/requireLogin';
-import LoadingSpinner from '../../components/LoadingSpinner';
+import LoadingSpinner from '../../components/shared/LoadingSpinner';
 
 import withLogin from '../../utils/withLogin';
 

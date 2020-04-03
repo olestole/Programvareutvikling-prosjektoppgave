@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { UserContext } from './UserProvider';
+import { UserContext } from '../shared/UserProvider';
 
 const useStyles = makeStyles({
   root: {
@@ -28,28 +28,7 @@ const useStyles = makeStyles({
   }
 });
 
-//const Customer = ({ customer }) => {
-//return (
-//<div>
-//<h3>Bruker data:</h3>
-//<>
-//{Object.entries(customer).map(([key, val]) =>
-//typeof val == 'string' ? (
-//<div key={key}>
-//<h4>
-//{key}: {val}
-//</h4>
-//</div>
-//) : (
-//<div />
-//)
-//)}
-//</>
-//</div>
-//);
-//};
-
-export default function FindRoom() {
+const BookingInfo = () => {
   const context = useContext(UserContext);
   const classes = useStyles();
   return (
@@ -58,12 +37,12 @@ export default function FindRoom() {
       <h3>Innsjekk: {context.user.bookedRoom.from_date}</h3>
       <h3>Utsjekk: {context.user.bookedRoom.to_date}</h3>
       <br />
-      {/*<Customer customer={context.user.customer} />*/}
       <br />
       <h3 className={classes.ref}>
         Booking referanse: {context.user.bookedRoom.booking_reference}
       </h3>
-      {/* <h3>Pris: {context.user.bookedRoom.room.price}</h3> */}
     </div>
   );
-}
+};
+
+export default BookingInfo;

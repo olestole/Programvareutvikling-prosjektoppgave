@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { UserContext } from './UserProvider';
+import { UserContext } from '../shared/UserProvider';
 import { useRouter } from 'next/router';
 
 import TextField from '@material-ui/core/TextField';
@@ -8,9 +8,9 @@ import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import RegisterUser from './RegisterUser';
-import { login } from '../utils/api';
+import { login } from '../../utils/api';
 
-import LoadingSpinner from './LoadingSpinner';
+import LoadingSpinner from '../shared/LoadingSpinner';
 
 const useStyles = makeStyles({
   root: {

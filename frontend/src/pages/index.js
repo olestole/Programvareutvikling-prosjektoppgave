@@ -1,6 +1,6 @@
 import React from 'react';
-import FindRoom from '../components/FindRoom';
-import Layout from '../components/Layout';
+import FindRoom from '../components/home/FindRoom';
+import Layout from '../components/shared/Layout';
 
 import withLogin from '../utils/withLogin';
 

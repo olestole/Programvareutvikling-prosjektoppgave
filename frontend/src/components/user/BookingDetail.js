@@ -14,7 +14,7 @@ import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import { Delete } from '@material-ui/icons';
 import useSWR from 'swr';
-import { UserContext } from '../UserProvider';
+import { UserContext } from '../shared/UserProvider';
 import { getReq, deleteReq } from '../../utils/api';
 import dayjs from 'dayjs';
 

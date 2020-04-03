@@ -20,7 +20,7 @@ import {
 } from '@material-ui/core';
 
 import useSWR from 'swr';
-import { getReq } from '../utils/api';
+import { getReq } from '../../utils/api';
 
 // Styles for Room. This should be placed in media query
 // Not optimal for phone view at all
