@@ -1,12 +1,11 @@
 import React, { useState, useContext } from 'react';
-import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
-import { UserContext } from './UserProvider';
+import { UserContext } from '../shared/UserProvider';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-import { putReq } from '../utils/api';
+import { putReq } from '../../utils/api';
 
 const useStyles = makeStyles({
   container: {

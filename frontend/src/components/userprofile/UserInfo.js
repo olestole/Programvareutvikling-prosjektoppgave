@@ -1,12 +1,12 @@
 import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { UserContext } from '../shared/UserProvider';
 
-import { UserContext } from './UserProvider';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 
-import Avatar from './Avatar';
-import UserEditForm from '../components/UserEditForm';
+import Avatar from '../shared/Avatar';
+import UserEditForm from './UserEditForm';
 
 const useStyles = makeStyles({
   container: {

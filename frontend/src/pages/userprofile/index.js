@@ -1,10 +1,10 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
-import UserInfo from '../components/UserInfo';
-import Layout from '../components/Layout';
-import withLogin from '../utils/withLogin';
-import RequireLogin from '../utils/requireLogin';
+import UserInfo from '../../components/userprofile/UserInfo';
+import Layout from '../../components/shared/Layout';
+import withLogin from '../../utils/withLogin';
+import RequireLogin from '../../utils/requireLogin';
 
 const useStyles = makeStyles({
   container: {
@@ -14,7 +14,7 @@ const useStyles = makeStyles({
   }
 });
 
-const MyPage = () => {
+const UserProfile = () => {
   const classes = useStyles();
   return (
     <Layout overflowY={'scroll'}>
@@ -27,4 +27,4 @@ const MyPage = () => {
   );
 };
 
-export default withLogin(MyPage);
+export default withLogin(UserProfile);
