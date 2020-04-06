@@ -5,7 +5,11 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 
-from fancyhotell.rooms.errors import RoomDoesNotExist, RoomNotAvailable
+from fancyhotell.rooms.errors import (
+    RoomDoesNotExist,
+    RoomNotAvailable,
+    RoomDoesNotHaveCapacity,
+)
 from fancyhotell.rooms.models import Booking, Room, Amenity
 from fancyhotell.rooms.permissions import BookingPermissions, RoomPermissions
 from fancyhotell.rooms.serializers import (
@@ -89,10 +93,10 @@ class BookingViewset(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def create(self, request):
-        if request.user.is_anonymous:
-            serializer = BookingCreateSerializerWithCustomerData(data=request.data)
-        elif request.user.is_authenticated:
+        if request.user.is_authenticated:
             serializer = BookingCreateSerializer(data=request.data)
+        else:
+            serializer = BookingCreateSerializerWithCustomerData(data=request.data)
 
         if serializer.is_valid():
             if not Room.objects.filter(pk=serializer.data["room_id"]):
@@ -100,7 +104,15 @@ class BookingViewset(viewsets.ModelViewSet):
 
             room = Room.objects.get(pk=serializer.data["room_id"])
 
+            if serializer.data["people"] > room.capacity:
+                raise RoomDoesNotHaveCapacity()
+
             booking_data = serializer.data
+
+            from_date = parse_date(serializer.data["from_date"])
+            to_date = parse_date(serializer.data["to_date"])
+            if not room.is_available(from_date, to_date):
+                raise RoomNotAvailable()
 
             # If the user is logged in, use the existing data
             if not request.user.is_anonymous and request.user.is_authenticated:
@@ -115,11 +127,6 @@ class BookingViewset(viewsets.ModelViewSet):
                 customer.save()
 
                 booking_data.pop("customer")
-
-            from_date = parse_date(serializer.data["from_date"])
-            to_date = parse_date(serializer.data["to_date"])
-            if not room.is_available(from_date, to_date):
-                raise RoomNotAvailable()
 
             booking = Booking(customer=customer, **booking_data)
             booking.save()

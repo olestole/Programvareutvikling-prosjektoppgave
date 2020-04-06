@@ -11,3 +11,9 @@ class RoomDoesNotExist(APIException):
     status_code = 400
     default_detail = "The selected room does not exist"
     default_code = "bad_request"
+
+
+class RoomDoesNotHaveCapacity(APIException):
+    status_code = 400
+    default_detail = "The selected room does not have enough capacity"
+    default_code = "bad_request"
