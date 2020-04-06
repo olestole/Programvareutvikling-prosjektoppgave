@@ -26,7 +26,7 @@ class UserReadSerializer(serializers.ModelSerializer):
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
-    address = AddressSerializer()
+    address = AddressSerializer(required=True)
     phone = serializers.CharField()
 
     class Meta:
