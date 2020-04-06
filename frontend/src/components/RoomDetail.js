@@ -325,7 +325,7 @@ const BookRoom = ({ room, fromDate, toDate, setIsBooking }) => {
   });
 
   const disabledDates = unavailable_dates.flatMap(range =>
-    getAllDates(range.from, range.start)
+    getAllDates(range.from, range.to)
   );
 
   const handleChange = ranges => {
@@ -349,7 +349,7 @@ const BookRoom = ({ room, fromDate, toDate, setIsBooking }) => {
     // TODO booking page
     const body = {
       from_date: dayjs(range.startDate).format('YYYY-MM-DD'),
-      to_date: dayjs(range.endDatae).format('YYYY-MM-DD'),
+      to_date: dayjs(range.endDate).format('YYYY-MM-DD'),
       people: 2, //TODO
       room_id: room.id,
       customer: context.user.customer
