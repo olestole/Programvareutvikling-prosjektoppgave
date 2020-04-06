@@ -1,8 +1,8 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import Avatar from '../components/shared/Avatar';
 
 it('renders avatar as expected', () => {
-  const tree = renderer.create(<Avatar />).toJSON();
-  expect(tree).toMatchSnapshot();
+  const { container } = render(<Avatar />);
+  expect(container).toMatchSnapshot();
 });

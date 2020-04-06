@@ -1,8 +1,8 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import Datepicker from '../components/home/Datepicker';
 
 it('renders datepicker component as expected', () => {
-  const tree = renderer.create(<Datepicker />).toJSON();
-  expect(tree).toMatchSnapshot();
+  const { container } = render(<Datepicker />);
+  expect(container).toMatchSnapshot();
 });
