@@ -68,6 +68,8 @@ class Room(models.Model):
             .exclude(from_date__gte=to_date)
             .exclude(to_date__lte=from_date)
             .exists()
+            and from_date < to_date
+            and from_date > timezone.now().date()
         )
 
 
