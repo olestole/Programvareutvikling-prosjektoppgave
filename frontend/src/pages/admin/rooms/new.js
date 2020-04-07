@@ -11,7 +11,7 @@ import { getReq } from '../../../utils/api';
 const useStyles = makeStyles({
   container: {
     justifyContent: 'center',
-    width: '90%',
+    width: '60%',
     paddingBottom: '30px'
   }
 });
@@ -30,7 +30,7 @@ const Index = props => {
   );
 };
 
-Index.getInitialProps = async ctx => {
+Index.getInitialProps = async () => {
   const amenities = await getReq('rooms/amenities/');
   return { amenities };
 };

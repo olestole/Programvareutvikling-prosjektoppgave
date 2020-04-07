@@ -3,11 +3,11 @@ import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
-import { TextField, Chip } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import { UserContext } from './UserProvider';
-import { putReq, postReq } from '../utils/api';
+import { postReq } from '../utils/api';
 
 const useStyles = makeStyles({
   container: {
@@ -34,17 +34,17 @@ const useStyles = makeStyles({
     margin: '5px',
     width: 'calc(66.6% - 10px)'
   },
-  descriptionFieldDiv: {
-    height: '8em'
-  },
   descrField: {
     margin: '5px',
-    width: `calc(100% - 10px)`,
-    height: '40px'
+    width: 'calc(66.6% - 10px)'
   },
   regBtn: {
     width: `calc(100% - 10px)`,
     margin: '5px'
+  },
+  autocompleteField: {
+    margin: '8px 10px',
+    width: `calc(100%-20px)`
   }
 });
 
@@ -121,10 +121,8 @@ const RoomEditor = props => {
           id="outlined-basic 1"
           label="Rom nummer"
           variant="outlined"
-          className={classes.full}
+          className={classes.half}
         />
-      </div>
-      <div className={classes.section}>
         <TextField
           name="newTitle"
           onChange={handleChange}
@@ -142,7 +140,7 @@ const RoomEditor = props => {
           id="outlined-basic 4"
           label="Pris"
           variant="outlined"
-          className={classes.third}
+          className={classes.half}
         />
         <TextField
           onChange={handleChange}
@@ -151,21 +149,24 @@ const RoomEditor = props => {
           id="outlined-basic 5"
           label="Kapasitet"
           variant="outlined"
-          className={classes.third}
+          className={classes.half}
         />
       </div>
-      <div className={classes.descriptionFieldDiv}>
+      <div>
         <TextField
           onChange={handleChange}
           name="newDescription"
           type="text"
-          id="outlined-basic 4"
+          multiline
+          rows="4"
+          id="outlined-multiline-static 6"
           label="Beskrivelse"
           variant="outlined"
           className={classes.descrField}
         />
       </div>
       <Autocomplete
+        className={classes.autocompleteField}
         multiple
         id="amenities"
         options={amenities}
