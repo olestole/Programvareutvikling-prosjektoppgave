@@ -14,7 +14,7 @@ import {
 } from '@material-ui/core';
 import SideDrawer from './SideDrawer';
 import Avatar from './Avatar';
-import { logout } from '../utils/api';
+import { logout } from '../../utils/api';
 
 const useStyles = makeStyles(theme => ({
   root: {

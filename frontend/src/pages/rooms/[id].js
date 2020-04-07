@@ -1,8 +1,8 @@
 import React from 'react';
 import { getRoomById } from '../../utils/api';
-import RoomDetail from '../../components/RoomDetail';
-import Layout from '../../components/Layout';
-import NotFound from '../../components/NotFound';
+import RoomDetail from '../../components/rooms/RoomDetail';
+import Layout from '../../components/shared/Layout';
+import NotFound from '../../components/shared/NotFound';
 import withLogin from '../../utils/withLogin';
 
 const RoomPage = ({ room, ...props }) => {
