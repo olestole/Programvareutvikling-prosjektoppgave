@@ -1,12 +1,11 @@
 import React, { useState, useContext } from 'react';
-import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
-import { UserContext } from './UserProvider';
+import { UserContext } from '../shared/UserProvider';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-import { login, postReq } from '../utils/api';
+import { putReq } from '../../utils/api';
 
 const useStyles = makeStyles({
   container: {
@@ -35,23 +34,22 @@ const useStyles = makeStyles({
   }
 });
 
-const RegisterUser = () => {
+const UserEditForm = ({ handleUserChange }) => {
   const classes = useStyles();
-  const router = useRouter();
   const context = useContext(UserContext);
 
   const [regState, setRegState] = useState({
-    newEmail: '',
-    newPassword: '',
+    email: '',
+    password: '',
     reenterPassword: '',
-    newPhone: '',
-    newAdress: '',
-    newFirstName: '',
-    newLastName: '',
-    newCountry: '',
-    newZip: '',
-    newCity: '',
-    newAdressNumber: ''
+    phone: '',
+    street_name: '',
+    first_name: '',
+    last_name: '',
+    country: '',
+    postal_code: '',
+    city: '',
+    street_number: ''
   });
 
   const handleChange = e => {
@@ -63,48 +61,65 @@ const RegisterUser = () => {
   };
 
   const addUser = async () => {
-    await context.setUser({
-      ...context.user,
-      customer: {
-        email: regState.newEmail,
-        first_name: regState.newFirstName,
-        last_name: regState.newLastName,
-        password: regState.newPassword,
-        address: {
-          street_name: regState.newAdress,
-          street_number: regState.newAdressNumber,
-          city: regState.newCity,
-          postal_code: regState.newZip,
-          country: regState.newCountry
-        }
-      }
-    });
-
     // CREATE BODY TO POST THE NEW USER TO BACKEND
     const body = {
-      email: regState.newEmail,
-      first_name: regState.newFirstName,
-      last_name: regState.newLastName,
-      phone: regState.newPhone,
-      password: regState.newPassword,
-      address: {
-        street_name: regState.newAdress,
-        street_number: regState.newAdressNumber,
-        city: regState.newCity,
-        postal_code: regState.newZip,
-        country: regState.newCountry
+      email: context.user.customer.email,
+      customer: {
+        email: context.user.customer.email,
+        first_name: context.user.customer.first_name,
+        last_name: context.user.customer.last_name,
+        phone: context.user.customer.phone,
+        address: {
+          street_name: context.user.customer.address.street_name,
+          street_number: context.user.customer.address.street_number,
+          city: context.user.customer.address.city,
+          postal_code: context.user.customer.address.postal_code,
+          country: context.user.customer.address.country
+        }
       }
     };
 
+    const addressList = [
+      'street_name',
+      'street_number',
+      'city',
+      'postal_code',
+      'country'
+    ];
+
+    // We have a pretty weird usermodel with duplicate fields and so on, so this makes sure everything is updated correctly
+    for (var key in regState) {
+      if (!regState[key] == '') {
+        if (addressList.includes(key)) {
+          body.customer.address[key] = regState[key];
+        } else if (key == 'email') {
+          body.customer[key] = regState[key];
+          body[key] = regState[key];
+        } else {
+          body.customer[key] = regState[key];
+        }
+      }
+    }
+
     // POST THE NEW USER TO BACKEND
-    const res = await postReq(body, 'users/');
+    const res = await putReq(
+      body,
+      `users/${context.user.id}/`,
+      context.user.accessToken
+    );
+
+    // Set the edited user to context, so that it visually updates the page with new info
+    context.setUser({
+      ...context.user,
+      email: body.email,
+      customer: body.customer
+    });
 
     if (res) {
-      login(body, context);
-      router.push('/');
+      handleUserChange();
     } else {
       // Error when the user already exists, change this with custom error-message later
-      alert('Email already exists😟');
+      alert('Something went wrong😶');
     }
   };
 
@@ -114,37 +129,17 @@ const RegisterUser = () => {
         <TextField
           fullWidth
           onChange={handleChange}
-          name="newEmail"
+          name="email"
           id="outlined-basic 1"
           label="E-post"
           variant="outlined"
           className={classes.full}
         />
       </div>
-      <div className={classes.section}>
-        <TextField
-          name="newPassword"
-          type="password"
-          onChange={handleChange}
-          id="outlined-basic 2"
-          label="Passord"
-          variant="outlined"
-          className={classes.half}
-        />
-        <TextField
-          name="reenterPassword"
-          type="password"
-          onChange={handleChange}
-          id="outlined-basic 3"
-          label="Bekreft passord"
-          variant="outlined"
-          className={classes.half}
-        />
-      </div>
       <div className={classes.div1}>
         <TextField
           onChange={handleChange}
-          name="newFirstName"
+          name="first_name"
           type="text"
           id="outlined-basic 4"
           label="Fornavn"
@@ -153,7 +148,7 @@ const RegisterUser = () => {
         />
         <TextField
           onChange={handleChange}
-          name="newLastName"
+          name="last_name"
           type="text"
           id="outlined-basic 5"
           label="Etternavn"
@@ -162,7 +157,7 @@ const RegisterUser = () => {
         />
         <TextField
           onChange={handleChange}
-          name="newPhone"
+          name="phone"
           type="tel"
           id="outlined-basic 6"
           label="Telefon nummer"
@@ -173,7 +168,7 @@ const RegisterUser = () => {
       <div>
         <TextField
           onChange={handleChange}
-          name="newCountry"
+          name="country"
           type="country"
           id="outlined-basic 7"
           label="Land"
@@ -182,7 +177,7 @@ const RegisterUser = () => {
         />
         <TextField
           onChange={handleChange}
-          name="newZip"
+          name="postal_code"
           type="text"
           id="outlined-basic 8"
           label="Zip"
@@ -192,7 +187,7 @@ const RegisterUser = () => {
         />
         <TextField
           onChange={handleChange}
-          name="newCity"
+          name="city"
           type="text"
           id="outlined-basic 9"
           label="By"
@@ -203,7 +198,7 @@ const RegisterUser = () => {
       <div>
         <TextField
           onChange={handleChange}
-          name="newAdress"
+          name="street_name"
           id="outlined-basic 10"
           label="Gateaddresse"
           variant="outlined"
@@ -211,7 +206,7 @@ const RegisterUser = () => {
         />
         <TextField
           onChange={handleChange}
-          name="newAdressNumber"
+          name="street_number"
           id="outlined-basic 11"
           label="Hus nummer"
           variant="outlined"
@@ -224,10 +219,10 @@ const RegisterUser = () => {
         className={classes.regBtn}
         onClick={addUser}
       >
-        Lag ny bruker
+        Oppdater bruker
       </Button>
     </form>
   );
 };
 
-export default RegisterUser;
+export default UserEditForm;

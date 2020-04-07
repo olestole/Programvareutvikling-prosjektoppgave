@@ -69,17 +69,26 @@ export const deleteReq = (endpoint, accessToken) =>
         }
       }).then(r => r.json());
 
-//PUT REQUEST
+// PUT REQUEST
 export const putReq = (body, endpoint, accessToken) => {
-  if (accessToken) {
-    fetch(`${config.serverUrl}/${endpoint}`, {
+  if (!accessToken) {
+    return fetch(`${config.serverUrl}/${endpoint}`, {
       method: 'PUT',
-      body: JSON.stringify(body),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    }).then(r => r.json());
+  } else {
+    return fetch(`${config.serverUrl}/${endpoint}`, {
+      method: 'PUT',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + accessToken
-      }
+      },
+      body: JSON.stringify(body)
     }).then(r => r.json());
   }
 };
@@ -118,6 +127,7 @@ export const login = async (body, context) => {
   } else {
     await context.setUser({
       ...context.user,
+      id: user.id,
       email: user.email,
       accessToken: token.access,
       refreshToken: token.refresh,

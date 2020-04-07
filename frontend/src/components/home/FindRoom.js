@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
-import { UserContext } from './UserProvider';
+import { UserContext } from '../shared/UserProvider';
 
 import Numberselect from './Numberselect';
 import Datepicker from './Datepicker';

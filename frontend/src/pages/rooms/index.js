@@ -1,6 +1,6 @@
 import React from 'react';
-import Layout from '../../components/Layout';
-import Roomlist from '../../components/Roomlist';
+import Layout from '../../components/shared/Layout';
+import Roomlist from '../../components/rooms/Roomlist';
 import { getReq } from '../../utils/api';
 
 const Rooms = props => {

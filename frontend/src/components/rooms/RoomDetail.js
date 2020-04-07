@@ -40,9 +40,9 @@ import { DateRange } from 'react-date-range';
 
 import dayjs from 'dayjs';
 
-import { UserContext } from '../components/UserProvider';
-import { postReq } from '../utils/api';
-import RequireLogin from '../utils/requireLogin';
+import { UserContext } from '../shared/UserProvider';
+import { postReq } from '../../utils/api';
+import RequireLogin from '../../utils/requireLogin';
 
 const gridStyles = makeStyles({
   gridImage: {

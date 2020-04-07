@@ -32,9 +32,7 @@ const DatePicker = props => {
       <Grid container justify="space-around" className={classes.root}>
         <KeyboardDatePicker
           disableToolbar
-          // variant="inline"
           format="dd/MM/yyyy"
-          // margin="normal"
           id="date-picker-inline"
           label="Ønsket dato"
           value={selectedDate}

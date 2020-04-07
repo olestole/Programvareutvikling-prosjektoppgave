@@ -1,5 +1,5 @@
 import React from 'react';
-import UserProvider from '../components/UserProvider';
+import UserProvider from '../components/shared/UserProvider';
 import { SWRConfig } from 'swr';
 import fetch from 'isomorphic-unfetch';
 // For component in components/RoomDetail

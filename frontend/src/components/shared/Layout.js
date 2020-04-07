@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { UserContext } from '../components/UserProvider';
-import Navbar from '../components/Navbar';
+import { UserContext } from './UserProvider';
+import Navbar from './Navbar';
 
 const useStyles = makeStyles({
   root: props => ({

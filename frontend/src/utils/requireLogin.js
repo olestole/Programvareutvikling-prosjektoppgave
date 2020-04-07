@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import { UserContext } from '../components/UserProvider';
-import LoginForm from '../components/LoginForm';
+import { UserContext } from '../components/shared/UserProvider';
+import LoginForm from '../components/login/LoginForm';
 
 const RequireLogin = props => {
   const { user } = useContext(UserContext);
