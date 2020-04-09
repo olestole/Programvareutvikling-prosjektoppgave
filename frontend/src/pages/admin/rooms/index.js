@@ -20,7 +20,11 @@ const Rooms = props => {
     <Layout position={'fixed'} overflowY={'scroll'} width={'100%'} {...props}>
       {rooms && rooms.length > 0 ? (
         <>
-          <BookedRoomList amenities={props.amenities} rooms={rooms} accessToken={user.accessToken} />
+          <BookedRoomList
+            amenities={props.amenities}
+            rooms={rooms}
+            accessToken={user.accessToken}
+          />
         </>
       ) : (
         <div>Ingen rom</div>
@@ -31,8 +35,8 @@ const Rooms = props => {
 
 Rooms.getInitialProps = async () => {
   const amenities = await getReq('rooms/amenities/');
-  console.log("Passed amenities from index.js")
-  console.log(amenities)
+  console.log('Passed amenities from index.js');
+  console.log(amenities);
 
   return { amenities };
 };

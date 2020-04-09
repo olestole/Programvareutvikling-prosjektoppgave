@@ -100,24 +100,6 @@ const TemporaryDrawer = () => {
     </div>
   );
 
-  const adminList = () => (
-    <>
-      <Divider />
-      <List>
-        {linksAdmin.map((path, index) => (
-          <Link key={index} href={path.link}>
-            <ListItem button>
-              <ListItemIcon>
-                <path.icon />
-              </ListItemIcon>
-              <ListItemText primary={path.text} />
-            </ListItem>
-          </Link>
-        ))}
-      </List>
-    </>
-  );
-
   const fullList = side => (
     <div
       className={classes.fullList}

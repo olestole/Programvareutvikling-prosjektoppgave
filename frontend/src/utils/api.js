@@ -96,13 +96,13 @@ export const putReq = (body, endpoint, accessToken) => {
 // LOGIN WITH USERINFO
 export const logInWithData = async body => {
   const tokenData = await postReq(body, 'token/', null);
-  const userData = await getReq('users/', tokenData.access);
+  const userData = await getReq('users/me/', tokenData.access);
 
   storeToken(tokenData.access);
 
   return {
     token: tokenData,
-    user: userData[0]
+    user: userData
   };
 };
 
