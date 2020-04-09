@@ -79,6 +79,11 @@ class BookingViewset(viewsets.ModelViewSet):
     def get_queryset(self):
         if self.request.user.is_anonymous:
             return None
+        if not self.request.user.is_staff:
+            email = self.request.user.email
+            if self.request.user.customer:
+                email = self.request.user.customer.email
+            return Booking.objects.filter(customer__email=email)
 
         return Booking.objects.all()
 
