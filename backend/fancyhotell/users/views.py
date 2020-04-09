@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from rest_framework.decorators import action
 from fancyhotell.users.serializers import (
     UserCreateSerializer,
     UserReadSerializer,
@@ -6,7 +7,7 @@ from fancyhotell.users.serializers import (
 )
 from fancyhotell.users.models import User
 from fancyhotell.users.permissions import UserPermissions
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, permissions
 from rest_framework.response import Response
 
 
@@ -46,3 +47,12 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response("OK")
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(
+        detail=False,
+        permission_classes=[permissions.IsAuthenticated],
+        serializer_class=UserReadSerializer,
+    )
+    def me(self, request):
+        serializer = self.get_serializer(request.user)
+        return Response(serializer.data)
