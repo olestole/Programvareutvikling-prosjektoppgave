@@ -4,6 +4,13 @@ module.exports = {
     '!**/*.d.ts',
     '!**/node_modules/**'
   ],
+  coveragePathIgnorePatterns: [
+  "node_modules/",
+    "next.config.js",
+    "coverage",
+    "jest.config.js",
+    "config/jest/"
+  ],
   setupFilesAfterEnv: ['<rootDir>/setupTests.js'],
   testPathIgnorePatterns: ['/node_modules/', '/.next/'],
   transform: {
