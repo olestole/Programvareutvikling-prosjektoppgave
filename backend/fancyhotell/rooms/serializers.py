@@ -134,7 +134,17 @@ class AdminRoomDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ["id", "room_number", "title", "number_of_future_bookings"]
+        fields = [
+            "id",
+            "room_number",
+            "title",
+            "description",
+            "price",
+            "capacity",
+            "amenities",
+            "unavailable_dates",
+            "number_of_future_bookings",
+        ]
 
     def get_number_of_future_bookings(self, obj):
         return (
@@ -142,3 +152,31 @@ class AdminRoomDetailSerializer(serializers.ModelSerializer):
             .filter(from_date__gt=timezone.now())
             .count()
         )
+
+    def get_unavailable_dates(self, obj):
+        bookings = (
+            Booking.objects.filter(from_date__gte=timezone.now())
+            .filter(room=obj.id)
+            .order_by("from_date")
+        )
+        dates = []
+        for booking in bookings:
+            dates.append({"from": booking.from_date, "to": booking.to_date})
+
+        return dates
+
+    # Override create for amenities
+    def create(self, validated_data):
+        amenities = [
+            amenity["amenity"] for amenity in validated_data.pop("amenities", [])
+        ]
+
+        with transaction.atomic():
+            instance = super().create(validated_data)
+            for amenity in amenities:
+                Amenity.objects.get_or_create(pk=amenity)
+            if amenities:
+                instance.amenities.set(amenities)
+                instance.save()
+
+        return instance

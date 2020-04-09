@@ -38,6 +38,8 @@ class RoomViewset(viewsets.ModelViewSet):
         return RoomSerializer
 
     def get_queryset(self):
+        if self.request.method in ["POST", "PUT"]:
+            return Room.objects.all()
         queryset = Room.get_available()
         from_date = self.request.query_params.get("from_date")
         to_date = self.request.query_params.get("to_date")
