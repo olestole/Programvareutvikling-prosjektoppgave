@@ -33,6 +33,7 @@ const NumberSelect = props => {
           }}
           variant="outlined"
           onChange={handleInput}
+          value={props.value}
         />
       </div>
     </form>
