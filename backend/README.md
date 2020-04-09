@@ -1,5 +1,12 @@
 # Fancy hotell backend
 
+- [Setting up the project](#Setup)
+- [Development](#development)
+
+## Setup
+
+The backend requires python 3. Make sure to get it installed.
+
 ```sh
 $ git clone git@gitlab.stud.idi.ntnu.no:tdt4140-2020/37.git
 $ cd backend
@@ -10,8 +17,10 @@ $ cd backend
 **Installing dependencies**
 
 ```sh
+# Create a new python virtual environment
 $ python3 -m venv venv
 $ source venv/bin/activate
+# Install python dependencies
 $ pip install -r requirements/dev.txt
 ```
 

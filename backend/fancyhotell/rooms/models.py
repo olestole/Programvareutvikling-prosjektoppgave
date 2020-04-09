@@ -77,11 +77,11 @@ class Booking(models.Model):
     from_date = models.DateField(null=False)
     to_date = models.DateField(null=False)
     room = models.ForeignKey(
-        Room, related_name="booking", null=False, on_delete=models.PROTECT
+        Room, related_name="booking", null=False, on_delete=models.SET_NULL
     )
     booking_reference = models.UUIDField(default=uuid.uuid4)
     comment = models.TextField(blank=True)
     customer = models.ForeignKey(
-        Customer, related_name="booking", null=False, on_delete=models.PROTECT
+        Customer, related_name="booking", null=False, on_delete=models.SET_NULL
     )
     people = models.IntegerField(null=False, blank=True)
