@@ -131,6 +131,7 @@ class BookingDetailSerializer(serializers.ModelSerializer):
 
 class AdminRoomDetailSerializer(serializers.ModelSerializer):
     number_of_future_bookings = serializers.SerializerMethodField()
+    unavailable_dates = serializers.SerializerMethodField()
 
     class Meta:
         model = Room
