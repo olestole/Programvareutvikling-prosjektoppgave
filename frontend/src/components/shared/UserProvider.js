@@ -9,6 +9,7 @@ const UserProvider = props => {
     accessToken: '',
     refreshToken: '',
     loggedIn: false,
+    is_staff: false,
     booking: {
       from_date: '',
       to_date: '',

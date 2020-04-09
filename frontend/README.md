@@ -2,12 +2,14 @@
 
 This is the front-end app for `Skikkelig Fancy Hotell`. It serves to be a user friendly way of interacting with the back-end to book hotels, edit user information etc.
 
+|                               |                               |
+| :---------------------------: | :---------------------------: |
+| ![](public/FancyHotell01.png) | ![](public/FancyHotell02.png) |
+
 **Built with**
 
 - [Next.js](https://nextjs.org/)
 - [MATERIAL-UI](https://material-ui.com/)
-
-<img src="public/FancyHotell01.png"/>
 
 # Table of Content
 
