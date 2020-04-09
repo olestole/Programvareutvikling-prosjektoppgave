@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import router, { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -39,10 +39,6 @@ import cx from 'classnames';
 import { DateRange } from 'react-date-range';
 
 import dayjs from 'dayjs';
-
-import { UserContext } from '../shared/UserProvider';
-import { postReq } from '../../utils/api';
-import RequireLogin from '../../utils/requireLogin';
 
 const gridStyles = makeStyles({
   gridImage: {
@@ -313,7 +309,7 @@ const bookingStyles = makeStyles({
   }
 });
 
-const BookRoom = ({ room, fromDate, toDate, setIsBooking }) => {
+const BookRoom = ({ room, fromDate, toDate }) => {
   const classes = bookingStyles();
 
   const { unavailable_dates } = room;
@@ -343,35 +339,21 @@ const BookRoom = ({ room, fromDate, toDate, setIsBooking }) => {
       dayjs(range.endDate).diff(range.startDate, 'day') * room.price
     );
 
-  const context = useContext(UserContext);
-
   const passInfo = async () => {
-    // TODO booking page
     const body = {
       from_date: dayjs(range.startDate).format('YYYY-MM-DD'),
       to_date: dayjs(range.endDate).format('YYYY-MM-DD'),
-      people: 2, //TODO
-      room_id: room.id,
-      customer: context.user.customer
+      people: 2,
+      room_id: room.id
     };
 
-    const bookingInfo = await postReq(
-      body,
-      'bookings/',
-      context.user.accessToken
+    router.push(
+      `/rooms/book?room_id=${body.room_id}&people=${body.people}&from_date=${body.from_date}&to_date=${body.to_date}`
     );
-
-    await context.setUser({
-      ...context.user,
-      bookedRoom: bookingInfo
-    });
-
-    router.push('/booking');
   };
 
   const handleBooking = () => {
-    setIsBooking(true);
-    context.user.loggedIn && passInfo();
+    passInfo();
   };
 
   return (
@@ -437,17 +419,6 @@ const RoomDetail = ({ room }) => {
   const classes = useStyles();
   const router = useRouter();
 
-  const context = useContext(UserContext);
-  const [isBooking, setIsBooking] = useState(false);
-
-  if (isBooking && !context.user.loggedIn) {
-    return (
-      <RequireLogin>
-        <span>If you see this, something went wrong</span>
-      </RequireLogin>
-    );
-  }
-
   return (
     <Paper className={classes.root}>
       <ImageGrid images={room.images} count={3} />
@@ -468,7 +439,6 @@ const RoomDetail = ({ room }) => {
         room={room}
         fromDate={router.query.from_date}
         toDate={router.query.to_date}
-        setIsBooking={setIsBooking}
       />
     </Paper>
   );
