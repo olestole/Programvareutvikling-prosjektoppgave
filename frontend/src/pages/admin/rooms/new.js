@@ -2,8 +2,8 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 
-import Layout from '../../../components/Layout';
-import RoomEditor from '../../../components/RoomEditor.js';
+import Layout from '../../../components/shared/Layout';
+import RoomEditor from '../../../components/rooms/RoomEditor.js';
 import withLogin from '../../../utils/withLogin';
 import RequireLogin from '../../../utils/requireLogin';
 import { getReq } from '../../../utils/api';

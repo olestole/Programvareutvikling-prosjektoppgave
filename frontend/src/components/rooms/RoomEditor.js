@@ -6,8 +6,8 @@ import Button from '@material-ui/core/Button';
 import { TextField } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
-import { UserContext } from './UserProvider';
-import { postReq } from '../utils/api';
+import { UserContext } from '../shared/UserProvider';
+import { postReq } from '../../utils/api';
 
 const useStyles = makeStyles({
   container: {
