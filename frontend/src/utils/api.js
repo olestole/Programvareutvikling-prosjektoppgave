@@ -60,14 +60,14 @@ export const deleteReq = (endpoint, accessToken) =>
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + accessToken
         }
-      }).then(r => r.json())
+      })
     : fetch(`${config.serverUrl}/${endpoint}`, {
         method: 'DELETE',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json'
         }
-      }).then(r => r.json());
+      });
 
 // PUT REQUEST
 export const putReq = (body, endpoint, accessToken) => {
@@ -127,6 +127,7 @@ export const login = async (body, context) => {
   } else {
     await context.setUser({
       ...context.user,
+      is_staff: user.is_staff,
       id: user.id,
       email: user.email,
       accessToken: token.access,

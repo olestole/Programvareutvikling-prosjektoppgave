@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Link from 'next/link';
 import { makeStyles } from '@material-ui/core/styles';
+import { UserContext } from './UserProvider';
 
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
@@ -14,15 +15,21 @@ import HomeIcon from '@material-ui/icons/Home';
 import HotelIcon from '@material-ui/icons/Hotel';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import MenuIcon from '@material-ui/icons/Menu';
+import ListIcon from '@material-ui/icons/List';
+import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 
-const links = [
-  { link: '/', icon: HomeIcon, text: 'Home' }
-  // { link: '/login', icon: PersonIcon, text: 'Logg inn' }
-];
+const links = [{ link: '/', icon: HomeIcon, text: 'Home' }];
 
 const linksPriv = [
   { link: '/user', icon: HotelIcon, text: 'Mine bookinger' },
   { link: '/userprofile', icon: AccountCircleIcon, text: 'Min side' }
+];
+
+const linksAdmin = [
+  { link: '/userprofile', icon: AccountCircleIcon, text: 'Min side' },
+  { link: '/user', icon: HotelIcon, text: 'Bookingliste' },
+  { link: '/admin/rooms', icon: ListIcon, text: 'Romliste' },
+  { link: '/admin/rooms/new', icon: PlaylistAddIcon, text: 'Legg til rom' }
 ];
 
 const useStyles = makeStyles({
@@ -42,6 +49,7 @@ const TemporaryDrawer = () => {
     bottom: false,
     right: false
   });
+  const context = useContext(UserContext);
 
   const toggleDrawer = (side, open) => event => {
     if (
@@ -53,6 +61,8 @@ const TemporaryDrawer = () => {
 
     setState({ ...state, [side]: open });
   };
+
+  const chooseList = context.user.is_staff ? linksAdmin : linksPriv;
 
   const sideList = side => (
     <div
@@ -76,7 +86,7 @@ const TemporaryDrawer = () => {
       <Divider />
 
       <List>
-        {linksPriv.map((path, index) => (
+        {chooseList.map((path, index) => (
           <Link key={index} href={path.link}>
             <ListItem button>
               <ListItemIcon>
@@ -88,6 +98,24 @@ const TemporaryDrawer = () => {
         ))}
       </List>
     </div>
+  );
+
+  const adminList = () => (
+    <>
+      <Divider />
+      <List>
+        {linksAdmin.map((path, index) => (
+          <Link key={index} href={path.link}>
+            <ListItem button>
+              <ListItemIcon>
+                <path.icon />
+              </ListItemIcon>
+              <ListItemText primary={path.text} />
+            </ListItem>
+          </Link>
+        ))}
+      </List>
+    </>
   );
 
   const fullList = side => (

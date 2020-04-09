@@ -7,7 +7,7 @@ import { TextField } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import { UserContext } from '../shared/UserProvider';
-import { postReq } from '../../utils/api';
+import { postReq, putReq } from '../../utils/api';
 
 const useStyles = makeStyles({
   container: {
@@ -54,12 +54,12 @@ const RoomEditor = props => {
   const context = useContext(UserContext);
 
   const [regState, setRegState] = useState({
-    newRoomNumber: '',
-    newTitle: '',
-    newPrice: '',
-    newCapacity: '',
-    newDescription: '',
-    newAmenities: []
+    room_number: '',
+    title: '',
+    price: '',
+    capacity: '',
+    description: '',
+    amenities: []
   });
 
   const handleChange = e => {
@@ -75,24 +75,49 @@ const RoomEditor = props => {
     e.preventDefault();
     setRegState({
       ...regState,
-      newAmenities: value.map(val => val.key)
+      amenities: value.map(val => val.key)
     });
   };
 
   const submitRoom = e => {
     e.preventDefault();
-    addRoom();
+    props.addRoom ? addRoom() : editRoom();
+  };
+
+  const editRoom = async () => {
+    const body = {
+      ...props.roomInfo
+    };
+
+    for (let key in regState) {
+      if (!regState[key] == '') {
+        if (['title', 'amenities', 'description'].includes(key)) {
+          body[key] = regState[key];
+        } else {
+          body[key] = parseInt(regState[key]);
+        }
+      }
+    }
+    await putReq(
+      body,
+      `admin/rooms/${props.roomInfo.id}/`,
+      context.user.accessToken
+    );
+    setTimeout(() => {
+      props.handleEditRoom();
+      console.log('Updated');
+    }, 1000);
   };
 
   const addRoom = async () => {
     // CREATE BODY TO POST THE NEW ROOM TO BACKEND
     const body = {
-      room_number: regState.newRoomNumber,
-      title: regState.newTitle,
-      price: regState.newPrice,
-      capacity: regState.newCapacity,
-      description: regState.newDescription,
-      amenities: regState.newAmenities
+      room_number: regState.room_number,
+      title: regState.title,
+      price: regState.price,
+      capacity: regState.capacity,
+      description: regState.description,
+      amenities: regState.amenities
     };
 
     // POST THE NEW ROOM TO BACKEND
@@ -108,15 +133,13 @@ const RoomEditor = props => {
     }
   };
 
-  const { amenities } = props;
-
   return (
     <form className={classes.container} onSubmit={submitRoom}>
       <div className={classes.section}>
         <TextField
           fullWidth
           onChange={handleChange}
-          name="newRoomNumber"
+          name="room_number"
           type="number"
           id="outlined-basic 1"
           label="Rom nummer"
@@ -124,7 +147,7 @@ const RoomEditor = props => {
           className={classes.half}
         />
         <TextField
-          name="newTitle"
+          name="title"
           onChange={handleChange}
           id="outlined-basic 2"
           label="Tittel"
@@ -135,7 +158,7 @@ const RoomEditor = props => {
       <div className={classes.div1}>
         <TextField
           onChange={handleChange}
-          name="newPrice"
+          name="price"
           type="number"
           id="outlined-basic 4"
           label="Pris"
@@ -144,7 +167,7 @@ const RoomEditor = props => {
         />
         <TextField
           onChange={handleChange}
-          name="newCapacity"
+          name="capacity"
           type="text"
           id="outlined-basic 5"
           label="Kapasitet"
@@ -155,7 +178,7 @@ const RoomEditor = props => {
       <div>
         <TextField
           onChange={handleChange}
-          name="newDescription"
+          name="description"
           type="text"
           multiline
           rows="4"
@@ -169,7 +192,7 @@ const RoomEditor = props => {
         className={classes.autocompleteField}
         multiple
         id="amenities"
-        options={amenities}
+        options={props.amenities}
         getOptionLabel={option => option.value}
         getOptionValue={option => option.key}
         onChange={handleAmenityChange}
@@ -182,9 +205,9 @@ const RoomEditor = props => {
         color="primary"
         className={classes.regBtn}
         type="submit"
-        // onClick={addRoom}
+        onClick={props.addRoom ? addRoom : editRoom}
       >
-        Lag nytt rom
+        {props.addRoom ? 'Lag nytt rom' : 'Endre rommet'}
       </Button>
     </form>
   );
