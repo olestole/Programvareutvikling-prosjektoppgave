@@ -1,21 +1,12 @@
 import React, { useContext, useState } from 'react';
-import router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Paper,
   Container,
   Button,
   Typography,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
   Divider,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  Chip,
   Stepper,
   Step,
   StepLabel,
@@ -25,6 +16,7 @@ import Numberselect from '../home/Numberselect';
 import { UserContext } from '../shared/UserProvider';
 import { postReq } from '../../utils/api';
 import RequireLogin from '../../utils/requireLogin';
+import dayjs from 'dayjs';
 
 const bookingStyles = makeStyles({
   root: {
@@ -121,6 +113,15 @@ const userStyles = makeStyles({
     height: '4em',
     margin: '5px',
     width: 'calc(66.6% - 10px)'
+  },
+  buttons: {
+    display: 'flex',
+    flexDirection: 'column',
+    margin: '50px',
+    padding: '20px'
+  },
+  button: {
+    margin: '20px'
   }
 });
 
@@ -168,20 +169,20 @@ const GetUserInfo = ({ setUser }) => {
   return (
     <>
       {useLogin === null && (
-        <div>
+        <div className={classes.buttons}>
           <Button
             size="large"
-            variant="contained"
-            className={classes.bookButton}
+            variant="outlined"
+            className={classes.button}
             onClick={() => setUseLogin(true)}
           >
             Logg inn med eksisterende bruker
           </Button>
           <Button
             size="large"
-            variant="contained"
-            className={classes.bookButton}
-            onClick={() => setUseLogin(true)}
+            variant="outlined"
+            className={classes.button}
+            onClick={() => setUseLogin(false)}
           >
             Skriv inn brukerinfo
           </Button>
@@ -309,10 +310,19 @@ const confirmStyles = makeStyles({
   },
   details: {
     marginTop: '5px'
+  },
+  customer: {
+    margin: '20px'
   }
 });
 const Confirm = ({ booking, room, user }) => {
   const classes = confirmStyles();
+
+  const getTotal = () =>
+    Intl.NumberFormat('no-NO', { style: 'currency', currency: 'NOK' }).format(
+      dayjs(booking.to_date).diff(booking.from_date, 'day') * room.price
+    );
+
   return (
     <Container>
       <div className={classes.left}>
@@ -338,7 +348,7 @@ const Confirm = ({ booking, room, user }) => {
         <Typography variant="h5" component="h5">
           Kundeinformasjon:
         </Typography>
-        <div>
+        <div className={classes.customer}>
           <Typography variant="p" component="p" className={classes.details}>
             Epost: {user.email}
           </Typography>
@@ -347,6 +357,8 @@ const Confirm = ({ booking, room, user }) => {
           </Typography>
         </div>
       </div>
+      <Divider />
+      <Typography variant="h6">{`Total: ${getTotal()} NOK`}</Typography>
     </Container>
   );
 };
@@ -403,12 +415,12 @@ const BookRoom = ({ room }) => {
 
   const context = useContext(UserContext);
 
-  if (context.user && stage == 2) {
+  if (context.user.loggedIn && stage == 2) {
     setStage(3);
   }
 
   const passInfo = async () => {
-    const body = context.user
+    const body = context.user.loggedIn
       ? {
           ...booking
         }
@@ -438,7 +450,7 @@ const BookRoom = ({ room }) => {
   return (
     <Paper className={classes.root}>
       <Divider />
-      <Stepper>
+      <Stepper activeStep={stage - 1}>
         {steps.map((label, index) => {
           return (
             <Step key={label} completed={index < stage}>
@@ -477,7 +489,9 @@ const BookRoom = ({ room }) => {
               variant="contained"
               className={classes.bookButton}
               disabled={stage == 1}
-              onClick={() => setStage(stage - context.user.loggedIn ? 2 : 1)}
+              onClick={() =>
+                setStage(context.user.loggedIn ? stage - 2 : stage - 1)
+              }
             >
               Tilbake
             </Button>
