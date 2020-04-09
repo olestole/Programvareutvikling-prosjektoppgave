@@ -33,7 +33,7 @@ class RoomViewset(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         # This is mostly just for metadata
-        if self.request.method in ["POST"]:
+        if self.request.method in ["POST", "PUT"]:
             return RoomDetailSerializer
         return RoomSerializer
 
