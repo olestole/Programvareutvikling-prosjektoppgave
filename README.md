@@ -8,6 +8,11 @@ It is seperated into two parts, the `frontend` and `backend`.
 See [frontend](#frontend) for details about the webapp.
 See [backend](#backend) for details about the backend.
 
+# Quick start
+
+To get started, you need to set up the frontend, and backend.
+See [frontend setup](#how-to-use) and [backend setup](#how-to-use-1) for setup.
+
 # Deployment
 
 The two applications are currently hosted on Heroku and Zeit now.
