@@ -1,3 +1,13 @@
+- model: users.User
+  fields:
+    email: admin@fancyhotell.now.sh
+    password: pbkdf2_sha256$180000$28SkPTbQJpXO$xNSv1GODWwWxyabTBPQd/Njv6+RxqLMP68DKAmlsyeM=
+    is_staff: true
+    is_superuser: true
+    customer: null
+    first_name: admin
+    last_name: admin
+
 - model: rooms.Amenity
   fields:
     amenity: "TV"
