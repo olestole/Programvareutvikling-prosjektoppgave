@@ -98,7 +98,8 @@ This is the front-end app for `Skikkelig Fancy Hotell`. It serves to be a user f
 
 #### Prerequisites
 
-- [yarn](https://yarnpkg.com/)
+- [node.js](https://nodejs.org/en/download/)
+- [yarn](https://classic.yarnpkg.com/en/docs/install#debian-stable)
 
 ### Setup
 
@@ -220,7 +221,10 @@ The project uses a handful of different libraries to simplify tasks such as date
 
 ### Setup
 
-The backend requires python 3. Make sure to get it installed.
+The backend requires python 3.7 and pip.
+
+- [python](https://www.python.org/downloads/)
+- [pip](https://pypi.org/project/pip/)
 
 ```sh
 $ git clone git@gitlab.stud.idi.ntnu.no:tdt4140-2020/37.git
